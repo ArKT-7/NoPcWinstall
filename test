@@ -123,17 +123,22 @@ if ! partition_exists "$part_win"; then
     echo ""
     echo "Current Size of Android partition: $size_userdata_gb GB"
     echo ""
+    echo "need to do partitioning for windows"
     re_part
 fi
 
 if ! partition_exists "$part_esp"; then
     echo "ESP Partition does not exist."
-    # Print sizes
+     # Print sizes
     echo ""
-    echo "Your Size of Windows Partition: $size_win_gb GB"
-    echo "Your Size of ESP Partition: $size_esp_mb MB"
-    echo "Your Size of Android partition: $size_userdata_gb GB"
+    size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
+    size_userdata_gb=$(bytes_to_gb $size_userdata)
+    echo "Current Size of Windows Partition: NOTHING LOL"
+    echo "Current Size of ESP Partition: NOTHING LOL"
     echo ""
+    echo "Current Size of Android partition: $size_userdata_gb GB"
+    echo ""
+    echo "need to do partitioning for windows"
     re_part
 fi
 

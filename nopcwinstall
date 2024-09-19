@@ -233,49 +233,10 @@ fi
 
 SELECTED_ZIP_FILE="${files[$selection]}"
 
-
-# Function to get total size of the zip file
-get_zip_size() {
-    /data/local/tmp/busybox stat -c %s "$1"
-}
-
-# Function to show progress
-show_progress() {
-    local size=$1
-    local progress=0
-
-    while [ $progress -lt $size ]; do
-        local new_progress=$( /data/local/tmp/busybox stat -c %s "$2" )
-        local percentage=$(( (new_progress * 100) / size ))
-        echo -ne "Progress: ${percentage}%\r"
-        progress=$new_progress
-        sleep 1
-    done
-}
-
-# Unzipping the file
+# Unzip the selected file
 echo ""
 echo "Unzipping selected file..."
-ZIP_SIZE=$(get_zip_size "$SELECTED_ZIP_FILE")
-
-# Start the extraction in background
-/data/local/tmp/busybox unzip -o "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP" &
-
-# Capture the PID of the unzip process
-UNZIP_PID=$!
-
-# Show progress
-show_progress "$ZIP_SIZE" "$DIR_UNZIP"
-
-# Wait for the unzip process to finish
-wait $UNZIP_PID
-
-echo ""
-echo "Unzip complete."
-
-
-
-
+/data/local/tmp/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
 EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")

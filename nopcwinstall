@@ -233,12 +233,18 @@ fi
 
 SELECTED_ZIP_FILE="${files[$selection]}"
 
-# Unzip the selected file
+# Unzip the selected file with clean output
 echo ""
 echo "Unzipping selected file..."
-/data/local/tmp/busybox unzip -q "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP" | /data/local/tmp/busybox grep -E 'inflating: ' | sed 's/inflating: //'
+
+# Use busybox unzip with output processing to show file names in a clean manner
+/data/local/tmp/busybox unzip -v "$SELECTED_ZIP_FILE" | /data/local/tmp/busybox awk '/^Inflating:/ {print "Extracting:", substr($0, index($0, $2))}'
+
+# Perform the actual extraction
+/data/local/tmp/busybox unzip -q "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 echo "Unzip complete."
+
 
 
 # Check for specific files

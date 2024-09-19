@@ -25,6 +25,7 @@ else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
     echo "$DEVICE_CODENAME"
+    echo ""
     exit 1
 fi
 
@@ -49,7 +50,7 @@ download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
-
+echo ""
 echo "All binaries have been downloaded and permissions set."
 echo  ""
 if [ "$DEVICE_CODENAME" = "nabu" ] || [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -61,6 +62,7 @@ else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
     echo "$DEVICE_CODENAME"
+    echo ""
     exit 1
 fi
 

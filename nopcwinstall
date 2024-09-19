@@ -16,9 +16,14 @@ TARGET_MOUNT_NTFS="/data/local/tmp/mount.ntfs"
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
 
-if [ "$DEVICE_CODENAME" = "nabu" ] || [ "$DEVICE_CODENAME" = "dm3q" ]; then
+if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-    echo "WinInstaller for Xiaomi Pad 5 (nabu)"
+    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "Based on Kumar_Jy wininstaller"
+elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+    echo ""
+    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo "Based on Kumar_Jy wininstaller"
 else
@@ -28,6 +33,7 @@ else
     echo ""
     exit 1
 fi
+
 
 # Function to download and set permissions
 download_and_set_permissions() {
@@ -53,9 +59,15 @@ download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 echo ""
 echo "All binaries have been downloaded and permissions set."
 echo  ""
-if [ "$DEVICE_CODENAME" = "nabu" ] || [ "$DEVICE_CODENAME" = "dm3q" ]; then
+
+if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-    echo "WinInstaller for Xiaomi Pad 5 (nabu)"
+    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "Based on Kumar_Jy wininstaller"
+elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+    echo ""
+    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo "Based on Kumar_Jy wininstaller"
 else
@@ -65,6 +77,7 @@ else
     echo ""
     exit 1
 fi
+
 
 # Function to convert bytes to gigabytes and megabytes
 bytes_to_gb() {

@@ -88,6 +88,16 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
+# Get sizes in bytes
+size_win=$($(pwd)/busybox blockdev --getsize64 "$part_win")
+size_esp=$($(pwd)/busybox blockdev --getsize64 "$part_esp")
+size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
+
+# Convert sizes
+size_win_gb=$(bytes_to_gb $size_win)
+size_esp_mb=$(bytes_to_mb $size_esp)
+size_userdata_gb=$(bytes_to_gb $size_userdata)
+
 # Function to handle repartitioning
 re_part() {
     echo "Do you want to continue? All data will be erased (y/n)?"
@@ -104,23 +114,25 @@ re_part() {
 # Check if partitions exist and their sizes
 if ! partition_exists "$part_win"; then
     echo "Windows Partition does not exist."
+    # Print sizes
+    echo ""
+    echo "Size of Windows Partition: $size_win_gb GB"
+    echo "Size of ESP Partition: $size_esp_mb MB"
+    echo "Size of Android partition: $size_userdata_gb GB"
+    echo ""
     re_part
 fi
 
 if ! partition_exists "$part_esp"; then
     echo "ESP Partition does not exist."
+    # Print sizes
+    echo ""
+    echo "Size of Windows Partition: $size_win_gb GB"
+    echo "Size of ESP Partition: $size_esp_mb MB"
+    echo "Size of Android partition: $size_userdata_gb GB"
+    echo ""
     re_part
 fi
-
-# Get sizes in bytes
-size_win=$($(pwd)/busybox blockdev --getsize64 "$part_win")
-size_esp=$($(pwd)/busybox blockdev --getsize64 "$part_esp")
-size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
-
-# Convert sizes
-size_win_gb=$(bytes_to_gb $size_win)
-size_esp_mb=$(bytes_to_mb $size_esp)
-size_userdata_gb=$(bytes_to_gb $size_userdata)
 
 # Print sizes
 echo ""

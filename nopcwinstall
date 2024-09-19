@@ -3,10 +3,10 @@
 #!/bin/sh
 
 # Define URLs and target paths
-URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/won-deployer/main/assets/busybox"
-URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/won-deployer/main/assets/mkfs.fat"
-URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/won-deployer/main/assets/mkfs.ntfs"
-URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/won-deployer/main/assets/mount.ntfs"
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
+URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
+URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
+URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 
 TARGET_BUSYBOX="/data/local/tmp/busybox"
 TARGET_MKFS_FAT="/data/local/tmp/mkfs.fat"
@@ -132,7 +132,7 @@ echo ""
 
 # Define directories
 MAIN_DIR="/sdcard/"
-DIR_UNZIP="/sdcard/nabu/"
+DIR_UNZIP="/sdcard/nopcwinstall/"
 DIR_BACK="/sdcard/backups/"
 DIR_UEFI="/sdcard/UEFI/"
 
@@ -295,23 +295,23 @@ echo "Mounting partitions..."
 echo ""
 echo "Copying files..."
 /data/local/tmp/busybox mkdir -p /mnt/win/installer/Driver
-copy_with_progress /sdcard/nabu/uefi.img /sdcard/UEFI/uefi.img
-copy_with_progress /sdcard/nabu/install.bat /mnt/win/installer/install.bat
-copy_with_progress /sdcard/nabu/winactivator.bat /mnt/win/installer/winactivator.bat
+copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
+copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
+copy_with_progress /sdcard/nopcwinstall/winactivator.bat /mnt/win/installer/winactivator.bat
 copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
-# copy_with_progress /sdcard/nabu/Driver.zip /mnt/win/installer/Driver.zip
+# copy_with_progress /sdcard/nopcwinstall/Driver.zip /mnt/win/installer/Driver.zip
 
 # Unzip Driver.zip
 echo ""
 echo "Unzipping Driver.zip..."
-/data/local/tmp/busybox unzip /sdcard/nabu/Driver.zip -d /mnt/win/installer/Driver
+/data/local/tmp/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
 
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-/data/local/tmp/busybox dd if=/sdcard/nabu/pe of=/dev/block/by-name/esp
-/data/local/tmp/busybox dd if=/sdcard/nabu/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+/data/local/tmp/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
+/data/local/tmp/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
 
 # Clean up
 echo ""

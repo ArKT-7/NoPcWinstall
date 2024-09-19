@@ -34,7 +34,7 @@ else
     exit 1
 fi
 
-
+echo ""
 # Function to download and set permissions
 download_and_set_permissions() {
     local url=$1

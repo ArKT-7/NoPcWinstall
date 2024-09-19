@@ -233,17 +233,28 @@ fi
 
 SELECTED_ZIP_FILE="${files[$selection]}"
 
-# Unzip the selected file with clean output
+# Unzip the selected file with progress display
 echo ""
 echo "Unzipping selected file..."
 
-# Use busybox unzip with output processing to show file names in a clean manner
-/data/local/tmp/busybox unzip -v "$SELECTED_ZIP_FILE" | /data/local/tmp/busybox awk '/^Inflating:/ {print "Extracting:", substr($0, index($0, $2))}'
+# Total number of files to extract
+total_files=$( /data/local/tmp/busybox unzip -l "$SELECTED_ZIP_FILE" | /data/local/tmp/busybox grep -c '^Inflating:' )
 
-# Perform the actual extraction
-/data/local/tmp/busybox unzip -q "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
+# Initialize counters
+files_extracted=0
 
+# Extract files and display progress
+/ /data/local/tmp/busybox unzip -o "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP" | while IFS= read -r line; do
+    if echo "$line" | /data/local/tmp/busybox grep -q '^inflating:'; then
+        files_extracted=$((files_extracted + 1))
+        percentage=$(( (files_extracted * 100) / total_files ))
+        echo -ne "Progress: ${percentage}%\r"
+    fi
+done
+
+echo ""
 echo "Unzip complete."
+
 
 
 

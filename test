@@ -20,12 +20,10 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo ""
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
@@ -73,26 +71,7 @@ echo ""
 echo ""
 echo "All binaries have been downloaded and permissions set."
 echo ""
-
-
-
-if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo ""
-    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo ""
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
-else
-    echo ""
-    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
-    echo "$DEVICE_CODENAME"
-    echo ""
-    exit 1
-fi
+echo ""
 
 
 # Function to convert bytes to gigabytes and megabytes

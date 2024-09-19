@@ -74,6 +74,22 @@ echo "All binaries have been downloaded and permissions set."
 echo "helloooo"
 echo ""
 
+# Define the URL and target file path
+URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
+TARGET_FILE="/data/local/tmp/Toolbox.zip"
+
+# Download the file
+echo "Downloading $URL to $TARGET_FILE..."
+/data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete."
+else
+    echo "Failed to download $URL."
+    exit 1
+fi
+
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"

@@ -170,14 +170,18 @@ echo ""
 # Backup current partitions
 echo "Backing up Important partitions..."
 echo ""
+
 echo "Backing up boot.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img 2>&1 | grep 'bytes'
+
 echo "Backing up dtbo.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img 2>&1 | grep 'bytes'
+
 for part in fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
-  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img
+  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img 2>&1 | grep 'bytes'
 done
+
 
 echo ""
 echo ""

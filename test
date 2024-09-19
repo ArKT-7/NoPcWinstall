@@ -19,7 +19,7 @@ TARGET_PARTED="$(pwd)/parted"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "lolololololololol"
+    echo "xxxxxxxxxxxxxxxxxxxxxx"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -125,7 +125,7 @@ repartition_windows() {
         elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
         elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
         else echo "is this nabu?"; exit 
-        echo ($max)
+        echo "$max"
         fi
         
         userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)

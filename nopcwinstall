@@ -75,23 +75,28 @@ echo "llllmmmm"
 echo ""
 
 
-#!/bin/sh
 
 # Define the URL and target file path
 URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
 TARGET_FILE="/data/local/tmp/Toolbox.zip"
+TEMP_LOG="/data/local/tmp/wget_log.txt"
 
-# Download the file and show only the progress bar and size
+# Download the file and log the size progress manually
 echo "Downloading $URL to $TARGET_FILE..."
-/data/local/tmp/busybox wget -q --show-progress -O "$TARGET_FILE" "$URL"
 
-# Check if the download was successful
+# Use wget and output the logs to a temporary file
+/data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL" -o "$TEMP_LOG"
+
+# Extract the file size from the log and display it
 if [ $? -eq 0 ]; then
-    echo "Download complete."
+    FILE_SIZE=$(busybox stat -c%s "$TARGET_FILE")
+    FILE_SIZE_MB=$(busybox expr $FILE_SIZE / 1048576) # Convert to MB
+    echo "Download complete. File size: ${FILE_SIZE_MB} MB"
 else
     echo "Failed to download $URL."
     exit 1
 fi
+
 
 
 

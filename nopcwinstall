@@ -167,10 +167,10 @@ for part in fsc fsg modemst1 modemst2; do
 done
 
 echo ""
+echo ""
 echo "Size of Windows Partition: $size_win_gb GB"
 echo "Size of ESP Partition: $size_esp_mb MB"
 echo "Size of Android partition: $size_userdata_gb GB"
-echo ""
 
 # List and select ZIP files
 echo ""

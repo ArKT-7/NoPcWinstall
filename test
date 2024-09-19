@@ -92,16 +92,24 @@ part_userdata="/dev/block/by-name/userdata"
 
 # Function to handle repartitioning
 re_part() {
-    echo "Do you want to continue? All data will be erased (y/n)?"
-    read -r confirmation
-    if [[ "$confirmation" == "y" || "$confirmation" == "yes" ]]; then
-        echo "OK, repartition will be done now."
-        exit
+    echo "Do you want to proceed with repartitioning? (y/n)"
+    read -r first_confirmation
+    if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
+        echo "Warning: All data will be erased. Do you want to continue? (y/n)"
+        read -r second_confirmation
+        if [[ "$second_confirmation" == "y" || "$second_confirmation" == "yes" ]]; then
+            echo "OK, repartition will be done now."
+            exit
+        else
+            echo "Repartitioning cancelled."
+            exit
+        fi
     else
         echo "Repartitioning cancelled."
         exit
     fi
 }
+
 
 # Check if partitions exist and their sizes
 if ! partition_exists "$part_win"; then

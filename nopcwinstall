@@ -235,7 +235,10 @@ SELECTED_ZIP_FILE="${files[$selection]}"
 # Unzip the selected file
 echo ""
 echo "Unzipping selected file..."
-/data/local/tmp/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
+/data/local/tmp/busybox unzip -q "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP" | /data/local/tmp/busybox grep -E 'inflating: ' | sed 's/inflating: //'
+
+echo "Unzip complete."
+
 
 # Check for specific files
 EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")

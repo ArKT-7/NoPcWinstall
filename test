@@ -1,7 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-#!/bin/sh
-
 # Define URLs and target paths
 URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
 URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
@@ -42,8 +40,6 @@ download_and_set_permissions() {
     
     if [ $? -ne 0 ]; then
         echo "Failed to download $(basename "$url"). Exiting."
-        echo ""
-        echo "Please re-boot/Restart your device and Re-run this Code."
         exit 1
     fi
 
@@ -51,36 +47,21 @@ download_and_set_permissions() {
     echo "Permissions set for $(basename "$dest_file")"
 }
 
-# Define target paths
-TARGET_BUSYBOX="$(pwd)/busybox"
-TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
-TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
-TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
-
-
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
-
-# Delete all files in $(pwd) except busybox
 $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +
 
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
-echo ""
+
 echo ""
 echo "All binaries have been downloaded and permissions set."
 echo ""
-echo ""
 
-
-# Function to convert bytes to gigabytes and megabytes
+# Function to convert bytes to gigabytes
 bytes_to_gb() {
-    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
-}
-
-bytes_to_mb() {
-    echo "scale=2; $1 / (1024 * 1024)" | bc
+    echo "scale=2; $1 / (1024 * 1024 * 1024)" | $(pwd)/busybox bc
 }
 
 # Function to check if a partition exists
@@ -93,16 +74,23 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
+# Get partition number for userdata
+userdata_partition_number=$(echo "$part_userdata" | $(pwd)/busybox sed 's/.*\(p[0-9]*\)/\1/')
+echo "Size of Userdata Partition: $size_userdata_gb GB (Partition No: $userdata_partition_number)"
+echo ""
 # Check if partitions exist
 if ! partition_exists "$part_win"; then
     echo "Windows Partition does not exist."
-    echo "Please do partitioning in modded recovery and re-run the script."
     exit 1
 fi
 
 if ! partition_exists "$part_esp"; then
     echo "ESP Partition does not exist."
-    echo "Please do re-partitioning in modded recovery and re-run the script."
+    exit 1
+fi
+
+if ! partition_exists "$part_userdata"; then
+    echo "Userdata Partition does not exist."
     exit 1
 fi
 
@@ -113,26 +101,24 @@ size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
 
 # Convert sizes
 size_win_gb=$(bytes_to_gb $size_win)
-size_esp_mb=$(bytes_to_mb $size_esp)
+size_esp_mb=$(bytes_to_gb $size_esp)
 size_userdata_gb=$(bytes_to_gb $size_userdata)
 
-# Print sizes
+
+# Print sizes and partition number
 echo ""
 echo "Size of Windows Partition: $size_win_gb GB"
 echo "Size of ESP Partition: $size_esp_mb MB"
-echo "Size of Android partition: $size_userdata_gb GB"
-echo ""
+
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
+if [ $(echo "$size_esp_mb < 350" | $(pwd)/busybox bc) -eq 1 ]; then
     echo "ESP partition is less than 350 MB."
-    echo "Please do re-partitioning in the modified recovery and re-run the script."
     exit 1
 fi
 
-if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
+if [ $(echo "$size_win_gb < 20" | $(pwd)/busybox bc) -eq 1 ]; then
     echo "Windows partition is less than 20 GB."
-    echo "Please do re-partitioning in the modified recovery and re-run the script."
     exit 1
 fi
 

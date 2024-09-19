@@ -81,9 +81,9 @@ echo ""
 URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
 TARGET_FILE="/data/local/tmp/Toolbox.zip"
 
-# Download the file
+# Download the file and show only the progress bar and size
 echo "Downloading $URL to $TARGET_FILE..."
-/data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL"
+/data/local/tmp/busybox wget -q --show-progress -O "$TARGET_FILE" "$URL"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -92,6 +92,7 @@ else
     echo "Failed to download $URL."
     exit 1
 fi
+
 
 
 

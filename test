@@ -7,11 +7,13 @@ URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busy
 URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
 URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
+URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
 TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
+TARGET_PARTED="$(pwd)/parted"
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
@@ -56,6 +58,7 @@ TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
 TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
+TARGET_PARTED="$(pwd)/parted"
 
 
 # Download and set permissions for binaries
@@ -67,6 +70,7 @@ $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
+download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 echo ""
 echo ""
 echo "All binaries have been downloaded and permissions set."

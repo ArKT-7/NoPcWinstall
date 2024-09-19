@@ -116,8 +116,9 @@ if ! partition_exists "$part_win"; then
     echo "Windows Partition does not exist."
     # Print sizes
     echo ""
-    echo "Size of Windows Partition: $size_win_gb GB"
-    echo "Size of ESP Partition: $size_esp_mb MB"
+    echo "Size of Windows Partition: NOTHING LOL"
+    echo "Size of ESP Partition: NOTHING LOL"
+    echo ""
     echo "Size of Android partition: $size_userdata_gb GB"
     echo ""
     re_part

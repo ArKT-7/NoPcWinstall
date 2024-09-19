@@ -69,6 +69,91 @@ echo "All binaries have been downloaded and permissions set."
 echo ""
 echo ""
 
+# Functions to convert bytes
+bytes_to_gb() {
+    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
+}
+
+bytes_to_mb() {
+    echo "scale=2; $1 / (1024 * 1024)" | bc
+}
+
+# Function to check if a partition exists
+partition_exists() {
+    [ -e "$1" ]
+}
+
+# Define partition paths
+part_win="/dev/block/by-name/win"
+part_esp="/dev/block/by-name/esp"
+part_userdata="/dev/block/by-name/userdata"
+
+# Function to remove partitions
+removeparts() {
+    for i in 33 32 31; do
+        $(pwd)/busybox parted -s /dev/block/sda rm $i 2>/dev/null
+    done
+}
+
+# Function to format Windows and ESP partitions
+formatwinesp() {
+    $(pwd)/busybox mkfs.fat -F32 -s1 $esp -n ESPNABU
+    $(pwd)/busybox mkfs.ntfs -f $win -L WINNABU
+}
+
+# Function to format data partitions
+formatdata() {
+    $(pwd)/busybox make_f2fs -f -g android /dev/block/sda31
+    $(pwd)/busybox mke2fs -t ext4 -F /dev/block/sda19
+}
+
+# Function to handle repartitioning
+repartition_windows() {
+    echo "Do you want to proceed with partitioning? (y/n)"
+    read -r first_confirmation
+    if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
+        echo "Warning: All data will be erased. Enter the size for the Windows partition in GB:"
+        read -r size_win
+        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
+            echo "Invalid size. Please enter a number."
+            exit 1
+        fi
+
+        # Logic to determine maximum size
+        blocksize=$(blockdev --getsize64 /dev/block/sda)
+        if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
+        elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
+        elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
+        else echo "is this nabu?"; exit 1
+        fi
+        
+        userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)
+
+        # Create partitions
+        removeparts
+        sgdisk --resize-table 64 /dev/block/sda
+        $(pwd)/busybox parted -s /dev/block/sda \
+            mkpart userdata ext4 10872MB $userdataend"MB" \
+            mkpart win ntfs $userdataend"MB" $(echo "$max - 400" | bc)"MB" \
+            mkpart esp fat32 $(echo "$max - 400" | bc)"MB" 100% \
+            set 33 esp on
+        sync
+        formatdata
+        formatwinesp
+        echo "Repartitioning done!"
+        exit
+    else
+        echo "Repartitioning cancelled."
+        exit
+    fi
+}
+
+# Check for existing partitions
+if ! partition_exists "$part_win" || ! partition_exists "$part_esp"; then
+    echo "Need to do partitioning for Windows"
+    repartition_windows
+fi
+
 # Function to convert bytes to gigabytes and megabytes
 bytes_to_gb() {
     echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
@@ -90,27 +175,6 @@ part_userdata="/dev/block/by-name/userdata"
 
 
 
-# Function to handle repartitioning
-re_part() {
-    echo "Do you want to proceed with partitioning? (y/n)"
-    read -r first_confirmation
-    if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
-        echo "Warning: All data will be erased. Do you want to continue? (y/n)"
-        read -r second_confirmation
-        if [[ "$second_confirmation" == "y" || "$second_confirmation" == "yes" ]]; then
-            echo "OK, repartition will be done now."
-            exit
-        else
-            echo "Repartitioning cancelled."
-            exit
-        fi
-    else
-        echo "Repartitioning cancelled."
-        exit
-    fi
-}
-
-
 # Check if partitions exist and their sizes
 if ! partition_exists "$part_win"; then
     echo "Windows Partition does not exist."
@@ -124,7 +188,7 @@ if ! partition_exists "$part_win"; then
     echo "Current Size of Android partition: $size_userdata_gb GB"
     echo ""
     echo "need to do partitioning for windows"
-    re_part
+    repartition_windows
 fi
 
 if ! partition_exists "$part_esp"; then
@@ -139,7 +203,7 @@ if ! partition_exists "$part_esp"; then
     echo "Current Size of Android partition: $size_userdata_gb GB"
     echo ""
     echo "need to do partitioning for windows"
-    re_part
+    repartition_windows
 fi
 
 
@@ -178,7 +242,7 @@ echo "ESP and Windows partitions already exist. \nDo you want to re-partition(r)
     read -r confirmation
     if [[ "$confirmation" == "r" || "$confirmation" == "repart" ]]; then
         echo "OK, repartition will be done now."
-        exit
+        repartition_windows
     else
         echo "Skipping repartitioning windows"
         echo "Windows partition will be format and will install in same partition"

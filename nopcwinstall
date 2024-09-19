@@ -8,10 +8,10 @@ URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkf
 URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 
-TARGET_BUSYBOX="/data/local/tmp/busybox"
-TARGET_MKFS_FAT="/data/local/tmp/mkfs.fat"
-TARGET_MKFS_NTFS="/data/local/tmp/mkfs.ntfs"
-TARGET_MOUNT_NTFS="/data/local/tmp/mount.ntfs"
+TARGET_BUSYBOX="$(pwd)/busybox"
+TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
+TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
+TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
@@ -34,7 +34,6 @@ else
     exit 1
 fi
 
-echo "lllmmmm"
 echo ""
 # Function to download and set permissions
 download_and_set_permissions() {
@@ -55,16 +54,17 @@ download_and_set_permissions() {
 }
 
 # Define target paths
-TARGET_BUSYBOX="/data/local/tmp/busybox"
-TARGET_MKFS_FAT="/data/local/tmp/mkfs.fat"
-TARGET_MKFS_NTFS="/data/local/tmp/mkfs.ntfs"
-TARGET_MOUNT_NTFS="/data/local/tmp/mount.ntfs"
+TARGET_BUSYBOX="$(pwd)/busybox"
+TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
+TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
+TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
+
 
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 
-# Delete all files in /data/local/tmp except busybox
-/data/local/tmp/busybox find /data/local/tmp -mindepth 1 ! -name 'busybox' -exec /data/local/tmp/busybox rm -rf {} +
+# Delete all files in $(pwd) except busybox
+$(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +
 
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
@@ -72,11 +72,11 @@ download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 echo ""
 # Define the URL and target file path
 URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
-TARGET_FILE="/data/local/tmp/Toolbox.zip"
+TARGET_FILE="$(pwd)/Toolbox.zip"
 
 # Download the file
 echo "Downloading Addition windows tolls file, office, activater and other things"
-/data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL"
+$(pwd)/busybox wget -O "$TARGET_FILE" "$URL"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -87,7 +87,6 @@ else
 fi
 echo ""
 echo "All binaries have been downloaded and permissions set."
-echo "hhhhhhhhhhhhhhh"
 echo ""
 
 
@@ -144,9 +143,9 @@ if ! partition_exists "$part_esp"; then
 fi
 
 # Get sizes in bytes
-size_win=$(/data/local/tmp/busybox blockdev --getsize64 "$part_win")
-size_esp=$(/data/local/tmp/busybox blockdev --getsize64 "$part_esp")
-size_userdata=$(/data/local/tmp/busybox blockdev --getsize64 "$part_userdata")
+size_win=$($(pwd)/busybox blockdev --getsize64 "$part_win")
+size_esp=$($(pwd)/busybox blockdev --getsize64 "$part_esp")
+size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
 
 # Convert sizes
 size_win_gb=$(bytes_to_gb $size_win)
@@ -187,10 +186,10 @@ check_and_create_dir() {
     local dir=$1
     if [ -d "$dir" ]; then
         # echo "Directory $dir exists. Removing it."
-        /data/local/tmp/busybox rm -rf "$dir"
+        $(pwd)/busybox rm -rf "$dir"
     fi
     # echo "Creating directory: $dir"
-    /data/local/tmp/busybox mkdir -p "$dir"
+    $(pwd)/busybox mkdir -p "$dir"
 }
 
 # Check and create directories
@@ -224,7 +223,7 @@ echo "Size of Android partition: $size_userdata_gb GB"
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
-zip_files=($( /data/local/tmp/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
+zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
 
 if [ ${#zip_files[@]} -eq 0 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
@@ -254,7 +253,7 @@ SELECTED_ZIP_FILE="${files[$selection]}"
 # Unzip the selected file
 echo ""
 echo "Unzipping selected file..."
-/data/local/tmp/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
+$(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
 EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
@@ -262,7 +261,7 @@ EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
         echo "Required file $file not found. Please re-run the script and select the correct ZIP."
-        /data/local/tmp/busybox rm -rf "$DIR_UNZIP"
+        $(pwd)/busybox rm -rf "$DIR_UNZIP"
         exit 1
     fi
 done
@@ -272,7 +271,7 @@ done
 echo ""
 echo "Searching for Windows files..."
 echo ""
-esd_files=($( /data/local/tmp/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
+esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
 
 # Check if no ESD files were found
 if [ ${#esd_files[@]} -eq 0 ]; then
@@ -313,23 +312,23 @@ echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
 # Unmount and format partitions
 echo ""
 echo "Unmounting and formatting partitions..."
-/data/local/tmp/busybox umount /dev/block/by-name/{esp,win}
-/data/local/tmp/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-/data/local/tmp/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+$(pwd)/busybox umount /dev/block/by-name/{esp,win}
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 
 # Mount partitions
 echo ""
 echo "Mounting partitions..."
-/data/local/tmp/busybox mkdir -p /mnt/{win,esp}
-/data/local/tmp/mount.ntfs /dev/block/by-name/win /mnt/win
-/data/local/tmp/busybox mount /dev/block/by-name/esp /mnt/esp
+$(pwd)/busybox mkdir -p /mnt/{win,esp}
+$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+$(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 
  copy_with_progress() {
     local src_file=$1
     local dest_file=$2
 
     total_size=$(stat -c%s "$src_file")
-    /data/local/tmp/busybox cp "$src_file" "$dest_file" &
+    $(pwd)/busybox cp "$src_file" "$dest_file" &
 
     cp_pid=$!
 
@@ -351,7 +350,7 @@ echo "Mounting partitions..."
 # Copy files
 echo ""
 echo "Copying files..."
-/data/local/tmp/busybox mkdir -p /mnt/win/installer/Driver
+$(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
@@ -361,23 +360,23 @@ copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
 # Unzip Toolbox.zip
 echo ""
 echo "Unzipping Toolbox.zip..."
-/data/local/tmp/busybox unzip /data/local/tmp/Toolbox.zip -d /mnt/win/
+$(pwd)/busybox unzip $(pwd)/Toolbox.zip -d /mnt/win/
 
 # Unzip Driver.zip
 echo ""
 echo "Unzipping Driver.zip..."
-/data/local/tmp/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
+$(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
 
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-/data/local/tmp/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
-/data/local/tmp/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
 
 # Clean up
 echo ""
 echo "Cleaning up..."
-/data/local/tmp/busybox rm -rf "$DIR_UNZIP"
+$(pwd)/busybox rm -rf "$DIR_UNZIP"
 
 echo "*************************************************";
 echo "*              Flashing Completed               *";

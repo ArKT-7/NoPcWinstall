@@ -1,6 +1,6 @@
 # NoPcWinstall guyssszzzzzzz
 
-## Install Termux app
+# 🚀 [Install Termux app](https://f-droid.org/repo/com.termux_1000.apk)
 ## Open Termux 
 ## Type
 ```bash

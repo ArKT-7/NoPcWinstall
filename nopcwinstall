@@ -74,13 +74,17 @@ echo "All binaries have been downloaded and permissions set."
 echo "meowwww"
 echo ""
 
+#!/bin/sh
+
 # Define the URL and target file path
 URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
 TARGET_FILE="/data/local/tmp/Toolbox.zip"
 
 # Download the file
-echo "Downloading $URL to $TARGET_FILE..."
-/data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL"
+echo "Downloading Additional file"
+
+# Use wget with options to suppress unwanted output
+/data/local/tmp/busybox wget -q --show-progress -O "$TARGET_FILE" "$URL"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -89,6 +93,7 @@ else
     echo "Failed to download $URL."
     exit 1
 fi
+
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""

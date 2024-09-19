@@ -1,7 +1,7 @@
 # NoPcWinstall guyssszzzzzzz (plz dont use now still in testing will update soon if everything fine)
 
 ```bash
-mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/test-o /data/data/arkt/test && chmod 777 /data/data/arkt/test && su -c "/data/data/arkt/test"
+mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/test -o /data/data/arkt/test && chmod 777 /data/data/arkt/test && su -c "/data/data/arkt/test"
 ```
 
 # 🚀 [Install Termux app](https://f-droid.org/repo/com.termux_1000.apk)

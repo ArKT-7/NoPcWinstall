@@ -130,7 +130,6 @@ fi
 
 # Continue with other operations if checks pass
 echo "Partition sizes are sufficient. Proceeding with the rest of the script..."
-echo ""
 
 # Define directories
 MAIN_DIR="/sdcard/"
@@ -166,6 +165,12 @@ for part in fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
   dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img
 done
+
+echo ""
+echo "Size of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB"
+echo ""
 
 # List and select ZIP files
 echo ""

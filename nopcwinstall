@@ -75,7 +75,7 @@ URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zi
 TARGET_FILE="/data/local/tmp/Toolbox.zip"
 
 # Download the file
-echo "Downloading Addition windows file, office, activater and other things"
+echo "Downloading Addition windows tolls file, office, activater and other things"
 /data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL"
 
 # Check if the download was successful
@@ -354,10 +354,14 @@ echo "Copying files..."
 /data/local/tmp/busybox mkdir -p /mnt/win/installer/Driver
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
-copy_with_progress /sdcard/nopcwinstall/winactivator.bat /mnt/win/installer/winactivator.bat
+copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
-# copy_with_progress /sdcard/nopcwinstall/Driver.zip /mnt/win/installer/Driver.zip
+
+# Unzip Toolbox.zip
+echo ""
+echo "Unzipping Toolbox.zip..."
+/data/local/tmp/busybox unzip /data/local/tmp/Toolbox.zip -d /mnt/win/
 
 # Unzip Driver.zip
 echo ""

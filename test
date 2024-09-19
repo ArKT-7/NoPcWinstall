@@ -53,14 +53,6 @@ download_and_set_permissions() {
     echo "Permissions set for $(basename "$dest_file")"
 }
 
-# Define target paths
-TARGET_BUSYBOX="$(pwd)/busybox"
-TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
-TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
-TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
-TARGET_PARTED="$(pwd)/parted"
-
-
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 
@@ -76,7 +68,6 @@ echo ""
 echo "All binaries have been downloaded and permissions set."
 echo ""
 echo ""
-
 
 # Function to convert bytes to gigabytes and megabytes
 bytes_to_gb() {
@@ -97,17 +88,28 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
-# Check if partitions exist
+# Function to handle repartitioning
+re_part() {
+    echo "Do you want to continue? All data will be erased (y/n)?"
+    read -r confirmation
+    if [[ "$confirmation" == "y" || "$confirmation" == "yes" ]]; then
+        echo "OK, repartition will be done now."
+        exit
+    else
+        echo "Repartitioning cancelled."
+        exit
+    fi
+}
+
+# Check if partitions exist and their sizes
 if ! partition_exists "$part_win"; then
     echo "Windows Partition does not exist."
-    echo "Please do partitioning in modded recovery and re-run the script."
-    exit 1
+    re_part
 fi
 
 if ! partition_exists "$part_esp"; then
     echo "ESP Partition does not exist."
-    echo "Please do re-partitioning in modded recovery and re-run the script."
-    exit 1
+    re_part
 fi
 
 # Get sizes in bytes
@@ -130,14 +132,12 @@ echo ""
 # Check partition sizes
 if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
     echo "ESP partition is less than 350 MB."
-    echo "Please do re-partitioning in the modified recovery and re-run the script."
-    exit 1
+    re_part
 fi
 
 if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
     echo "Windows partition is less than 20 GB."
-    echo "Please do re-partitioning in the modified recovery and re-run the script."
-    exit 1
+    re_part
 fi
 
 # Continue with other operations if checks pass

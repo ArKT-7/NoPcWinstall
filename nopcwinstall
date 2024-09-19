@@ -62,6 +62,10 @@ TARGET_MOUNT_NTFS="/data/local/tmp/mount.ntfs"
 
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+
+# Delete all files in /data/local/tmp except busybox
+/data/local/tmp/busybox find /data/local/tmp -mindepth 1 ! -name 'busybox' -exec /data/local/tmp/busybox rm -rf {} +
+
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"

@@ -39,17 +39,23 @@ echo ""
 download_and_set_permissions() {
     local url=$1
     local dest_file=$2
-    echo "Downloading $url to $dest_file..."
-    curl -L -o "$dest_file" "$url"
+    echo "Downloading $(basename "$url")..."
+    curl -s -L -o "$dest_file" "$url"
     
     if [ $? -ne 0 ]; then
-        echo "Failed to download $url. Exiting."
+        echo "Failed to download $(basename "$url"). Exiting."
         exit 1
     fi
 
-    echo "Setting permissions for $dest_file..."
     chmod 777 "$dest_file"
+    echo "Permissions set for $(basename "$dest_file")"
 }
+
+# Define target paths
+TARGET_BUSYBOX="/data/local/tmp/busybox"
+TARGET_MKFS_FAT="/data/local/tmp/mkfs.fat"
+TARGET_MKFS_NTFS="/data/local/tmp/mkfs.ntfs"
+TARGET_MOUNT_NTFS="/data/local/tmp/mount.ntfs"
 
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"

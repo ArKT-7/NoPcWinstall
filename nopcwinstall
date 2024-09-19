@@ -34,7 +34,7 @@ else
     exit 1
 fi
 
-echo "MMMFZAAAOO"
+echo "heloooo"
 echo ""
 # Function to download and set permissions
 download_and_set_permissions() {
@@ -71,7 +71,7 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 echo ""
 echo "All binaries have been downloaded and permissions set."
-echo "LMMMFAAAOO"
+echo "helloooo"
 echo ""
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then

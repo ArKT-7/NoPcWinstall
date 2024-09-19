@@ -1,4 +1,4 @@
-# NoPcWinstall guyssszzzzzzz
+# NoPcWinstall guyssszzzzzzz (plz dont use now still in testing will update soon if everything fine)
 
 # 🚀 [Install Termux app](https://f-droid.org/repo/com.termux_1000.apk)
 ## Open Termux 

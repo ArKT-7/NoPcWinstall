@@ -1,0 +1,394 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+#!/bin/sh
+
+# Define URLs and target paths
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
+URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
+URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
+URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
+
+TARGET_BUSYBOX="$(pwd)/busybox"
+TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
+TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
+TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
+
+# Check the device codename using getprop
+DEVICE_CODENAME=$(getprop ro.product.device)
+
+if [ "$DEVICE_CODENAME" = "nabu" ]; then
+    echo ""
+    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "Based on Kumar_Jy wininstaller"
+elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+    echo ""
+    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "Based on Kumar_Jy wininstaller"
+else
+    echo ""
+    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
+    echo "$DEVICE_CODENAME"
+    echo ""
+    exit 1
+fi
+
+echo ""
+# Function to download and set permissions
+download_and_set_permissions() {
+    local url=$1
+    local dest_file=$2
+    echo "Downloading $(basename "$url")..."
+    curl -s -L -o "$dest_file" "$url"
+    
+    if [ $? -ne 0 ]; then
+        echo "Failed to download $(basename "$url"). Exiting."
+        echo ""
+        echo "Please re-boot/Restart your device and Re-run this Code."
+        exit 1
+    fi
+
+    chmod 777 "$dest_file"
+    echo "Permissions set for $(basename "$dest_file")"
+}
+
+# Define target paths
+TARGET_BUSYBOX="$(pwd)/busybox"
+TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
+TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
+TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
+
+
+# Download and set permissions for binaries
+download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+
+# Delete all files in $(pwd) except busybox
+$(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +
+
+download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
+download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
+download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
+echo ""
+# Define the URL and target file path
+URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
+TARGET_FILE="$(pwd)/Toolbox.zip"
+
+# Download the file
+echo "Downloading Addition windows tolls file, office, activater and other things"
+$(pwd)/busybox wget -O "$TARGET_FILE" "$URL"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete."
+else
+    echo "Failed to download $URL."
+    exit 1
+fi
+echo ""
+echo "All binaries have been downloaded and permissions set."
+echo ""
+
+
+
+if [ "$DEVICE_CODENAME" = "nabu" ]; then
+    echo ""
+    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "Based on Kumar_Jy wininstaller"
+elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+    echo ""
+    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "Based on Kumar_Jy wininstaller"
+else
+    echo ""
+    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
+    echo "$DEVICE_CODENAME"
+    echo ""
+    exit 1
+fi
+
+
+# Function to convert bytes to gigabytes and megabytes
+bytes_to_gb() {
+    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
+}
+
+bytes_to_mb() {
+    echo "scale=2; $1 / (1024 * 1024)" | bc
+}
+
+# Function to check if a partition exists
+partition_exists() {
+    [ -e "$1" ]
+}
+
+# Define partition paths
+part_win="/dev/block/by-name/win"
+part_esp="/dev/block/by-name/esp"
+part_userdata="/dev/block/by-name/userdata"
+
+# Check if partitions exist
+if ! partition_exists "$part_win"; then
+    echo "Windows Partition does not exist."
+    echo "Please do partitioning in modded recovery and re-run the script."
+    exit 1
+fi
+
+if ! partition_exists "$part_esp"; then
+    echo "ESP Partition does not exist."
+    echo "Please do re-partitioning in modded recovery and re-run the script."
+    exit 1
+fi
+
+# Get sizes in bytes
+size_win=$($(pwd)/busybox blockdev --getsize64 "$part_win")
+size_esp=$($(pwd)/busybox blockdev --getsize64 "$part_esp")
+size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
+
+# Convert sizes
+size_win_gb=$(bytes_to_gb $size_win)
+size_esp_mb=$(bytes_to_mb $size_esp)
+size_userdata_gb=$(bytes_to_gb $size_userdata)
+
+# Print sizes
+echo ""
+echo "Size of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB"
+echo ""
+
+# Check partition sizes
+if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 350 MB."
+    echo "Please do re-partitioning in the modified recovery and re-run the script."
+    exit 1
+fi
+
+if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
+    echo "Windows partition is less than 20 GB."
+    echo "Please do re-partitioning in the modified recovery and re-run the script."
+    exit 1
+fi
+
+# Continue with other operations if checks pass
+echo "Partition sizes are sufficient. Proceeding with the rest of the script..."
+
+# Define directories
+MAIN_DIR="/sdcard/"
+DIR_UNZIP="/sdcard/nopcwinstall/"
+DIR_BACK="/sdcard/backups/"
+DIR_UEFI="/sdcard/UEFI/"
+
+# Function to check and create directories
+check_and_create_dir() {
+    local dir=$1
+    if [ -d "$dir" ]; then
+        # echo "Directory $dir exists. Removing it."
+        $(pwd)/busybox rm -rf "$dir"
+    fi
+    # echo "Creating directory: $dir"
+    $(pwd)/busybox mkdir -p "$dir"
+}
+
+# Check and create directories
+check_and_create_dir "$DIR_UNZIP"
+check_and_create_dir "$DIR_BACK"
+check_and_create_dir "$DIR_UEFI"
+echo ""
+
+# Backup current partitions
+echo "Backing up Important partitions..."
+echo ""
+
+echo "Backing up boot.img..."
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img 2>&1 | grep 'bytes'
+
+echo "Backing up dtbo.img..."
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img 2>&1 | grep 'bytes'
+
+for part in fsc fsg modemst1 modemst2; do
+  echo "Backing up $part.img..."
+  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img 2>&1 | grep 'bytes'
+done
+
+
+echo ""
+echo ""
+echo "Size of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB"
+
+# List and select ZIP files
+echo ""
+echo "Searching for ZIP files..."
+zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
+
+if [ ${#zip_files[@]} -eq 0 ]; then
+    echo "No ZIP files found. Please download and place a ZIP file in the directory."
+    exit 1
+fi
+
+echo "Available ZIP files:"
+count=1
+for file in "${zip_files[@]}"; do
+    echo "$count. $(basename "$file")"
+    files[$count]=$file
+    count=$((count + 1))
+done
+
+echo ""
+echo "Enter the serial number of the ZIP file to select:"
+read selection
+
+# Validate ZIP file selection
+if [ -z "${files[$selection]}" ]; then
+    echo "Invalid selection. Exiting."
+    exit 1
+fi
+
+SELECTED_ZIP_FILE="${files[$selection]}"
+
+# Unzip the selected file
+echo ""
+echo "Unzipping selected file..."
+$(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
+
+# Check for specific files
+EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
+
+for file in "${EXPECTED_FILES[@]}"; do
+    if [ ! -f "$DIR_UNZIP/$file" ]; then
+        echo "Required file $file not found. Please re-run the script and select the correct ZIP."
+        $(pwd)/busybox rm -rf "$DIR_UNZIP"
+        exit 1
+    fi
+done
+
+
+# List and select Windows files
+echo ""
+echo "Searching for Windows files..."
+echo ""
+esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
+
+# Check if no ESD files were found
+if [ ${#esd_files[@]} -eq 0 ]; then
+    echo "No Windows files found. Please download and place an ESD file in the directory."
+    exit 1
+fi
+
+# If only one ESD file is found, automatically select it
+if [ ${#esd_files[@]} -eq 1 ]; then
+    SELECTED_ESD_FILE="${esd_files[0]}"
+    echo "ESD file found: $(basename "$SELECTED_ESD_FILE")"
+    echo "Automatically selecting this file."
+else
+    # If more than one ESD file is found, prompt user for selection
+    echo "Available Windows files:"
+    count=1
+    for file in "${esd_files[@]}"; do
+        echo "$count. $(basename "$file")"
+        files[$count]=$file
+        count=$((count + 1))
+    done
+
+    echo ""
+    echo "Enter the serial number of the Windows file to select:"
+    read selection
+
+    # Validate Windows file selection
+    if [ -z "${files[$selection]}" ]; then
+        echo "Invalid selection. Exiting."
+        exit 1
+    fi
+
+    SELECTED_ESD_FILE="${files[$selection]}"
+fi
+echo ""
+echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
+
+# Unmount and format partitions
+echo ""
+echo "Unmounting and formatting partitions..."
+$(pwd)/busybox umount /dev/block/by-name/{esp,win}
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+
+# Mount partitions
+echo ""
+echo "Mounting partitions..."
+$(pwd)/busybox mkdir -p /mnt/{win,esp}
+$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+$(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
+
+ copy_with_progress() {
+    local src_file=$1
+    local dest_file=$2
+
+    total_size=$(stat -c%s "$src_file")
+    $(pwd)/busybox cp "$src_file" "$dest_file" &
+
+    cp_pid=$!
+
+    while kill -0 "$cp_pid" 2>/dev/null; do
+        copied_size=$(stat -c%s "$dest_file" 2>/dev/null || echo 0)
+        percentage=$(echo "scale=2; ($copied_size / $total_size) * 100" | bc)
+
+        # Output progress on the same line
+        printf "\rCopying %s: Progress: %.2f%%" "$(basename "$src_file")" "$percentage"
+
+        sleep 1
+    done
+
+    # Ensure the final line ends with a newline
+    echo ""
+} 
+
+
+# Copy files
+echo ""
+echo "Copying files..."
+$(pwd)/busybox mkdir -p /mnt/win/installer/Driver
+copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
+copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
+copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
+copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
+copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
+
+# Unzip Toolbox.zip
+echo ""
+echo "Unzipping Toolbox.zip..."
+$(pwd)/busybox unzip $(pwd)/Toolbox.zip -d /mnt/win/
+
+# Unzip Driver.zip
+echo ""
+echo "Unzipping Driver.zip..."
+$(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
+
+# Write images to the device
+echo ""
+echo "Writing winpe image to the device..."
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+
+# Clean up
+echo ""
+echo "Cleaning up..."
+$(pwd)/busybox rm -rf "$DIR_UNZIP"
+
+echo "*************************************************";
+echo "*              Flashing Completed               *";
+echo "*                                               *";
+echo "*             rebooting in 5 sec and            *";
+echo "*                                               *";
+echo "*     Installation will start automaticly       *";
+echo "*                                               *";
+echo "*  If Installation Failed, Don't Flash it again *";
+echo "*                                               *";
+echo "*         ask for help on Telegram Chat         *";
+echo "*                                               *";
+echo "*************************************************";
+sleep 5
+reboot

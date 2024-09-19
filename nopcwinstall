@@ -34,7 +34,7 @@ else
     exit 1
 fi
 
-echo "meowwww"
+echo "lllmmmm"
 echo ""
 # Function to download and set permissions
 download_and_set_permissions() {
@@ -71,45 +71,27 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 echo ""
 echo "All binaries have been downloaded and permissions set."
-echo "meowwww"
+echo "llllmmmm"
 echo ""
 
 
-
-
+#!/bin/sh
 
 # Define the URL and target file path
 URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
 TARGET_FILE="/data/local/tmp/Toolbox.zip"
 
-# Check if curl is available
-if command -v curl > /dev/null; then
-    # Download the file using curl with progress bar
-    echo "Downloading $URL to $TARGET_FILE..."
-    curl -L -o "$TARGET_FILE" "$URL"
-    
-    # Check if the download was successful
-    if [ $? -eq 0 ]; then
-        echo "Download complete."
-    else
-        echo "Failed to download $URL."
-        exit 1
-    fi
+# Download the file
+echo "Downloading $URL to $TARGET_FILE..."
+/data/local/tmp/busybox wget -O "$TARGET_FILE" "$URL"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete."
 else
-    echo "curl is not available. Downloading using busybox wget..."
-    # Download the file using busybox wget (default output)
-    /data/local/tmp/busybox wget -q -O "$TARGET_FILE" "$URL"
-    
-    # Check if the download was successful
-    if [ $? -eq 0 ]; then
-        echo "Download complete."
-    else
-        echo "Failed to download $URL."
-        exit 1
-    fi
+    echo "Failed to download $URL."
+    exit 1
 fi
-
-
 
 
 

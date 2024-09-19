@@ -34,7 +34,7 @@ else
     exit 1
 fi
 
-echo "LOLaaaa"
+echo "XDDDD"
 echo ""
 # Function to download and set permissions
 download_and_set_permissions() {
@@ -71,8 +71,9 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 echo ""
 echo "All binaries have been downloaded and permissions set."
-echo "LOLaaaaaaa"
+echo "XDDD"
 echo ""
+
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"

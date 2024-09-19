@@ -45,6 +45,8 @@ download_and_set_permissions() {
     
     if [ $? -ne 0 ]; then
         echo "Failed to download $(basename "$url"). Exiting."
+        echo ""
+        echo "Please re-boot/Restart your device and Re-run this Code."
         exit 1
     fi
 

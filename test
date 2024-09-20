@@ -22,7 +22,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "llllllllllllllllllll"
+    echo "neoneoenoenoenoenoenoeneoneoen"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then

@@ -354,7 +354,7 @@ echo "Proceeding with the rest of the Things..."
 # Define directories
 MAIN_DIR="/sdcard/"
 DIR_UNZIP="/sdcard/nopcwinstall/"
-DIR_BACK="/sdcard/backups/"
+DIR_BACK="/sdcard/importantbackups/"
 DIR_UEFI="/sdcard/UEFI/"
 
 # Function to check and create directories
@@ -379,14 +379,14 @@ echo "Backing up Important partitions..."
 echo ""
 
 echo "Backing up boot.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img 2>&1 | grep 'bytes'
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img 2>&1 | grep 'bytes'
 
 echo "Backing up dtbo.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img 2>&1 | grep 'bytes'
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img 2>&1 | grep 'bytes'
 
 for part in fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
-  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img 2>&1 | grep 'bytes'
+  dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img 2>&1 | grep 'bytes'
 done
 
 
@@ -527,13 +527,13 @@ $(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 echo ""
 echo "Copying files..."
 $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
-$(pwd)/busybox mkdir -p /mnt/win/Backups
+$(pwd)/busybox mkdir -p /mnt/win/importantbackups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
-copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
-echo "Copying Bckup files just in case if needed further..."
-$(pwd)/busybox cp -r /sdcard/backups/* /mnt/win/Backups/
+copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
+echo "Copying Important .img Backup files just in case if needed further..."
+$(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
 
 # Unzip Toolbox.zip

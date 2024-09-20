@@ -73,7 +73,7 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 ## Miscellaneous
 - ```WOA HELPER APP``` (for Dualbooting from Android To Windows [Downlaod and Install](https://github.com/Marius586/WoA-Helper-update/releases/tag/WOA))
   
-> ## **Official Guides For Xiaomi Pad 5 (Nabu)**
+> ### **Official Guides For Xiaomi Pad 5 (Nabu)**
 > - [Manual with PC](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/blob/main/guide/English/1-partition-en.md)
 > - [Without PC (TWRP)](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/blob/main/guide/Installation.md)
 > - [Automatic with PC](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/blob/main/guide/English/won-deployer-install-en.md)

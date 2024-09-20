@@ -75,7 +75,7 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
   
 ---
 
-## **Official Guides For Xiaomi Pad 5 (Nabu)**
+### **Official Guides For Xiaomi Pad 5 (Nabu)**
 
 - [Manual with PC](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/blob/main/guide/English/1-partition-en.md)
   

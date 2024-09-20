@@ -193,7 +193,8 @@ repartition_windows() {
     
 
         echo ""
-        echo "Now your device will boot to recovery. Please wipe data there, then reboot."
+        echo "NOW IF YOUR DEVICE BOOT TO RECOVERY. THEN WIPE DATA THERE, then reboot. AND RE-RUN EVERYTHING"
+        echo "IF IT SIMPLY RE-START THEN CONTINUE WITH RE-RUN THE COMMAND"
         echo ""
         echo "Repartitioning done! Press any key to reboot..."
         read -n 1 -s key  # Wait for a key press

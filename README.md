@@ -62,9 +62,8 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 > [!IMPORTANT]
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
 
-- **`Currently supported Device`**. -
-- *`Currently supported Device`*. -
 - ***`Currently supported Device`***. -
+  
 | Device Name    | Codename | Status       |
 | -------------- | -------- | ------------ |
 | Xiaomi Pad 5   | Nabu     | ✅ Available |

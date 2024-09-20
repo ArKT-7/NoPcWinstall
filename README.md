@@ -26,7 +26,7 @@
 - ```Your Device Must be Rooted (guide soon!)```
 
 ## Files you need to downlaod 
-### Put this two file in your Xiaomi pad 5
+### Put this two file in your Device internal Storage
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     
 - [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller) (```Download Latest directly by clcicking here - ``` [Nabu_WinInstaller_09092024.zip](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/download/Nabu-WinInstaller/Nabu_WinInstaller_09092024.zip))
@@ -62,6 +62,9 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 > [!IMPORTANT]
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
 
+| Device Name    | Codename | Status       |
+| -------------- | -------- | ------------ |
+| Xiaomi Pad 5   | Nabu     | ✔️ Available |
 
 
 ## Credits and Thankfull to

@@ -9,8 +9,8 @@ URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mk
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
 URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
-URL_make_f2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/make_f2fs"
-URL_mkfsf2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
+# URL_make_f2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/make_f2fs"
+# URL_mkfsf2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
@@ -18,8 +18,8 @@ TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 TARGET_PARTED="$(pwd)/parted"
 TARGET_SGDISK="$(pwd)/sgdisk"
-TARGET_make_f2fs="$(pwd)/make_f2fs"
-TARGET_mkfsf2fs="$(pwd)/mkfs.f2fs"
+# TARGET_make_f2fs="$(pwd)/make_f2fs"
+# TARGET_mkfsf2fs="$(pwd)/mkfs.f2fs"
 
 
 # Check the device codename using getprop
@@ -77,8 +77,8 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
-download_and_set_permissions "$URL_make_f2fs" "$TARGET_make_f2fs"
-download_and_set_permissions "$URL_mkfsf2fs" "$TARGET_mkfsf2fs"
+# download_and_set_permissions "$URL_make_f2fs" "$TARGET_make_f2fs"
+# download_and_set_permissions "$URL_mkfsf2fs" "$TARGET_mkfsf2fs"
 echo ""
 # Define URLs and target file paths
 URL1="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"

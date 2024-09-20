@@ -91,14 +91,14 @@ part_userdata="/dev/block/by-name/userdata"
 # Function to remove partitions
 removeparts() {
     for i in 33 32 31; do
-        $(pwd)/busybox parted -s /dev/block/sda rm $i 2>/dev/null
+        $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null
     done
 }
 
 # Function to format Windows and ESP partitions
 formatwinesp() {
-    $(pwd)/busybox mkfs.fat -F32 -s1 $esp -n ESPNABU
-    $(pwd)/busybox mkfs.ntfs -f $win -L WINNABU
+    $(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
+    $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 # Function to format data partitions

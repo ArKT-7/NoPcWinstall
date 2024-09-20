@@ -107,12 +107,26 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
-# Function to remove partitions
-removeparts() {
-    for i in 33 32 31; do
-        $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null
-    done
+win=/dev/block/sda32
+esp=/dev/block/sda33
+
+removeparts(){ for i in 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
+
+formatwinesp(){
+$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
+$(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
+
+formatandroid(){
+$(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
+}
+
+blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
+if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
+elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
+elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
+else echo "is this nabu?"; exit 1
+fi
 
 
 # Function to handle repartitioning
@@ -135,53 +149,35 @@ repartition_windows() {
             echo "Invalid size. Please enter a number."
             continue
         fi
+if [[ -n $size_win ]]; then
+winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
+echo "min size is 20, max size is less then $winmax"
+! [[ -z $2 && $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "20 < $size_win && $size_win < $winmax" | bc) == 1 ]] && echo "invalid argument!" && exit 1
+echo ""$(echo "scale=2; $size_win*1000/1024" | bc)"GiB of space will be given to the main windows parition"
+userdataend=$(echo "$max - $size_win*1000 - 400" | bc)
+echo "userdata will get "$(echo "scale=2;($userdataend-10872)/1024" | bc)"GiB of space"
+echo -n "does that sound good (y/n)? "
+read yn
+[[ $yn =~ ^[Yy].*$ ]] || { echo "rethink things carefully and, eventually, you'll come to a conclusion.";exit 1; }
+fi
+winend=$((max-400))"MB"
+removeparts
+$(pwd)/sgdisk --resize-table 64 /dev/block/sda
+$(pwd)/parted -s /dev/block/sda \
+  mkpart userdata ext4 10872MB $userdataend"MB" \
+  mkpart win ntfs $userdataend"MB" $winend \
+  mkpart esp fat32 $winend 100% \
+  set 33 esp on
+sync
+formatwinesp
+formatandroid
+echo "done!"
 
-        # Logic to determine the maximum partition size based on block size
-        blocksize=$(blockdev --getsize64 /dev/block/sda)
-        if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then 
-            max=125586  # For devices with a 125GB disk size
-        elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then 
-            max=253446  # For devices with a 253GB disk size
-        elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then 
-            max=509465  # For devices with a 509GB disk size
-        else 
-            echo "Unknown device. Is this nabu?" 
-            exit 1
-        fi
-
-        # Calculate the end of the userdata partition and the size for Windows
-        userdataend=$(echo "$max - $size_win * 1024 - 400" | bc)
-        userdata_size=$(echo "scale=2;($userdataend-10872)/1024" | bc)
-        windows_size=$(echo "scale=2;$size_win" | bc)
-
-        # Display the calculated sizes
-        echo "The userdata partition will be: $userdata_size GB"
-        echo "The Windows partition will be: $windows_size GB"
-        
-        # Ask for confirmation
-        echo -n "Do you want to proceed with these sizes? (y/n): "
-        read -r confirmation
-        if [[ "$confirmation" == "y" || "$confirmation" == "yes" ]]; then
-            echo "Proceeding with partitioning..."
-            break
-        else
-            echo "Re-enter the partition size for Windows."
-        fi
-    done
-
-    # If confirmed, proceed with removing existing partitions and creating new ones
-    removeparts
-    $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-    $(pwd)/parted -s /dev/block/sda \
-        mkpart userdata ext4 10872MB "$userdataend"MB \
-        mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
-        mkpart esp fat32 "$((max - 400))"MB 100%
-    sync
-    echo "Repartitioning completed."
-
+        echo "Repartitioning completed."
         echo ""
-        echo "NOW IF YOUR DEVICE BOOT TO RECOVERY. THEN WIPE DATA THERE,"
-        echo "then reboot. AND RE-RUN EVERYTHING"
+        echo "NOW YOUR DEVICE BOOT TO RECOVERY. THEN WIPE DATA THERE,"
+        echo "then reboot. AND COMPLETE SETUP EVERYTHING"
+        echo "INSTALL MAGISK AND THEN CONTINUE TO RE-RUN EVERYTHING"
         echo ""
         echo "Repartitioning done! Press any key to reboot..."
         read -n 1 -s key  # Wait for a key press

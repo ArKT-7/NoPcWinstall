@@ -24,7 +24,7 @@ More coming soon!
 ---
 ## Get Started
 > [!TIP]
-> To open this site quickly, enter this URL: [**bit.ly/nopcwin**](https://bit.ly/nopcwin)
+> To open this site quickly, enter this URL: [**bit.ly/arkt7**](https://bit.ly/arkt7)
 
 
 ## Prerequisites

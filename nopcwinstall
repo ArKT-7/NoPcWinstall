@@ -22,7 +22,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "NEW_lo,ololololololol"
+    echo "NEW_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxolololo"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -128,7 +128,6 @@ elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
 else echo "is this nabu?"; exit 1
 fi
 
-
 # Function to handle repartitioning
 repartition_windows() {
     echo "Do you want to proceed with partitioning? (y/n)"
@@ -142,54 +141,61 @@ repartition_windows() {
         fi
         
         while true; do
-        # Prompt the user for the Windows partition size
-        echo "Enter the size for the Windows partition in GB:"
-        read -r size_win
-        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
-            echo "Invalid size. Please enter a number."
-            continue
-        fi
-if
-if [[ -n $size_win ]]; then
-winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
-echo "min size is 20, max size is less then $winmax"
-! [[ -z $2 && $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "20 < $size_win && $size_win < $winmax" | bc) == 1 ]] && echo "invalid argument!" && exit 1
-echo ""$(echo "scale=2; $size_win*1000/1024" | bc)"GiB of space will be given to the main windows parition"
-userdataend=$(echo "$max - $size_win*1000 - 400" | bc)
-echo "userdata will get "$(echo "scale=2;($userdataend-10872)/1024" | bc)"GiB of space"
-echo -n "does that sound good (y/n)? "
-read yn
-[[ $yn =~ ^[Yy].*$ ]] || { echo "rethink things carefully and, eventually, you'll come to a conclusion.";exit 1; }
-fi
-winend=$((max-400))"MB"
-removeparts
-$(pwd)/sgdisk --resize-table 64 /dev/block/sda
-$(pwd)/parted -s /dev/block/sda \
-  mkpart userdata ext4 10872MB $userdataend"MB" \
-  mkpart win ntfs $userdataend"MB" $winend \
-  mkpart esp fat32 $winend 100% \
-  set 33 esp on
-sync
-formatwinesp
-formatandroid
-echo "done!"
+            # Prompt the user for the Windows partition size
+            echo "Enter the size for the Windows partition in GB:"
+            read -r size_win
+            if ! [[ $size_win =~ ^[0-9]+$ ]]; then
+                echo "Invalid size. Please enter a number."
+                continue
+            fi
 
-        echo "Repartitioning completed."
-        echo ""
-        echo "NOW YOUR DEVICE BOOT TO RECOVERY. THEN WIPE DATA THERE,"
-        echo "then reboot. AND COMPLETE SETUP EVERYTHING"
-        echo "INSTALL MAGISK AND THEN CONTINUE TO RE-RUN EVERYTHING"
-        echo ""
-        echo "Repartitioning done! Press any key to reboot..."
-        read -n 1 -s key  # Wait for a key press
-        echo "Waiting for 5 seconds before rebooting..."
-        sleep 5
-        reboot
+            if [[ -n $size_win ]]; then
+                winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
+                echo "Min size is 20, max size is less than $winmax"
+                if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "20 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
+                    echo "Invalid argument!"
+                    exit 1
+                fi
+                echo "$(echo "scale=2; $size_win*1000/1024" | bc) GiB of space will be given to the main Windows partition"
+                userdataend=$(echo "$max - $size_win*1000 - 400" | bc)
+                echo "userdata will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GiB of space"
+                echo -n "Does that sound good? (y/n) "
+                read yn
+                [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully, and eventually, you'll come to a conclusion."; exit 1; }
+            fi
+
+            winend=$((max-400))"MB"
+            removeparts
+            $(pwd)/sgdisk --resize-table 64 /dev/block/sda
+            $(pwd)/parted -s /dev/block/sda \
+              mkpart userdata ext4 10872MB $userdataend"MB" \
+              mkpart win ntfs $userdataend"MB" $winend \
+              mkpart esp fat32 $winend 100% \
+              set 33 esp on
+            sync
+            formatwinesp
+            formatandroid
+            echo "done!"
+
+            echo "Repartitioning completed."
+            echo ""
+            echo "NOW YOUR DEVICE WILL BOOT TO RECOVERY. THEN WIPE DATA THERE,"
+            echo "then reboot. AND COMPLETE SETUP EVERYTHING."
+            echo "INSTALL MAGISK AND THEN CONTINUE TO RE-RUN EVERYTHING."
+            echo ""
+            echo "Repartitioning done! Press any key to reboot..."
+            read -n 1 -s key  # Wait for a key press
+            echo "Waiting for 5 seconds before rebooting..."
+            sleep 5
+            reboot
+        done
     else
         echo "Repartitioning cancelled."
         exit
     fi
 }
+
+
    
 
 

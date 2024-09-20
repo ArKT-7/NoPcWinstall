@@ -26,7 +26,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test mode on now"
+    echo "test mode on now2wwwwwwwwwwwkwjdjddkkfkfjfk"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -401,7 +401,7 @@ echo "Size of Android partition: $size_userdata_gb GB"
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
-zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
+zip_files=($(pwd)/busybox find "$MAIN_DIR" -path "$MAIN_DIR/Android" -prune -o -type f -name "*.zip" -print))
 
 if [ ${#zip_files[@]} -eq 0 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."

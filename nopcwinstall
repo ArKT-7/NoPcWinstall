@@ -53,7 +53,7 @@ download_and_set_permissions() {
     local url=$1
     local dest_file=$2
     echo "Downloading $(basename "$url")..."
-    $(pwd)/curl -s -L -o "$dest_file" "$url"
+    $(pwd)/busybox wget -O "$dest_file" "$url"
     
     if [ $? -ne 0 ]; then
         echo "Failed to download $(basename "$url"). Exiting."

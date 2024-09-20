@@ -217,27 +217,29 @@ echo ""
 # Check partition sizes
 if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
     echo "ESP partition is less than 350 MB."
-    re_part
+    repartition_windows
 fi
 
 if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
     echo "Windows partition is less than 20 GB."
-    re_part
+    repartition_windows
 fi
 
 # Continue with other operations if checks pass
 echo "Partition sizes are sufficient. 
 echo ""
 echo "ESP and Windows partitions already exist."
-echo "Do you want to re-partition - r or continue - c with the existing partitions? r/c"
-    read -r confirmation
-    if [[ "$confirmation" == "r" || "$confirmation" == "repart" ]]; then
-        echo "OK, repartition will be done now."
-        repartition_windows
-    else
-        echo "Skipping repartitioning windows"
-        echo "Windows partition will be format and will install in same partition"
-    fi
+echo "Do you want to re-partition (r) or continue with the existing partitions (c)?"
+read -r confirmation
+
+if [[ "$confirmation" == "r" || "$confirmation" == "repart" ]]; then
+    echo "OK, repartitioning will be done now."
+    repartition_windows
+else
+    echo "Skipping repartitioning of Windows."
+    echo "The Windows partition will be formatted, and the installation will proceed in the same partition."
+fi
+
 echo ""
 Proceeding with the rest of the Things..."
 

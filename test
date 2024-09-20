@@ -11,6 +11,7 @@ URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parte
 URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
 URL_MKFSF2FS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
 URL_MKE2FS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mke2fs"
+URL_USERDATA="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
@@ -20,6 +21,7 @@ TARGET_PARTED="$(pwd)/parted"
 TARGET_SGDISK="$(pwd)/sgdisk"
 TARGET_MKFSF2FS="$(pwd)/mkfs.f2fs"
 TARGET_MKE2FS="$(pwd)/mke2fs"
+TARGET_USERDATA="$(pwd)/userdata.img"
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
@@ -72,6 +74,7 @@ download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
 download_and_set_permissions "$URL_MKFSF2FS" "$TARGET_MKFSF2FS"
 download_and_set_permissions "$URL_MKE2FS" "$TARGET_MKE2FS"
+download_and_set_permissions "$URL_USERDATA" "$TARGET_USERDATA"
 echo ""
 echo ""
 echo "All binaries have been downloaded and permissions set."
@@ -112,8 +115,7 @@ formatwinesp() {
 
 # Function to format data partitions
 formatdata() {
-    $(pwd)/mkfs.f2fs -g android -O project_quota,extra_attr -f /dev/block/sda31
-    $(pwd)/mke2fs -t ext4 -F /dev/block/sda19
+    $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/by-name/userdata
 }
 
 # Function to handle repartitioning

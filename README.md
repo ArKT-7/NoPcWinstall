@@ -29,7 +29,7 @@
 ### Put this two file in your Xiaomi pad 5
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     
-- [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller) (```Download Latest directly by clcicking here - ```) [Nabu_WinInstaller_09092024.zip](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/download/Nabu-WinInstaller/Nabu_WinInstaller_09092024.zip)
+- [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller) (```Download Latest directly by clcicking here - ``` [Nabu_WinInstaller_09092024.zip](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/download/Nabu-WinInstaller/Nabu_WinInstaller_09092024.zip))
 > [!NOTE]
 > - If you are doing partitioning(first time install) or re-partitioning, make sure to download and put these files in your Nabu only after completing the partition process, as the device will be formatted during partitioning.
 

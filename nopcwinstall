@@ -158,9 +158,9 @@ $(pwd)/mkfs.ntfs -f $win -L WINNABU
 formatandroid(){
 echo "writing Userdata and Metadata"
 $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
-$(pwd)/busybox umount -a /dev/block/sda19
-$(pwd)/busybox mke2fs -F /dev/block/sda19
-$(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
+# $(pwd)/busybox umount -a /dev/block/sda19
+# $(pwd)/busybox mke2fs -F /dev/block/sda19
+# $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
 }
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
@@ -229,7 +229,7 @@ repartition_windows() {
             read -n 1 -s key  # Wait for a key press
             echo "Waiting for 5 seconds before rebooting..."
             sleep 5
-            reboot
+            reboot recovery
         done
     else
         echo "Repartitioning cancelled."

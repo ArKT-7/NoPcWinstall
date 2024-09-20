@@ -239,3 +239,222 @@ echo "ESP and Windows partitions already exist. \nDo you want to re-partition(r)
     fi
 echo ""
 Proceeding with the rest of the Things..."
+
+
+# Define directories
+MAIN_DIR="/sdcard/"
+DIR_UNZIP="/sdcard/nopcwinstall/"
+DIR_BACK="/sdcard/backups/"
+DIR_UEFI="/sdcard/UEFI/"
+
+# Function to check and create directories
+check_and_create_dir() {
+    local dir=$1
+    if [ -d "$dir" ]; then
+        # echo "Directory $dir exists. Removing it."
+        $(pwd)/busybox rm -rf "$dir"
+    fi
+    # echo "Creating directory: $dir"
+    $(pwd)/busybox mkdir -p "$dir"
+}
+
+# Check and create directories
+check_and_create_dir "$DIR_UNZIP"
+check_and_create_dir "$DIR_BACK"
+check_and_create_dir "$DIR_UEFI"
+echo ""
+
+# Backup current partitions
+echo "Backing up Important partitions..."
+echo ""
+
+echo "Backing up boot.img..."
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img 2>&1 | grep 'bytes'
+
+echo "Backing up dtbo.img..."
+dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img 2>&1 | grep 'bytes'
+
+for part in fsc fsg modemst1 modemst2; do
+  echo "Backing up $part.img..."
+  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img 2>&1 | grep 'bytes'
+done
+
+
+echo ""
+echo ""
+echo "Size of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB"
+
+# List and select ZIP files
+echo ""
+echo "Searching for ZIP files..."
+zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
+
+if [ ${#zip_files[@]} -eq 0 ]; then
+    echo "No ZIP files found. Please download and place a ZIP file in the directory."
+    exit 1
+fi
+
+echo "Available ZIP files:"
+count=1
+for file in "${zip_files[@]}"; do
+    echo "$count. $(basename "$file")"
+    files[$count]=$file
+    count=$((count + 1))
+done
+
+echo ""
+echo "Enter the serial number of the ZIP file to select:"
+read selection
+
+# Validate ZIP file selection
+if [ -z "${files[$selection]}" ]; then
+    echo "Invalid selection. Exiting."
+    exit 1
+fi
+
+SELECTED_ZIP_FILE="${files[$selection]}"
+
+# Unzip the selected file
+echo ""
+echo "Unzipping selected file..."
+$(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
+
+# Check for specific files
+EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
+
+for file in "${EXPECTED_FILES[@]}"; do
+    if [ ! -f "$DIR_UNZIP/$file" ]; then
+        echo "Required file $file not found. Please re-run the script and select the correct ZIP."
+        $(pwd)/busybox rm -rf "$DIR_UNZIP"
+        exit 1
+    fi
+done
+
+
+# List and select Windows files
+echo ""
+echo "Searching for Windows files..."
+echo ""
+esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
+
+# Check if no ESD files were found
+if [ ${#esd_files[@]} -eq 0 ]; then
+    echo "No Windows files found. Please download and place an ESD file in the directory."
+    exit 1
+fi
+
+# If only one ESD file is found, automatically select it
+if [ ${#esd_files[@]} -eq 1 ]; then
+    SELECTED_ESD_FILE="${esd_files[0]}"
+    echo "ESD file found: $(basename "$SELECTED_ESD_FILE")"
+    echo "Automatically selecting this file."
+else
+    # If more than one ESD file is found, prompt user for selection
+    echo "Available Windows files:"
+    count=1
+    for file in "${esd_files[@]}"; do
+        echo "$count. $(basename "$file")"
+        files[$count]=$file
+        count=$((count + 1))
+    done
+
+    echo ""
+    echo "Enter the serial number of the Windows file to select:"
+    read selection
+
+    # Validate Windows file selection
+    if [ -z "${files[$selection]}" ]; then
+        echo "Invalid selection. Exiting."
+        exit 1
+    fi
+
+    SELECTED_ESD_FILE="${files[$selection]}"
+fi
+echo ""
+echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
+
+# Unmount and format partitions
+echo ""
+echo "Unmounting and formatting partitions..."
+$(pwd)/busybox umount /dev/block/by-name/{esp,win}
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+
+# Mount partitions
+echo ""
+echo "Mounting partitions..."
+$(pwd)/busybox mkdir -p /mnt/{win,esp}
+$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+$(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
+
+ copy_with_progress() {
+    local src_file=$1
+    local dest_file=$2
+
+    total_size=$(stat -c%s "$src_file")
+    $(pwd)/busybox cp "$src_file" "$dest_file" &
+
+    cp_pid=$!
+
+    while kill -0 "$cp_pid" 2>/dev/null; do
+        copied_size=$(stat -c%s "$dest_file" 2>/dev/null || echo 0)
+        percentage=$(echo "scale=2; ($copied_size / $total_size) * 100" | bc)
+
+        # Output progress on the same line
+        printf "\rCopying %s: Progress: %.2f%%" "$(basename "$src_file")" "$percentage"
+
+        sleep 1
+    done
+
+    # Ensure the final line ends with a newline
+    echo ""
+} 
+
+
+# Copy files
+echo ""
+echo "Copying files..."
+$(pwd)/busybox mkdir -p /mnt/win/installer/Driver
+copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
+copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
+copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
+copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
+copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
+
+# Unzip Toolbox.zip
+echo ""
+echo "Unzipping Toolbox.zip..."
+$(pwd)/busybox unzip $(pwd)/Toolbox.zip -d /mnt/win/
+
+# Unzip Driver.zip
+echo ""
+echo "Unzipping Driver.zip..."
+$(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
+
+# Write images to the device
+echo ""
+echo "Writing winpe image to the device..."
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+
+# Clean up
+echo ""
+echo "Cleaning up..."
+$(pwd)/busybox rm -rf "$DIR_UNZIP"
+
+echo "*************************************************";
+echo "*              Flashing Completed               *";
+echo "*                                               *";
+echo "*             rebooting in 5 sec and            *";
+echo "*                                               *";
+echo "*     Installation will start automaticly       *";
+echo "*                                               *";
+echo "*  If Installation Failed, Don't Flash it again *";
+echo "*                                               *";
+echo "*         ask for help on Telegram Chat         *";
+echo "*                                               *";
+echo "*************************************************";
+sleep 5
+reboot

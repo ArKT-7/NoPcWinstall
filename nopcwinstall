@@ -22,7 +22,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "2333333333333333333333333333333333"
+    echo "NEW"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -481,6 +481,7 @@ copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
+echo "Copying Bckup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/backups/* /mnt/win/Backups/
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
 

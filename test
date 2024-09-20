@@ -102,21 +102,6 @@ removeparts() {
 
 # Function to handle repartitioning
 repartition_windows() {
-    # Logic to determine maximum size
-    blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-    
-    # Set max based on blocksize
-    if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then 
-        max=125586
-    elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then 
-        max=253446
-    elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then 
-        max=509465
-    else 
-        echo "Unexpected block size. Exiting."
-        exit 1
-    fi
-
     echo "Do you want to proceed with partitioning? (y/n)"
     read -r first_confirmation
     if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
@@ -126,17 +111,23 @@ repartition_windows() {
             echo "Repartitioning cancelled."
             exit
         fi
-
-        # Display size limits
-        echo "Enter the size for the Windows partition in GB (minimum 20 GB, maximum $((max - 20)) GB):"
+        
+        echo "Enter the size for the Windows partition in GB:"
         read -r size_win
-        if ! [[ $size_win =~ ^[0-9]+$ ]] || [[ $size_win -lt 20 ]] || [[ $size_win -gt $((max - 20)) ]]; then
-            echo "Invalid size. Please enter a number between 20 and $((max - 20))."
+        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
+            echo "Invalid size. Please enter a number."
             exit 1
         fi
 
-        # Calculate end of userdata partition
-        userdataend=$((max - size_win * 1024))  # Convert GB to MB for calculation
+        # Logic to determine maximum size
+        blocksize=$(blockdev --getsize64 /dev/block/sda)
+        if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
+        elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
+        elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
+        else echo "is this nabu?"; exit 1
+        fi
+        
+        userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)
 
         # Create partitions
         removeparts

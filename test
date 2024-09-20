@@ -107,12 +107,6 @@ removeparts() {
     done
 }
 
-# Function to format Windows and ESP partitions
-formatwinesp() {
-    $(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
-    $(pwd)/mkfs.ntfs -f $win -L WINNABU
-}
-
 # Function to format data partitions
 formatdata() {
     $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/by-name/userdata
@@ -152,7 +146,6 @@ repartition_windows() {
         sync
         echo "lololololllllllllllllllllllllllllllll"
         formatdata
-        formatwinesp
         echo "Repartitioning done!"
         exit
     else

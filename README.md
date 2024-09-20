@@ -25,14 +25,14 @@ More coming soon!
 > [!TIP]
 > To open this site quickly, enter this URL: [**bit.ly/nopcwin**](https://bit.ly/nopcwin)
 
-
+---
 ## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```
   
 - ```Unlocked bootloader``` (If your bootloader is locked and you don't know how to unlock it use [this](https://github.com/ArKT-7/won-deployer/blob/main/guide/English/unlock-bootloader-en.md) guide)
 
 - ```Your Device Must be Rooted (guide soon!)```
-
+---
 ## Files you need to downlaod 
 ### Put this two file in your Device internal Storage
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
@@ -41,7 +41,7 @@ More coming soon!
 > [!NOTE]
 > - If you are doing partitioning(first time install) or re-partitioning, make sure to download and put these files in your Nabu only after completing the partition process, as the device will be formatted during partitioning.
 
-
+---
 ## Running the script For Partition/Re-partition or Install Windows
 
 ### 1. Install Termux apk
@@ -68,8 +68,9 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
    - **`Good Luck`**.
 
 > [!IMPORTANT]
-> If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
+> If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7)
 
+---
 ## Miscellaneous
 - ```WOA HELPER APP``` (for Dualbooting from Android To Windows [Downlaod and Install](https://github.com/Marius586/WoA-Helper-update/releases/tag/WOA))
   

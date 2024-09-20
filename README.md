@@ -34,7 +34,7 @@
 > - If you are doing partitioning(first time install) or re-partitioning, make sure to download and put these files in your Nabu only after completing the partition process, as the device will be formatted during partitioning.
 
 
-## Running the script
+## Running the script For Partition/Re-partition or Install Windows
 
 ### 1. Install Termux apk
 ## `>_` [Downlaod Termux app](https://f-droid.org/repo/com.termux_1000.apk)

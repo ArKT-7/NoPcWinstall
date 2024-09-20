@@ -22,6 +22,8 @@ More coming soon!
 > **IF YOU AREN'T COMFORTABLE MODDING YOUR TABLET OR ITS PARTITION TABLE OR YOU ARE PARANOID OF BRICKING YOUR DEVICE CLICK AWAY NOW!!! YOU HAVE BEEN WARNED, YOU ARE ON YOUR OWN IF YOU BRICK YOUR DEVICE!!! AGAIN! YOU HAVE BEEN WARNED!!!**
 
 ## Get Started
+> [!TIP]
+> If you are partitioning or re-partitioning, ensure you download these files *after* completing the partitioning process, as the device will be formatted during partitioning.
 
 ## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```

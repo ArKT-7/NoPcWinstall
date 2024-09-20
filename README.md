@@ -67,6 +67,14 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 > [!IMPORTANT]
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
 
+## Miscellaneous
+
+- [Official Guide Manuall with PC](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/blob/main/guide/English/1-partition-en.md)
+  
+- [Official Guide Without PC (TWRP)](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/blob/main/guide/Installation.md)
+
+- [Official Guide Automatic with PC](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/blob/main/guide/English/won-deployer-install-en.md)
+
 
 ## Credits and Thankfull to
 

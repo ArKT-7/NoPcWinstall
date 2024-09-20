@@ -228,7 +228,8 @@ fi
 # Continue with other operations if checks pass
 echo "Partition sizes are sufficient. 
 echo ""
-echo "ESP and Windows partitions already exist. \nDo you want to re-partition(r) or continue(c) with the existing partitions?"
+echo "ESP and Windows partitions already exist."
+echo "Do you want to re-partition(r) or continue(c) with the existing partitions?"
     read -r confirmation
     if [[ "$confirmation" == "r" || "$confirmation" == "repart" ]]; then
         echo "OK, repartition will be done now."

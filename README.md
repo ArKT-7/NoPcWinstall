@@ -1,6 +1,7 @@
-# NoPcWinstall 
+# No-Pc-Winstall #No-TWRP #No-Other-Device
 
-<p align="center"><a href="README.md"><img src="https://github.com/ArKT-7/won-deployer/blob/main/assets/Won-nabu-bg.png" width="280"></a></p>
+<img align="right" src="https://raw.githubusercontent.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/main/nabu.png" width="425" alt="Windows 11 Running On A Xiaomi Pad 5">
+
 
 # Running Windows on the Xiaomi Pad 5
 ## Try out my new script for automatically installing/re-installing Windows on Nabu—it's currently in beta. I’d love your feedback on any issues or ideas for new features. Share your thoughts with me via the Telegram link below."

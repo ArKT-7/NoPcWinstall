@@ -136,12 +136,13 @@ repartition_windows() {
         # Create partitions
         removeparts
         $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-        $(pwd)/busybox parted -s /dev/block/sda \
+        $(pwd)/parted -s /dev/block/sda \
             mkpart userdata ext4 10872MB $userdataend"MB" \
             mkpart win ntfs $userdataend"MB" $(echo "$max - 400" | bc)"MB" \
             mkpart esp fat32 $(echo "$max - 400" | bc)"MB" 100% \
             set 33 esp on
         sync
+        echo "lololololllllllllllllllllllllllllllll"
         formatdata
         formatwinesp
         echo "Repartitioning done!"

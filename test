@@ -9,6 +9,8 @@ URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mk
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
 URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
+URL_MKFSF2FS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
+URL_MKE2FS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mke2fs"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
@@ -16,6 +18,8 @@ TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 TARGET_PARTED="$(pwd)/parted"
 TARGET_SGDISK="$(pwd)/sgdisk"
+TARGET_MKFSF2FS="$(pwd)/mkfs.f2fs"
+TARGET_MKE2FS="$(pwd)/mke2fs"
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
@@ -66,6 +70,8 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
+download_and_set_permissions "$URL_MKFSF2FS" "$TARGET_MKFSF2FS"
+download_and_set_permissions "$URL_MKE2FS" "$TARGET_MKE2FS"
 echo ""
 echo ""
 echo "All binaries have been downloaded and permissions set."

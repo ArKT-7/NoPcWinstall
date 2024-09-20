@@ -104,7 +104,18 @@ removeparts() {
 repartition_windows() {
     # Logic to determine maximum size
     blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-    max=$((blocksize / 1024 / 1024))  # Convert bytes to MB
+    
+    # Set max based on blocksize
+    if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then 
+        max=125586
+    elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then 
+        max=253446
+    elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then 
+        max=509465
+    else 
+        echo "Unexpected block size. Exiting."
+        exit 1
+    fi
 
     echo "Do you want to proceed with partitioning? (y/n)"
     read -r first_confirmation

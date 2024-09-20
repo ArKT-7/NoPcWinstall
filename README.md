@@ -1,4 +1,13 @@
 # No-Pc-Winstall #No-TWRP #No-Other-Device
+<img align="right" src="https://raw.githubusercontent.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/main/nabu.png" width="425" alt="Windows 11 Running On A Xiaomi Pad 5">
+
+- ***`Currently supported Device`***. -
+  
+| Device Name    | Codename | Status       |
+| -------------- | -------- | ------------ |
+| Xiaomi Pad 5   | Nabu     | ✅ Available |
+More coming soon!
+# Running Windows on the Xiaomi Pad 5
 
 ## Try out my new script for automatically installing/re-installing Windows on Nabu with only one command in Termux app on Nabu — it's currently in early beta stage. I’d love your feedback on any issues or ideas for new features. Share your thoughts with me via the Telegram link below."
 [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://telegram.me/ArKT_7)
@@ -58,12 +67,6 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 > [!IMPORTANT]
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
 
-- ***`Currently supported Device`***. -
-  
-| Device Name    | Codename | Status       |
-| -------------- | -------- | ------------ |
-| Xiaomi Pad 5   | Nabu     | ✅ Available |
-More coming soon!
 
 ## Credits and Thankfull to
 

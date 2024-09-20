@@ -135,7 +135,8 @@ repartition_windows() {
             exit 1
         fi
 
-        userdataend=$((max - size_win * 1024 - 400))  # Calculate end of userdata partition
+        # Calculate end of userdata partition
+        userdataend=$((max - size_win * 1024))  # Convert GB to MB for calculation
 
         # Create partitions
         removeparts
@@ -157,7 +158,7 @@ repartition_windows() {
         exit
     fi
 }
-
+   
 
 
 # Function to convert bytes to gigabytes and megabytes

@@ -149,6 +149,7 @@ repartition_windows() {
             echo "Invalid size. Please enter a number."
             continue
         fi
+if
 if [[ -n $size_win ]]; then
 winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
 echo "min size is 20, max size is less then $winmax"

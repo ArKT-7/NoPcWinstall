@@ -23,7 +23,7 @@ More coming soon!
 
 ## Get Started
 > [!TIP]
-> If you are partitioning or re-partitioning, ensure you download these files *after* completing the partitioning process, as the device will be formatted during partitioning.
+> To open this site quickly enter this url - *bit.ly/nopcwin*.
 
 ## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```

@@ -68,466 +68,75 @@ download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
 echo ""
-# Define the URL and target file path
-URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
-TARGET_FILE="$(pwd)/Toolbox.zip"
-
-# Download the file
-echo "Downloading Addition windows tolls file, office, activater and other things"
-$(pwd)/busybox wget -O "$TARGET_FILE" "$URL"
-
-# Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "Download complete."
-else
-    echo "Failed to download $URL."
-    exit 1
-fi
 echo ""
 echo "All binaries have been downloaded and permissions set."
 echo ""
 echo ""
 
-# Functions to convert bytes
-bytes_to_gb() {
-    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
-}
 
-bytes_to_mb() {
-    echo "scale=2; $1 / (1024 * 1024)" | bc
-}
+#!/sbin/bash
+win=/dev/block/sda32
+esp=/dev/block/sda33
+removeparts(){ for i in 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 
-# Function to check if a partition exists
-partition_exists() {
-    [ -e "$1" ]
-}
-
-# Define partition paths
-part_win="/dev/block/by-name/win"
-part_esp="/dev/block/by-name/esp"
-part_userdata="/dev/block/by-name/userdata"
-
-# Function to remove partitions
-removeparts() {
-    for i in 33 32 31; do
-        $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null
-    done
+formatwinesp(){
+$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
+$(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 
-# Function to handle repartitioning
-repartition_windows() {
-    echo "Do you want to proceed with partitioning? (y/n)"
-    read -r first_confirmation
-    if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
-        echo "Warning: All data will be erased. Do you want to continue? (y/n)"
-        read -r second_confirmation
-        if [[ "$second_confirmation" != "y" && "$second_confirmation" != "yes" ]]; then
-            echo "Repartitioning cancelled."
-            exit
-        fi
-        
-        while true; do
-        # Prompt the user for the Windows partition size
-        echo "Enter the size for the Windows partition in GB:"
-        read -r size_win
-        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
-            echo "Invalid size. Please enter a number."
-            continue
-        fi
+[ "$ignoreweirdness" != true ] && for i in 1 2 3 4; do test -e /dev/block/by-name/bk0$i || {
+    echo "this script will NOT work with weird partition layouts! please restore the partition table by flashing gpt_both0 in fastboot!"
+    exit 1
+}; done
 
-        # Logic to determine the maximum partition size based on block size
-        blocksize=$(blockdev --getsize64 /dev/block/sda)
-        if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then 
-            max=125586  # For devices with a 125GB disk size
-        elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then 
-            max=253446  # For devices with a 253GB disk size
-        elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then 
-            max=509465  # For devices with a 509GB disk size
-        else 
-            echo "Unknown device. Is this nabu?" 
+
+blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
+if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
+elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
+elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
+else echo "is this nabu?"; exit 1
+fi
+
+if [ "$ignoreweirdness" != true ]; then
+    weirdparts=$(find /dev/block -regextype posix-extended -type b -regex '.*/sda(3[4-9]|[4-9][0-9])$')
+    if [ -n "$weirdparts" ]; then
+        echo -n "in order to use this script, your partition table has to be restored to the stock variant. ALL DATA WILL BE LOST. continue (y/n)? "
+        read yn
+        [[ $yn =~ ^[Yy].*$ ]] || {
+            echo "can't proceed without restoring the table."
             exit 1
-        fi
-
-        # Calculate the end of the userdata partition and the size for Windows
-        userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)
-        userdata_size=$(echo "scale=2;($userdataend-10872)/1024" | bc)
-        windows_size=$(echo "scale=2;$size_win" | bc)
-
-        # Display the calculated sizes
-        echo "The userdata partition will be: $userdata_size GB"
-        echo "The Windows partition will be: $windows_size GB"
-        
-        # Ask for confirmation
-        echo -n "Do you want to proceed with these sizes? (y/n): "
-        read -r confirmation
-        if [[ "$confirmation" == "y" || "$confirmation" == "yes" ]]; then
-            echo "Proceeding with partitioning..."
-            break
-        else
-            echo "Re-enter the partition size for Windows."
-        fi
-    done
-
-    # If confirmed, proceed with removing existing partitions and creating new ones
-    removeparts
-    $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-    $(pwd)/parted -s /dev/block/sda \
-        mkpart userdata ext4 10872MB "$userdataend"MB \
-        mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
-        mkpart esp fat32 "$((max - 400))"MB 100%
-    sync
-
-# If confirmed, proceed with removing existing partitions and creating new ones
-    removeparts
-    $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-    $(pwd)/parted -s /dev/block/sda \
-        mkpart userdata ext4 10872MB "$userdataend"MB \
-        mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
-        mkpart esp fat32 "$((max - 400))"MB 100%
-    sync
-
-    echo "Repartitioning completed."
-
-
-    
-
-        echo ""
-        echo "Now your device will boot to recovery. Please wipe data there, then reboot."
-        echo ""
-        echo "Repartitioning done! Press any key to reboot..."
-        read -n 1 -s key  # Wait for a key press
-        echo "Waiting for 5 seconds before rebooting..."
-        sleep 5
-        reboot
-    else
-        echo "Repartitioning cancelled."
-        exit
+        }
+        echo "restoring the stock partition layout now"
+        for i in $weirdparts; do
+            f="${i:14}"
+            parted -s /dev/block/sda rm $f 2>/dev/null
+        done
+        restore
+        exit 0
     fi
-}
-   
-
-
-# Function to convert bytes to gigabytes and megabytes
-bytes_to_gb() {
-    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
-}
-
-bytes_to_mb() {
-    echo "scale=2; $1 / (1024 * 1024)" | bc
-}
-
-# Function to check if a partition exists
-partition_exists() {
-    [ -e "$1" ]
-}
-
-# Define partition paths
-part_win="/dev/block/by-name/win"
-part_esp="/dev/block/by-name/esp"
-part_userdata="/dev/block/by-name/userdata"
-
-
-
-# Check if partitions exist and their sizes
-if ! partition_exists "$part_win"; then
-    echo "Windows Partition does not exist."
-    # Print sizes
-    echo ""
-    size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
-    size_userdata_gb=$(bytes_to_gb $size_userdata)
-    echo "Current Size of Windows Partition: NOTHING LOL"
-    echo "Current Size of ESP Partition: NOTHING LOL"
-    echo ""
-    echo "Current Size of Android partition: $size_userdata_gb GB"
-    echo ""
-    echo "need to do partitioning for windows"
-    repartition_windows
-fi
-
-if ! partition_exists "$part_esp"; then
-    echo "ESP Partition does not exist."
-     # Print sizes
-    echo ""
-    size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
-    size_userdata_gb=$(bytes_to_gb $size_userdata)
-    echo "Current Size of Windows Partition: NOTHING LOL"
-    echo "Current Size of ESP Partition: NOTHING LOL"
-    echo ""
-    echo "Current Size of Android partition: $size_userdata_gb GB"
-    echo ""
-    echo "need to do partitioning for windows"
-    repartition_windows
 fi
 
 
-# Get sizes in bytes
-size_win=$($(pwd)/busybox blockdev --getsize64 "$part_win")
-size_esp=$($(pwd)/busybox blockdev --getsize64 "$part_esp")
-size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
-
-# Convert sizes
-size_win_gb=$(bytes_to_gb $size_win)
-size_esp_mb=$(bytes_to_mb $size_esp)
-size_userdata_gb=$(bytes_to_gb $size_userdata)
-
-# Print sizes
-echo ""
-echo "Size of Windows Partition: $size_win_gb GB"
-echo "Size of ESP Partition: $size_esp_mb MB"
-echo "Size of Android partition: $size_userdata_gb GB"
-echo ""
-
-# Check partition sizes
-if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 350 MB."
-    repartition_windows
+if [[ -n $1 ]]; then
+winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
+echo "min size is 20, max size is less then $winmax"
+! [[ -z $2 && $1 =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "20 < $1 && $1 < $winmax" | bc) == 1 ]] && echo "invalid argument!" && exit 1
+echo ""$(echo "scale=2; $1*1000/1024" | bc)"GiB of space will be given to the main windows parition"
+userdataend=$(echo "$max - $1*1000 - 400" | bc)
+echo "userdata will get "$(echo "scale=2;($userdataend-10872)/1024" | bc)"GiB of space"
+echo -n "does that sound good (y/n)? "
+read yn
+[[ $yn =~ ^[Yy].*$ ]] || { echo "rethink things carefully and, eventually, you'll come to a conclusion.";exit 1; }
 fi
-
-if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
-    echo "Windows partition is less than 20 GB."
-    repartition_windows
-fi
-
-# Continue with other operations if checks pass
-echo "Partition sizes are sufficient."
-echo ""
-
-repartition_conf() {
-    echo "ESP and Windows partitions already exist."
-    echo "Do you want to re-partition - r or continue with the existing partitions - c? (r/c)"
-    read -r first_confirmation
-    if [[ "$first_confirmation" == "r" || "$first_confirmation" == "repart" ]]; then
-        echo "OK, repartitioning will be done now."
-        repartition_windows
-    else
-        echo "Skipping repartitioning of Windows."
-        echo "The Windows partition will be formatted, and the installation will proceed in the same partition."
-    fi
-}
-
-repartition_conf
-echo ""
-echo "Proceeding with the rest of the Things..."
-
-
-
-# Define directories
-MAIN_DIR="/sdcard/"
-DIR_UNZIP="/sdcard/nopcwinstall/"
-DIR_BACK="/sdcard/backups/"
-DIR_UEFI="/sdcard/UEFI/"
-
-# Function to check and create directories
-check_and_create_dir() {
-    local dir=$1
-    if [ -d "$dir" ]; then
-        # echo "Directory $dir exists. Removing it."
-        $(pwd)/busybox rm -rf "$dir"
-    fi
-    # echo "Creating directory: $dir"
-    $(pwd)/busybox mkdir -p "$dir"
-}
-
-# Check and create directories
-check_and_create_dir "$DIR_UNZIP"
-check_and_create_dir "$DIR_BACK"
-check_and_create_dir "$DIR_UEFI"
-echo ""
-
-# Backup current partitions
-echo "Backing up Important partitions..."
-echo ""
-
-echo "Backing up boot.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img 2>&1 | grep 'bytes'
-
-echo "Backing up dtbo.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img 2>&1 | grep 'bytes'
-
-for part in fsc fsg modemst1 modemst2; do
-  echo "Backing up $part.img..."
-  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img 2>&1 | grep 'bytes'
-done
-
-
-echo ""
-echo ""
-echo "Size of Windows Partition: $size_win_gb GB"
-echo "Size of ESP Partition: $size_esp_mb MB"
-echo "Size of Android partition: $size_userdata_gb GB"
-
-# List and select ZIP files
-echo ""
-echo "Searching for ZIP files..."
-zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
-
-if [ ${#zip_files[@]} -eq 0 ]; then
-    echo "No ZIP files found. Please download and place a ZIP file in the directory."
-    exit 1
-fi
-
-echo "Available ZIP files:"
-count=1
-for file in "${zip_files[@]}"; do
-    echo "$count. $(basename "$file")"
-    files[$count]=$file
-    count=$((count + 1))
-done
-
-echo ""
-echo "Enter the serial number of the ZIP file to select:"
-read selection
-
-# Validate ZIP file selection
-if [ -z "${files[$selection]}" ]; then
-    echo "Invalid selection. Exiting."
-    exit 1
-fi
-
-SELECTED_ZIP_FILE="${files[$selection]}"
-
-# Unzip the selected file
-echo ""
-echo "Unzipping selected file..."
-$(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
-
-# Check for specific files
-EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
-
-for file in "${EXPECTED_FILES[@]}"; do
-    if [ ! -f "$DIR_UNZIP/$file" ]; then
-        echo "Required file $file not found. Please re-run the script and select the correct ZIP."
-        $(pwd)/busybox rm -rf "$DIR_UNZIP"
-        exit 1
-    fi
-done
-
-
-# List and select Windows files
-echo ""
-echo "Searching for Windows files..."
-echo ""
-esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
-
-# Check if no ESD files were found
-if [ ${#esd_files[@]} -eq 0 ]; then
-    echo "No Windows files found. Please download and place an ESD file in the directory."
-    exit 1
-fi
-
-# If only one ESD file is found, automatically select it
-if [ ${#esd_files[@]} -eq 1 ]; then
-    SELECTED_ESD_FILE="${esd_files[0]}"
-    echo "ESD file found: $(basename "$SELECTED_ESD_FILE")"
-    echo "Automatically selecting this file."
-else
-    # If more than one ESD file is found, prompt user for selection
-    echo "Available Windows files:"
-    count=1
-    for file in "${esd_files[@]}"; do
-        echo "$count. $(basename "$file")"
-        files[$count]=$file
-        count=$((count + 1))
-    done
-
-    echo ""
-    echo "Enter the serial number of the Windows file to select:"
-    read selection
-
-    # Validate Windows file selection
-    if [ -z "${files[$selection]}" ]; then
-        echo "Invalid selection. Exiting."
-        exit 1
-    fi
-
-    SELECTED_ESD_FILE="${files[$selection]}"
-fi
-echo ""
-echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
-
-# Unmount and format partitions
-echo ""
-echo "Unmounting and formatting partitions..."
-$(pwd)/busybox umount /dev/block/by-name/{esp,win}
-$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
-
-# Mount partitions
-echo ""
-echo "Mounting partitions..."
-$(pwd)/busybox mkdir -p /mnt/{win,esp}
-$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
-$(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
-
- copy_with_progress() {
-    local src_file=$1
-    local dest_file=$2
-
-    total_size=$(stat -c%s "$src_file")
-    $(pwd)/busybox cp "$src_file" "$dest_file" &
-
-    cp_pid=$!
-
-    while kill -0 "$cp_pid" 2>/dev/null; do
-        copied_size=$(stat -c%s "$dest_file" 2>/dev/null || echo 0)
-        percentage=$(echo "scale=2; ($copied_size / $total_size) * 100" | bc)
-
-        # Output progress on the same line
-        printf "\rCopying %s: Progress: %.2f%%" "$(basename "$src_file")" "$percentage"
-
-        sleep 1
-    done
-
-    # Ensure the final line ends with a newline
-    echo ""
-} 
-
-
-# Copy files
-echo ""
-echo "Copying files..."
-$(pwd)/busybox mkdir -p /mnt/win/installer/Driver
-$(pwd)/busybox mkdir -p /mnt/win/Backups
-copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
-copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
-copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
-copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
-$(pwd)/busybox cp -r /sdcard/backups/* /mnt/win/Backups/
-copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
-
-# Unzip Toolbox.zip
-echo ""
-echo "Unzipping Toolbox.zip..."
-$(pwd)/busybox unzip $(pwd)/Toolbox.zip -d /mnt/win/
-
-# Unzip Driver.zip
-echo ""
-echo "Unzipping Driver.zip..."
-$(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
-
-# Write images to the device
-echo ""
-echo "Writing winpe image to the device..."
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
-
-# Clean up
-echo ""
-echo "Cleaning up..."
-$(pwd)/busybox rm -rf "$DIR_UNZIP"
-
-echo "*************************************************";
-echo "*              Flashing Completed               *";
-echo "*                                               *";
-echo "*             rebooting in 5 sec and            *";
-echo "*                                               *";
-echo "*     Installation will start automaticly       *";
-echo "*                                               *";
-echo "*  If Installation Failed, Don't Flash it again *";
-echo "*                                               *";
-echo "*         ask for help on Telegram Chat         *";
-echo "*                                               *";
-echo "*************************************************";
-sleep 5
-reboot
+winend=$((max-400))"MB"
+removeparts
+$(pwd)/sgdisk --resize-table 64 /dev/block/sda
+$(pwd)/parted -s /dev/block/sda \
+  mkpart userdata ext4 10872MB $userdataend"MB" \
+  mkpart win ntfs $userdataend"MB" $winend \
+  mkpart esp fat32 $winend 100% \
+  set 33 esp on
+sync
+formatwinesp
+echo "done!"

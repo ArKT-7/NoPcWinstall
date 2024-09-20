@@ -27,11 +27,12 @@
 
 ### Files need to downlaod 
 
-- [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```select build no``` Language:  ```select your language```)
+- [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     
 - [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller)
 
-Here’s a terminal-like icon for your use:
+
+### Running the script
 
 ## `>_` [Install Termux app](https://f-droid.org/repo/com.termux_1000.apk)
 

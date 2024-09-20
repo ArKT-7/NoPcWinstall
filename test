@@ -26,7 +26,7 @@ TARGET_METADATA="$(pwd)/metadata.img"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "2333333333333333333333333333333333"
+    echo "55555555555555555555555555555555555555555555555555555555"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -102,24 +102,14 @@ elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
 else echo "is this nabu?"; exit 1
 fi
 
-echo "Do you want to proceed with partitioning? (y/n)"
-read -r first_confirmation
-    if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
-        echo "Warning: All data will be erased. Do you want to continue? (y/n)"
-        read -r second_confirmation
-        if [[ "$second_confirmation" != "y" && "$second_confirmation" != "yes" ]]; then
-            echo "Repartitioning cancelled."
-            exit
-        fi
-        
-        while true; do
-        # Prompt the user for the Windows partition size
-        echo "Enter the size for the Windows partition in GB:"
-        read -r size_win
-        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
-            echo "Invalid size. Please enter a number."
-            continue
-        fi
+
+# Prompt the user for the Windows partition size
+echo "Enter the size for the Windows partition in GB:"
+read -r size_win
+if ! [[ $size_win =~ ^[0-9]+$ ]]; then
+echo "Invalid size. Please enter a number."
+continue
+fi
 if [[ -n $size_win ]]; then
 winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
 echo "min size is 20, max size is less then $winmax"

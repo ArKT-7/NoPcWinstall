@@ -229,7 +229,7 @@ repartition_windows() {
             read -n 1 -s key  # Wait for a key press
             echo "Waiting for 5 seconds before rebooting..."
             sleep 5
-            reboot
+            reboot recovery
         done
     else
         echo "Repartitioning cancelled."

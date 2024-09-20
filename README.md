@@ -1,6 +1,5 @@
 # No-Pc-Winstall #No-TWRP #No-Other-Device
-<img align="center" src="https://raw.githubusercontent.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/main/nabu.png" width="425" alt="Windows 11 Running On A Xiaomi Pad 5">
-
+<p align="center"><a href="README.md"><img src="https://raw.githubusercontent.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/main/nabu.png" width="280"></a></p>
 - ***`Currently supported Device`***. -
   
 | Device Name    | Codename | Status       |

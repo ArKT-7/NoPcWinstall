@@ -228,18 +228,21 @@ fi
 # Continue with other operations if checks pass
 echo "Partition sizes are sufficient. 
 echo ""
-echo "ESP and Windows partitions already exist."
-echo "Do you want to re-partition - r or continue with the existing partitions - c ? r/c"
-read -r confirmation
 
-if [[ "$confirmation" == "r" || "$confirmation" == "repart" ]]; then
-    echo "OK, repartitioning will be done now."
-    repartition_windows
-else
-    echo "Skipping repartitioning of Windows."
-    echo "The Windows partition will be formatted, and the installation will proceed in the same partition."
+repartition_conf() {
+    echo "ESP and Windows partitions already exist."
+    echo "Do you want to re-partition - r or continue with the existing partitions - c? r/c"
+    read -r first_confirmation
+    if [[ "$first_confirmation" == "r" || "$first_confirmation" == "repart" ]]; then
+        echo "OK, repartitioning will be done now."
+        repartition_windows
+    else
+        echo "Skipping repartitioning of Windows."
+        echo "The Windows partition will be formatted, and the installation will proceed in the same partition."
 fi
+}
 
+repartition_conf
 echo ""
 Proceeding with the rest of the Things..."
 

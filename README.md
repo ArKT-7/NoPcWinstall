@@ -25,8 +25,8 @@
 
 - ```Your Device Must be Rooted (guide soon!)```
 
-## Files need to downlaod 
-### Downlaod these two file in your Xiaomi pad 5
+## Files you need to downlaod 
+### Put this two file in your Xiaomi pad 5
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     
 - [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller)
@@ -34,37 +34,33 @@
 > - If you are partitioning or re-partitioning, make sure to download these files only after completing the partition process, as the device will be formatted during partitioning.
 
 
-### Running the script
+## Running the script
 
-## `>_` [Install Termux app](https://f-droid.org/repo/com.termux_1000.apk)
+### 1. Install Termux apk
+## `>_` [Downlaod Termux app](https://f-droid.org/repo/com.termux_1000.apk)
 
-### Open Termux 
-
-### Type
+### 2. Open Termux app and Type
 ```bash
 su
 ```
-### Then Grant Root
+### 3. Then Grant Root 
 
-### Copy and Paste this
+### 4. Copy this command and paste in Termux app
 ```bash
 mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/data/arkt/nopcwinstall && chmod 777 /data/data/arkt/nopcwinstall && su -c "/data/data/arkt/nopcwinstall"
 ```
-### Copy and Paste this if upper not work
+### 4.1 Copy and Paste this if upper not work
 ```bash
 chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/local/tmp/nopcwinstall && chmod 777 /data/local/tmp/nopcwinstall && su -c "/data/local/tmp/nopcwinstall"
 ```
 
-## Follow the Guide what it asking
+## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
+   - **`Good Luck`**.
+
+> [!IMPORTANT]
+> If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
 
 
-
-
-## Miscellaneous
-
-- [Bootloader unlocking guide](guide/English/unlock-bootloader-en.md)
-  
-- [Official Guide](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5)
 
 ## Credits and Thankfull to
 

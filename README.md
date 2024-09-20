@@ -31,7 +31,7 @@
     
 - [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller)
 > [!NOTE]
-> - If you are partitioning or re-partitioning, make sure to download these files only after completing the partition process, as the device will be formatted during partitioning.
+> - If you are doing partitioning(first time install) or re-partitioning, make sure to download and put these files in your Nabu only after completing the partition process, as the device will be formatted during partitioning.
 
 
 ## Running the script

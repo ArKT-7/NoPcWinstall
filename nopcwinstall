@@ -558,15 +558,17 @@ echo "Cleaning up..."
 $(pwd)/busybox rm -rf "$DIR_UNZIP"
 
 echo "*************************************************";
-echo "*              Flashing Completed               *";
+echo "*         Pre - installation Completed          *";
 echo "*                                               *";
-echo "*             rebooting in 5 sec and            *";
+echo "*            rebooting in 10 sec and            *";
 echo "*                                               *";
 echo "*     Installation will start automaticly       *";
+echo "*   Now just wait and dont press any button     *";
 echo "*                                               *";
-echo "*  If Installation Failed, Don't Flash it again *";
+echo "*  If Installation Failed, Don't Panic be Calm  *";
 echo "*                                               *";
 echo "*         ask for help on Telegram Chat         *";
+echo "*      Telegram - '@ArKT_7', @wininstaller      *";
 echo "*                                               *";
 echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
@@ -588,5 +590,5 @@ else
     echo ""
     exit 1
 fi
-sleep 5
+sleep 10
 reboot

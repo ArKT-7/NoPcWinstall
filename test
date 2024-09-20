@@ -159,12 +159,6 @@ repartition_windows() {
     fi
 }
 
-# Check for existing partitions
-if ! partition_exists "$part_win" || ! partition_exists "$part_esp"; then
-    echo "Need to do partitioning for Windows"
-    repartition_windows
-fi
-
 # Function to convert bytes to gigabytes and megabytes
 bytes_to_gb() {
     echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc

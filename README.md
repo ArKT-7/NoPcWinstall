@@ -9,7 +9,7 @@
 More coming soon!
 # Running Windows on the Xiaomi Pad 5
 
-## Try out my new script for automatically installing/re-installing Windows on Nabu with only one command in Termux app on Nabu — it's currently in early beta stage i'll soon add more things also colors and make the script good looking 😁. I’d love your feedback on any issues or ideas for new features. Share your thoughts with me via the Telegram link below."
+## Try out my new script for automatically installing/re-installing Windows on Nabu with only one command in Termux app/adb shell on Nabu — it's currently in early beta stage i'll soon add more things also colors and make the script good looking 😁. I’d love your feedback on any issues or ideas for new features. Share your thoughts with me via the Telegram link below."
 [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://telegram.me/ArKT_7)
 [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://t.me/ArKT_7)
 

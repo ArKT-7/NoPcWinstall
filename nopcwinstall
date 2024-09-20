@@ -26,7 +26,7 @@ TARGET_mkfsf2fs="$(pwd)/mkfs.f2fs"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "lmomomimeklnfkjrsngbjkrsbghjkbrsgsr"
+    echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -156,8 +156,9 @@ $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 formatandroid(){
-echo "lllllllllllllllllllllllllll"
+echo "Formatting Userdata and Metadata"
 $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
+$(pwd)/busybox umount /dev/block/sda19 > /dev/null 2>&1
 $(pwd)/busybox mke2fs -F /dev/block/sda19
 $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
 }

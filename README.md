@@ -55,6 +55,8 @@ su
 ### 3. Then Grant Root 
 
 ### 4. Copy this command and paste in Termux app
+> [!NOTE]
+> - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 ```bash
 mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/data/arkt/nopcwinstall && chmod 777 /data/data/arkt/nopcwinstall && su -c "/data/data/arkt/nopcwinstall"
 ```

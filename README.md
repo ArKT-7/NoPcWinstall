@@ -67,7 +67,7 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 ## Credits and Thankfull to
 
 - [@Kumar-Jy](https://github.com/Kumar-Jy) - Wininstaller method ([here](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC))
-- [@Kumar-Jy](https://t.me/Kumar_Jy)
+- [@Kumar-Jy - Wininstaller](https://t.me/wininstaller) - Telegram Group
 
 
 

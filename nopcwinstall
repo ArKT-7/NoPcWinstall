@@ -74,21 +74,53 @@ download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
 download_and_set_permissions "$URL_make_f2fs" "$TARGET_make_f2fs"
 download_and_set_permissions "$URL_mkfsf2fs" "$TARGET_mkfsf2fs"
 echo ""
-# Define the URL and target file path
-URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
-TARGET_FILE="$(pwd)/Toolbox.zip"
+# Define URLs and target file paths
+URL1="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
+TARGET_FILE1="$(pwd)/Toolbox.zip"
 
-# Download the file
-echo "Downloading Addition windows tolls file, office, activater and other things"
-$(pwd)/busybox wget -O "$TARGET_FILE" "$URL"
+URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
+TARGET_FILE2="$(pwd)/userdata.img"
+
+URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
+TARGET_FILE3="$(pwd)/metadata.img"
+
+# Download the Toolbox.zip file
+echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
+$(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
-    echo "Download complete."
+    echo "Download complete for Toolbox.zip."
 else
-    echo "Failed to download $URL."
+    echo "Failed to download $URL1."
     exit 1
 fi
+
+# Download the userdata.img file
+echo "Downloading userdata.img"
+$(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for userdata.img."
+else
+    echo "Failed to download $URL2."
+    exit 1
+fi
+
+# Download the metadata.img file
+echo "Downloading metadata.img"
+$(pwd)/busybox wget -O "$TARGET_FILE3" "$URL3"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for metadata.img."
+else
+    echo "Failed to download $URL3."
+    exit 1
+fi
+
+echo "All downloads completed."
 echo ""
 echo "All binaries have been downloaded and permissions set."
 echo ""
@@ -125,7 +157,9 @@ $(pwd)/mkfs.ntfs -f $win -L WINNABU
 
 formatandroid(){
 echo "lllllllllllllllllllllllllll"
-# $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
+$(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
+$(pwd)/busybox mke2fs -F /dev/block/sda19
+$(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
 }
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)

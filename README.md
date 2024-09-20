@@ -71,6 +71,8 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7) 
 
 ## Miscellaneous
+- ```WOA HELPER APP``` (for Dualbooting from Android To Windows [Downlaod and Install](https://github.com/Marius586/WoA-Helper-update/releases/tag/WOA))
+  
 - **`Official Guides For Xiaomi Pad 5 (Nabu)`**.
 - [Manuall with PC](https://github.com/erdilS/Port-Windows-11-Xiaomi-Pad-5/blob/main/guide/English/1-partition-en.md)
   

@@ -112,8 +112,8 @@ formatwinesp() {
 
 # Function to format data partitions
 formatdata() {
-    $(pwd)/busybox make_f2fs -f -g android /dev/block/sda31
-    $(pwd)/busybox mke2fs -t ext4 -F /dev/block/sda19
+    $(pwd)/mkfs.f2fs -g android -O project_quota,extra_attr -f /dev/block/sda31
+    $(pwd)/mke2fs -t ext4 -F /dev/block/sda19
 }
 
 # Function to handle repartitioning

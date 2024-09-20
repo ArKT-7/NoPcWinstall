@@ -124,6 +124,7 @@ $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 formatandroid(){
+echo "lllllllllllllllllllllllllll"
 # $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
 }
 

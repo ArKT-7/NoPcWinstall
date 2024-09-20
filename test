@@ -22,7 +22,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "neoneoenoenoenoenoenoeneoneoen"
+    echo "lmafffffoooo"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
@@ -226,12 +226,12 @@ if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
 fi
 
 # Continue with other operations if checks pass
-echo "Partition sizes are sufficient. 
+echo "Partition sizes are sufficient."
 echo ""
 
 repartition_conf() {
     echo "ESP and Windows partitions already exist."
-    echo "Do you want to re-partition - r or continue with the existing partitions - c? r/c"
+    echo "Do you want to re-partition - r or continue with the existing partitions - c? (r/c)"
     read -r first_confirmation
     if [[ "$first_confirmation" == "r" || "$first_confirmation" == "repart" ]]; then
         echo "OK, repartitioning will be done now."
@@ -239,12 +239,13 @@ repartition_conf() {
     else
         echo "Skipping repartitioning of Windows."
         echo "The Windows partition will be formatted, and the installation will proceed in the same partition."
-fi
+    fi
 }
 
 repartition_conf
 echo ""
-Proceeding with the rest of the Things..."
+echo "Proceeding with the rest of the Things..."
+
 
 
 # Define directories

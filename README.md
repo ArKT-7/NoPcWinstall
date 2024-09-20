@@ -18,18 +18,20 @@
 
 ## Get Started
 
-### Prerequisites
+## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```
 
 - ```Your Device Must be Rooted (guide soon!)```
   
 - ```Unlocked bootloader``` (If your bootloader is locked and you don't know how to unlock it use [this](https://github.com/ArKT-7/won-deployer/blob/main/guide/English/unlock-bootloader-en.md) guide)
 
-### Files need to downlaod 
-
+## Files need to downlaod 
+### Downlaod these two file in your Xiaomi pad 5
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     
 - [```Nabu_Wininstaller_  .zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller)
+> [!NOTE]
+> - If you are partitioning or re-partitioning, make sure to download these files only after completing the partition process, as the device will be formatted during partitioning.
 
 
 ### Running the script
@@ -44,14 +46,18 @@ su
 ```
 ### Then Grant Root
 
-## Paste this
+### Copy and Paste this
 ```bash
 mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/data/arkt/nopcwinstall && chmod 777 /data/data/arkt/nopcwinstall && su -c "/data/data/arkt/nopcwinstall"
 ```
-### Paste this if upper not work
+### Copy and Paste this if upper not work
 ```bash
 chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/local/tmp/nopcwinstall && chmod 777 /data/local/tmp/nopcwinstall && su -c "/data/local/tmp/nopcwinstall"
 ```
+
+## Follow the Guide what it asking
+
+
 
 
 ## Miscellaneous

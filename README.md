@@ -61,7 +61,7 @@ su
 mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/data/arkt/nopcwinstall && chmod 777 /data/data/arkt/nopcwinstall && su -c "/data/data/arkt/nopcwinstall"
 ```
 > [!NOTE]
-> - Copy this command and Paste in case upper not work
+> - Copy this command and Paste if upper not work
 
 ```bash
 chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/local/tmp/nopcwinstall && chmod 777 /data/local/tmp/nopcwinstall && su -c "/data/local/tmp/nopcwinstall"

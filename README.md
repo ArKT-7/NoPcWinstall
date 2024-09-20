@@ -46,7 +46,7 @@ More coming soon!
 ## Running the script For Partition/Re-partition or Install Windows
 
 ### 1. Install Termux apk
-## `>_` [Downlaod Termux app](https://media.githubusercontent.com/media/ArKT-7/NoPcWinstall/main/bin/termux.apk) [Mirror Link](https://f-droid.org/repo/com.termux_1000.apk)
+## `>_` [Downlaod Termux app](https://media.githubusercontent.com/media/ArKT-7/NoPcWinstall/main/bin/termux.apk) - [Mirror Link](https://f-droid.org/repo/com.termux_1000.apk)
 
 ### 2. Open Termux app and Type
 ```bash

@@ -150,7 +150,7 @@ repartition_windows() {
         fi
 
         # Calculate the end of the userdata partition and the size for Windows
-        userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)
+        userdataend=$(echo "$max - $size_win * 1024 - 400" | bc)
         userdata_size=$(echo "scale=2;($userdataend-10872)/1024" | bc)
         windows_size=$(echo "scale=2;$size_win" | bc)
 
@@ -177,24 +177,11 @@ repartition_windows() {
         mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
         mkpart esp fat32 "$((max - 400))"MB 100%
     sync
-
-# If confirmed, proceed with removing existing partitions and creating new ones
-    removeparts
-    $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-    $(pwd)/parted -s /dev/block/sda \
-        mkpart userdata ext4 10872MB "$userdataend"MB \
-        mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
-        mkpart esp fat32 "$((max - 400))"MB 100%
-    sync
-
     echo "Repartitioning completed."
 
-
-    
-
         echo ""
-        echo "NOW IF YOUR DEVICE BOOT TO RECOVERY. THEN WIPE DATA THERE, then reboot. AND RE-RUN EVERYTHING"
-        echo "IF IT SIMPLY RE-START THEN CONTINUE WITH RE-RUN THE COMMAND"
+        echo "NOW IF YOUR DEVICE BOOT TO RECOVERY. THEN WIPE DATA THERE,"
+        echo "then reboot. AND RE-RUN EVERYTHING"
         echo ""
         echo "Repartitioning done! Press any key to reboot..."
         read -n 1 -s key  # Wait for a key press

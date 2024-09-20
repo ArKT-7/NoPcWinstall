@@ -67,12 +67,12 @@ download_and_set_permissions() {
 }
 
 # Download and set permissions for binaries
-download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+# download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 
 # Delete all files in $(pwd) except busybox
 $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +
 
-# download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
+download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"

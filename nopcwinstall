@@ -162,7 +162,7 @@ $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 formatandroid(){
-echo "writing Userdata and Metadata"
+echo "writing Userdata and Persist"
 $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
 # $(pwd)/busybox umount -a /dev/block/sda19
 # $(pwd)/busybox mke2fs -F /dev/block/sda19

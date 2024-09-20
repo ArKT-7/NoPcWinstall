@@ -102,6 +102,10 @@ removeparts() {
 
 # Function to handle repartitioning
 repartition_windows() {
+    # Logic to determine maximum size
+    blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
+    max=$((blocksize / 1024 / 1024))  # Convert bytes to MB
+
     echo "Do you want to proceed with partitioning? (y/n)"
     read -r first_confirmation
     if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
@@ -119,11 +123,6 @@ repartition_windows() {
             echo "Invalid size. Please enter a number between 20 and $((max - 20))."
             exit 1
         fi
-
-        # Logic to determine maximum size
-        blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-        max=$((blocksize / 1024 / 1024))  # Convert bytes to MB
-        echo "$max"
 
         userdataend=$((max - size_win * 1024 - 400))  # Calculate end of userdata partition
 
@@ -147,6 +146,7 @@ repartition_windows() {
         exit
     fi
 }
+
 
 
 # Function to convert bytes to gigabytes and megabytes

@@ -7,25 +7,28 @@ URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busy
 URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
 URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
+URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
+URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
 TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
+TARGET_PARTED="$(pwd)/parted"
+TARGET_SGDISK="$(pwd)/sgdisk"
+
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo ""
+    echo "2333333333333333333333333333333333"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo ""
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
@@ -53,13 +56,6 @@ download_and_set_permissions() {
     echo "Permissions set for $(basename "$dest_file")"
 }
 
-# Define target paths
-TARGET_BUSYBOX="$(pwd)/busybox"
-TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
-TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
-TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
-
-
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 
@@ -69,6 +65,8 @@ $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
+download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
+download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
 echo ""
 # Define the URL and target file path
 URL="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
@@ -88,26 +86,126 @@ fi
 echo ""
 echo "All binaries have been downloaded and permissions set."
 echo ""
+echo ""
+
+# Functions to convert bytes
+bytes_to_gb() {
+    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
+}
+
+bytes_to_mb() {
+    echo "scale=2; $1 / (1024 * 1024)" | bc
+}
+
+# Function to check if a partition exists
+partition_exists() {
+    [ -e "$1" ]
+}
+
+# Define partition paths
+part_win="/dev/block/by-name/win"
+part_esp="/dev/block/by-name/esp"
+part_userdata="/dev/block/by-name/userdata"
+
+# Function to remove partitions
+removeparts() {
+    for i in 33 32 31; do
+        $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null
+    done
+}
 
 
+# Function to handle repartitioning
+repartition_windows() {
+    echo "Do you want to proceed with partitioning? (y/n)"
+    read -r first_confirmation
+    if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
+        echo "Warning: All data will be erased. Do you want to continue? (y/n)"
+        read -r second_confirmation
+        if [[ "$second_confirmation" != "y" && "$second_confirmation" != "yes" ]]; then
+            echo "Repartitioning cancelled."
+            exit
+        fi
+        
+        while true; do
+        # Prompt the user for the Windows partition size
+        echo "Enter the size for the Windows partition in GB:"
+        read -r size_win
+        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
+            echo "Invalid size. Please enter a number."
+            continue
+        fi
 
-if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo ""
-    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo ""
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo "Based on Kumar_Jy wininstaller"
-else
-    echo ""
-    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
-    echo "$DEVICE_CODENAME"
-    echo ""
-    exit 1
-fi
+        # Logic to determine the maximum partition size based on block size
+        blocksize=$(blockdev --getsize64 /dev/block/sda)
+        if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then 
+            max=125586  # For devices with a 125GB disk size
+        elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then 
+            max=253446  # For devices with a 253GB disk size
+        elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then 
+            max=509465  # For devices with a 509GB disk size
+        else 
+            echo "Unknown device. Is this nabu?" 
+            exit 1
+        fi
+
+        # Calculate the end of the userdata partition and the size for Windows
+        userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)
+        userdata_size=$(echo "scale=2;($userdataend-10872)/1024" | bc)
+        windows_size=$(echo "scale=2;$size_win" | bc)
+
+        # Display the calculated sizes
+        echo "The userdata partition will be: $userdata_size GB"
+        echo "The Windows partition will be: $windows_size GB"
+        
+        # Ask for confirmation
+        echo -n "Do you want to proceed with these sizes? (y/n): "
+        read -r confirmation
+        if [[ "$confirmation" == "y" || "$confirmation" == "yes" ]]; then
+            echo "Proceeding with partitioning..."
+            break
+        else
+            echo "Re-enter the partition size for Windows."
+        fi
+    done
+
+    # If confirmed, proceed with removing existing partitions and creating new ones
+    removeparts
+    $(pwd)/sgdisk --resize-table 64 /dev/block/sda
+    $(pwd)/parted -s /dev/block/sda \
+        mkpart userdata ext4 10872MB "$userdataend"MB \
+        mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
+        mkpart esp fat32 "$((max - 400))"MB 100%
+    sync
+
+# If confirmed, proceed with removing existing partitions and creating new ones
+    removeparts
+    $(pwd)/sgdisk --resize-table 64 /dev/block/sda
+    $(pwd)/parted -s /dev/block/sda \
+        mkpart userdata ext4 10872MB "$userdataend"MB \
+        mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
+        mkpart esp fat32 "$((max - 400))"MB 100%
+    sync
+
+    echo "Repartitioning completed."
+
+
+    
+
+        echo ""
+        echo "Now your device will boot to recovery. Please wipe data there, then reboot."
+        echo ""
+        echo "Repartitioning done! Press any key to reboot..."
+        read -n 1 -s key  # Wait for a key press
+        echo "Waiting for 5 seconds before rebooting..."
+        sleep 5
+        reboot
+    else
+        echo "Repartitioning cancelled."
+        exit
+    fi
+}
+   
 
 
 # Function to convert bytes to gigabytes and megabytes
@@ -129,18 +227,39 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
-# Check if partitions exist
+
+
+# Check if partitions exist and their sizes
 if ! partition_exists "$part_win"; then
     echo "Windows Partition does not exist."
-    echo "Please do partitioning in modded recovery and re-run the script."
-    exit 1
+    # Print sizes
+    echo ""
+    size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
+    size_userdata_gb=$(bytes_to_gb $size_userdata)
+    echo "Current Size of Windows Partition: NOTHING LOL"
+    echo "Current Size of ESP Partition: NOTHING LOL"
+    echo ""
+    echo "Current Size of Android partition: $size_userdata_gb GB"
+    echo ""
+    echo "need to do partitioning for windows"
+    repartition_windows
 fi
 
 if ! partition_exists "$part_esp"; then
     echo "ESP Partition does not exist."
-    echo "Please do re-partitioning in modded recovery and re-run the script."
-    exit 1
+     # Print sizes
+    echo ""
+    size_userdata=$($(pwd)/busybox blockdev --getsize64 "$part_userdata")
+    size_userdata_gb=$(bytes_to_gb $size_userdata)
+    echo "Current Size of Windows Partition: NOTHING LOL"
+    echo "Current Size of ESP Partition: NOTHING LOL"
+    echo ""
+    echo "Current Size of Android partition: $size_userdata_gb GB"
+    echo ""
+    echo "need to do partitioning for windows"
+    repartition_windows
 fi
+
 
 # Get sizes in bytes
 size_win=$($(pwd)/busybox blockdev --getsize64 "$part_win")
@@ -162,18 +281,36 @@ echo ""
 # Check partition sizes
 if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
     echo "ESP partition is less than 350 MB."
-    echo "Please do re-partitioning in the modified recovery and re-run the script."
-    exit 1
+    repartition_windows
 fi
 
 if [ $(echo "$size_win_gb < 20" | bc) -eq 1 ]; then
     echo "Windows partition is less than 20 GB."
-    echo "Please do re-partitioning in the modified recovery and re-run the script."
-    exit 1
+    repartition_windows
 fi
 
 # Continue with other operations if checks pass
-echo "Partition sizes are sufficient. Proceeding with the rest of the script..."
+echo "Partition sizes are sufficient."
+echo ""
+
+repartition_conf() {
+    echo "ESP and Windows partitions already exist."
+    echo "Do you want to re-partition - r or continue with the existing partitions - c? (r/c)"
+    read -r first_confirmation
+    if [[ "$first_confirmation" == "r" || "$first_confirmation" == "repart" ]]; then
+        echo "OK, repartitioning will be done now."
+        repartition_windows
+    else
+        echo "Skipping repartitioning of Windows."
+        echo "The Windows partition will be formatted, and the installation will proceed in the same partition."
+    fi
+}
+
+repartition_conf
+echo ""
+echo "Proceeding with the rest of the Things..."
+
+
 
 # Define directories
 MAIN_DIR="/sdcard/"
@@ -351,10 +488,12 @@ $(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 echo ""
 echo "Copying files..."
 $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
+$(pwd)/busybox mkdir -p /mnt/win/Backups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
+$(pwd)/busybox cp -r /sdcard/backups/* /mnt/win/Backups/
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
 
 # Unzip Toolbox.zip

@@ -142,8 +142,16 @@ repartition_windows() {
         echo ""
         echo "Now your device will boot to recovery. Please wipe data there, then reboot."
         echo ""
-        echo "Repartitioning done!"
-        exit
+        # Prompt for reboot
+        echo "Repartitioning done! Press any key to reboot or wait 5 seconds..."
+        read -t 5 -n 1 key
+        if [[ $? -eq 0 ]]; then
+            echo "Rebooting..."
+            reboot
+        else
+            echo "No key pressed. Exiting."
+            exit
+        fi
     else
         echo "Repartitioning cancelled."
         exit

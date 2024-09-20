@@ -74,8 +74,7 @@ chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubu
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstallaosp -o nopcwinstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 nopcwinstallaosp && chmod 777 busybox && su -c "./nopcwinstallaosp"
 ```
-> [!NOTE]
-> - Copy this command and Paste if upper not work
+
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
    - **`Good Luck`**.
 

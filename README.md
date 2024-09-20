@@ -20,10 +20,10 @@
 
 ## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```
-
-- ```Your Device Must be Rooted (guide soon!)```
   
 - ```Unlocked bootloader``` (If your bootloader is locked and you don't know how to unlock it use [this](https://github.com/ArKT-7/won-deployer/blob/main/guide/English/unlock-bootloader-en.md) guide)
+
+- ```Your Device Must be Rooted (guide soon!)```
 
 ## Files need to downlaod 
 ### Downlaod these two file in your Xiaomi pad 5

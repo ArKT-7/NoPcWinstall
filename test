@@ -8,12 +8,14 @@ URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkf
 URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
+URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
 TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 TARGET_PARTED="$(pwd)/parted"
+TARGET_SGDISK="$(pwd)/sgdisk"
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
@@ -63,6 +65,7 @@ download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
+download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
 echo ""
 echo ""
 echo "All binaries have been downloaded and permissions set."
@@ -132,7 +135,7 @@ repartition_windows() {
 
         # Create partitions
         removeparts
-        #sgdisk --resize-table 64 /dev/block/sda
+        $(pwd)/sgdisk --resize-table 64 /dev/block/sda
         $(pwd)/busybox parted -s /dev/block/sda \
             mkpart userdata ext4 10872MB $userdataend"MB" \
             mkpart win ntfs $userdataend"MB" $(echo "$max - 400" | bc)"MB" \

@@ -21,11 +21,12 @@ More coming soon!
 > [!WARNING]
 > **IF YOU AREN'T COMFORTABLE MODDING YOUR TABLET OR ITS PARTITION TABLE OR YOU ARE PARANOID OF BRICKING YOUR DEVICE CLICK AWAY NOW!!! YOU HAVE BEEN WARNED, YOU ARE ON YOUR OWN IF YOU BRICK YOUR DEVICE!!! AGAIN! YOU HAVE BEEN WARNED!!!**
 
+---
 ## Get Started
 > [!TIP]
 > To open this site quickly, enter this URL: [**bit.ly/nopcwin**](https://bit.ly/nopcwin)
 
----
+
 ## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```
   

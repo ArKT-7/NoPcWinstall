@@ -488,10 +488,12 @@ $(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 echo ""
 echo "Copying files..."
 $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
+$(pwd)/busybox mkdir -p /mnt/win/Backups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
+$(pwd)/busybox cp -r /sdcard/backups/* /mnt/win/Backups/
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
 
 # Unzip Toolbox.zip

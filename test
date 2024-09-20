@@ -105,36 +105,40 @@ repartition_windows() {
     echo "Do you want to proceed with partitioning? (y/n)"
     read -r first_confirmation
     if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
-        echo "Warning: All data will be erased. Enter the size for the Windows partition in GB:"
+        echo "Warning: All data will be erased. Do you want to continue? (y/n)"
+        read -r second_confirmation
+        if [[ "$second_confirmation" != "y" && "$second_confirmation" != "yes" ]]; then
+            echo "Repartitioning cancelled."
+            exit
+        fi
+
+        # Display size limits
+        echo "Enter the size for the Windows partition in GB (minimum 20 GB, maximum $((max - 20)) GB):"
         read -r size_win
-        if ! [[ $size_win =~ ^[0-9]+$ ]]; then
-            echo "Invalid size. Please enter a number."
+        if ! [[ $size_win =~ ^[0-9]+$ ]] || [[ $size_win -lt 20 ]] || [[ $size_win -gt $((max - 20)) ]]; then
+            echo "Invalid size. Please enter a number between 20 and $((max - 20))."
             exit 1
         fi
 
         # Logic to determine maximum size
         blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-        if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
-        elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
-        elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
-        else echo "is this nabu?"; exit 
+        max=$((blocksize / 1024 / 1024))  # Convert bytes to MB
         echo "$max"
-        fi
-        
-        userdataend=$(echo "$max - $size_win * 1000 - 400" | bc)
+
+        userdataend=$((max - size_win * 1024 - 400))  # Calculate end of userdata partition
 
         # Create partitions
         removeparts
         $(pwd)/sgdisk --resize-table 64 /dev/block/sda
         $(pwd)/parted -s /dev/block/sda \
-            mkpart userdata ext4 10872MB $userdataend"MB" \
-            mkpart win ntfs $userdataend"MB" $(echo "$max - 400" | bc)"MB" \
-            mkpart esp fat32 $(echo "$max - 400" | bc)"MB" 100% \
+            mkpart userdata ext4 10872MB "$userdataend"MB \
+            mkpart win ntfs "$userdataend"MB "$((max - 400))"MB \
+            mkpart esp fat32 "$((max - 400))"MB 100% \
             set 33 esp on
         sync
-        echo "lploolplplpojfdjfkdnfdn"
+
         echo ""
-        echo "now you revice will boot to recovery please wipe data there then reboot"
+        echo "Now your device will boot to recovery. Please wipe data there, then reboot."
         echo ""
         echo "Repartitioning done!"
         exit
@@ -143,6 +147,7 @@ repartition_windows() {
         exit
     fi
 }
+
 
 # Function to convert bytes to gigabytes and megabytes
 bytes_to_gb() {

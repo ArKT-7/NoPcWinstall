@@ -23,7 +23,7 @@ More coming soon!
 
 ## Get Started
 > [!TIP]
-> To open this site quickly enter this url - *bit.ly/nopcwin*.
+> To open this site quickly enter this url - ```*bit.ly/nopcwin*```.
 
 ## Prerequisites
 - ```A functioning brain (seriously, you'll need to think!)```

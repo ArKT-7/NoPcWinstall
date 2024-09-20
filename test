@@ -9,7 +9,6 @@ URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mk
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
 URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
-URL_USERDATA="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
 URL_METADATA="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
 
 TARGET_BUSYBOX="$(pwd)/busybox"
@@ -18,7 +17,6 @@ TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 TARGET_PARTED="$(pwd)/parted"
 TARGET_SGDISK="$(pwd)/sgdisk"
-TARGET_USERDATA="$(pwd)/userdata.img"
 TARGET_METADATA="$(pwd)/metadata.img"
 
 
@@ -71,7 +69,6 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
-download_and_set_permissions "$URL_USERDATA" "$TARGET_USERDATA"
 download_and_set_permissions "$URL_METADATA" "$TARGET_METADATA"
 echo ""
 echo ""
@@ -91,7 +88,6 @@ $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 formatandroid(){
-$(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
 $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
 }
 

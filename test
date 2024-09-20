@@ -102,7 +102,7 @@ removeparts() {
 
 # Function to handle repartitioning
 repartition_windows() {
-    echo "Do you want to proceed with partitioning? y/n"
+    echo "Do you want to proceed with partitioning? (y/n)"
     read -r first_confirmation
     if [[ "$first_confirmation" == "y" || "$first_confirmation" == "yes" ]]; then
         echo "Warning: All data will be erased. Enter the size for the Windows partition in GB:"

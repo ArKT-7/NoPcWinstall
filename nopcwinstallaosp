@@ -200,14 +200,14 @@ repartition_windows() {
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 400 - 100)/1000" | bc)
+                winmax=$(echo "($max - 10872 - 700 - 100)/1000" | bc)
                 echo "Min size is 20, max size is less than $winmax"
                 if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "20 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
                     echo "Invalid argument!"
                     exit 1
                 fi
                 echo "$(echo "scale=2; $size_win*1000/1024" | bc) GiB of space will be given to the main Windows partition"
-                userdataend=$(echo "$max - $size_win*1000 - 400" | bc)
+                userdataend=$(echo "$max - $size_win*1000 - 700" | bc)
                 echo "userdata will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GiB of space"
                 echo -n "Does that sound good? (y/n) "
                 read yn

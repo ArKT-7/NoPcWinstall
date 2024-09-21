@@ -36,7 +36,7 @@ More coming soon!
 
 - ```Your Device Must be Rooted (guide soon!)```
 ---
-## Files you need to downlaod 
+## Files you need to Download 
 ### Put this two file in your Device internal Storage
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     

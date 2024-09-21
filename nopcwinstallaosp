@@ -28,14 +28,14 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo "test mode on now2dndjskdkdkjdjdkddkkdkfjdjddkkfkfjfk"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo "test for other device"
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
@@ -576,13 +576,13 @@ echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo "test for other device"
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 else

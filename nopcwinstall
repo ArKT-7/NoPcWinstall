@@ -214,7 +214,7 @@ repartition_windows() {
                 [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully, and eventually, you'll come to a conclusion."; exit 1; }
             fi
 
-            winend=$((max-400))"MB"
+            winend=$((max-700))"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda \
@@ -551,7 +551,7 @@ $(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Drive
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp bs=8M
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
 
 # Clean up

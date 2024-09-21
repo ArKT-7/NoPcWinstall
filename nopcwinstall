@@ -199,9 +199,10 @@ repartition_windows() {
             fi
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
+            echo ""
             if [[ -n $size_win ]]; then
                 winmax=$(echo "($max - 10872 - 635 - 100)/1000" | bc)
-                echo "Min size is 30, max size is less than $winmax GB"
+                echo "Min size is can be 30, max size is less than $winmax GB"
                 if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
                     echo "Invalid argument! please give corrent size accordingly"
                     exit 1

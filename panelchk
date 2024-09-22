@@ -8,7 +8,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
-elif [ "$DEVICE_CODENAME" = " beryllium" ]; then
+elif [ "$DEVICE_CODENAME" = "beryllium" ]; then
     echo "test for TOUCH"
     echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"

@@ -154,6 +154,12 @@ part_userdata="/dev/block/by-name/userdata"
 win=/dev/block/sda32
 esp=/dev/block/sda33
 
+umountwinesp(){
+$(pwd)/busybox umount /dev/block/sda32
+$(pwd)/busybox umount /dev/block/sda33
+$(pwd)/busybox partprobe
+}
+
 removeparts(){ for i in 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 
 formatwinesp(){
@@ -220,6 +226,7 @@ repartition_windows() {
             fi
 
             winend=$((max-635))"MB"
+            umountwinesp
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda \

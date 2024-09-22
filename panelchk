@@ -371,7 +371,7 @@ $(pwd)/busybox mkdir -p /mnt/{win,esp}
 $(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
 $(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 
- copy_with_progress() {
+copy_with_progress() {
     local src_file=$1
     local dest_file=$2
 

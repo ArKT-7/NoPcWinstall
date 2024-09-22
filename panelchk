@@ -268,54 +268,6 @@ echo "Size of Windows Partition: $size_win_gb GB"
 echo "Size of ESP Partition: $size_esp_mb MB"
 echo "Size of Android partition: $size_userdata_gb GB"
 
-# Continue with other operations if checks pass
-echo "Partition sizes are sufficient. Proceeding with the rest of the script..."
-
-# Define directories
-MAIN_DIR="/sdcard/"
-DIR_UNZIP="/sdcard/nopcwinstall/"
-DIR_BACK="/sdcard/backups/"
-DIR_UEFI="/sdcard/UEFI/"
-
-# Function to check and create directories
-check_and_create_dir() {
-    local dir=$1
-    if [ -d "$dir" ]; then
-        # echo "Directory $dir exists. Removing it."
-        $(pwd)/busybox rm -rf "$dir"
-    fi
-    # echo "Creating directory: $dir"
-    $(pwd)/busybox mkdir -p "$dir"
-}
-
-# Check and create directories
-check_and_create_dir "$DIR_UNZIP"
-check_and_create_dir "$DIR_BACK"
-check_and_create_dir "$DIR_UEFI"
-echo ""
-
-# Backup current partitions
-echo "Backing up Important partitions..."
-echo ""
-
-echo "Backing up boot.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/backups/boot.img 2>&1 | grep 'bytes'
-
-echo "Backing up dtbo.img..."
-dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/backups/dtbo.img 2>&1 | grep 'bytes'
-
-for part in fsc fsg modemst1 modemst2; do
-  echo "Backing up $part.img..."
-  dd if=/dev/block/by-name/$part of=/sdcard/backups/$part.img 2>&1 | grep 'bytes'
-done
-
-
-echo ""
-echo ""
-echo "Size of Windows Partition: $size_win_gb GB"
-echo "Size of ESP Partition: $size_esp_mb MB"
-echo "Size of Android partition: $size_userdata_gb GB"
-
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
@@ -352,7 +304,7 @@ echo "Unzipping selected file..."
 $(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
-EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
+EXPECTED_FILES=("Driver.zip" "install.bat" "pe")
 
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
@@ -409,8 +361,8 @@ echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
 echo ""
 echo "Unmounting and formatting partitions..."
 $(pwd)/busybox umount /dev/block/by-name/{esp,win}
-$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPF1
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINF1
 
 # Mount partitions
 echo ""
@@ -447,10 +399,9 @@ $(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 echo ""
 echo "Copying files..."
 $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
-copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
-copy_with_progress /sdcard/backups/boot.img /mnt/win/boot.img
+copy_with_progress /sdcard/nopcwinstall/boot.img /mnt/win/boot.img
 copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
 
 # Unzip Toolbox.zip

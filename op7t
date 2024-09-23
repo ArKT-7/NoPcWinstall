@@ -193,7 +193,6 @@ repartition_windows() {
 
             winend=$((max-350))"MB"
             removeparts
-            $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda \
               mkpart userdata ext4 19150MB $userdataend"MB" \
               mkpart win ntfs $userdataend"MB" $winend \

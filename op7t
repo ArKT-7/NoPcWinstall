@@ -32,9 +32,9 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+elif [ "$DEVICE_CODENAME" = "OnePlus7TPro" ]; then
+    echo "test for op7tpro hotdog"
+    echo "WinInstaller for Oneplus 7T Pro ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
@@ -87,9 +87,6 @@ TARGET_FILE1="$(pwd)/Toolbox.zip"
 URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
 TARGET_FILE2="$(pwd)/userdata.img"
 
-URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
-TARGET_FILE3="$(pwd)/metadata.img"
-
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
 $(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
@@ -111,18 +108,6 @@ if [ $? -eq 0 ]; then
     echo "Download complete for userdata.img."
 else
     echo "Failed to download $URL2."
-    exit 1
-fi
-
-# Download the metadata.img file
-echo "Downloading metadata.img"
-$(pwd)/busybox wget -O "$TARGET_FILE3" "$URL3"
-
-# Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "Download complete for metadata.img."
-else
-    echo "Failed to download $URL3."
     exit 1
 fi
 
@@ -151,30 +136,31 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
-win=/dev/block/sda32
-esp=/dev/block/sda33
+win=/dev/block/sda23
+esp=/dev/block/sda24
 
-removeparts(){ for i in 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
+removeparts(){ for i in 24 23 22; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 
 formatwinesp(){
-$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f $win -L WINNABU
+$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPONEPLUS
+$(pwd)/mkfs.ntfs -f $win -L WINONEPLUS
 }
 
 formatandroid(){
-echo "writing Userdata and Persist"
-$(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
+echo "writing Userdata"
+# $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda22
+
 # $(pwd)/busybox umount -a /dev/block/sda19
 # $(pwd)/busybox mke2fs -F /dev/block/sda19
 # $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
-$(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
+# $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 }
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
-elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
-elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
-else echo "is this nabu?"; exit 1
+#if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
+if [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
+#elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
+else echo "is this oneplus7tpro?"; exit 1
 fi
 
 # Function to handle repartitioning
@@ -198,10 +184,10 @@ repartition_windows() {
                 continue
             fi
             echo "backuping persist.img..."
-            $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
+            # $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
             if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 635 - 100)/1000" | bc)
+                winmax=$(echo "($max - 19150 - 350 - 100)/1000" | bc)
                 echo "Min size is can be 30, max size is less than $winmax GB"
                 if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
                     echo "Invalid argument! please give corrent size accordingly"
@@ -210,8 +196,8 @@ repartition_windows() {
                 echo ""
                 echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
                 echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 635" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
+                userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
+                echo "Android will get $(echo "scale=2; ($userdataend-19150)/1024" | bc) GB of space"
                 echo ""
                 echo -n "Does that sound good? (y/n) "
                 read yn
@@ -219,14 +205,14 @@ repartition_windows() {
                 [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
             fi
 
-            winend=$((max-635))"MB"
+            winend=$((max-350))"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda \
-              mkpart userdata ext4 10872MB $userdataend"MB" \
+              mkpart userdata ext4 19150MB $userdataend"MB" \
               mkpart win ntfs $userdataend"MB" $winend \
               mkpart esp fat32 $winend 100% \
-              set 33 esp on
+              set 24 esp on
             sync
             formatwinesp
             formatandroid

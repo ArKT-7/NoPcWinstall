@@ -144,7 +144,7 @@ $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
 #if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
-if [[ $blocksize =~ ^252[0-9]{9}$ ]]; then max=251432
+if [[ $blocksize =~ ^251[0-9]{9}$ ]]; then max=251432
 #elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
 else echo "is this oneplus7tpro?"; exit 1
 fi

@@ -311,8 +311,8 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 600" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 600 MB."
+if [ $(echo "$size_esp_mb < 300" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 300 MB."
     repartition_windows
 fi
 
@@ -482,8 +482,8 @@ echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
 echo ""
 echo "Unmounting and formatting partitions..."
 $(pwd)/busybox umount /dev/block/by-name/{esp,win}
-$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPONEPLUS
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINONEPLUS
 
 # Mount partitions
 echo ""

@@ -33,7 +33,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
 elif [ "$DEVICE_CODENAME" = "OnePlus7TPro" ]; then
-    echo "test for op7tpro hotdog xxxxxxxxxxxxxxxxxxxx"
+    echo "test for op7tpro hotdog nsrkgnjrgkjrsbgkjnsgkjrnbkjhrhkjsrnhkjsrnhjksrnjkh"
     echo "WinInstaller for Oneplus 7T Pro ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -474,7 +474,7 @@ $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINONEPLUS
 echo ""
 echo "Mounting partitions..."
 $(pwd)/busybox mkdir -p /mnt/{win,esp}
-$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+$(pwd)/busybox mount -t ntfs /dev/block/by-name/win /mnt/win
 $(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 
  copy_with_progress() {

@@ -33,7 +33,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
 elif [ "$DEVICE_CODENAME" = "OnePlus7TPro" ]; then
-    echo "test for op7tpro hotdog"
+    echo "test for op7tpro hotdog xxxxxxxxxxxxxxxxxxxx"
     echo "WinInstaller for Oneplus 7T Pro ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""

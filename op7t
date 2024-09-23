@@ -153,7 +153,7 @@ echo "writing Userdata"
 # $(pwd)/busybox umount -a /dev/block/sda19
 # $(pwd)/busybox mke2fs -F /dev/block/sda19
 # $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
-# $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
+$(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 }
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
@@ -184,7 +184,7 @@ repartition_windows() {
                 continue
             fi
             echo "backuping persist.img..."
-            # $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
+            $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
             if [[ -n $size_win ]]; then
                 winmax=$(echo "($max - 19150 - 350 - 100)/1000" | bc)

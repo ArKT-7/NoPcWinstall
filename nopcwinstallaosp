@@ -221,11 +221,10 @@ repartition_windows() {
             winend=$((max-635))"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-            $(pwd)/parted -s /dev/block/sda \
-              mkpart userdata ext4 10872MB $userdataend"MB" \
-              mkpart win ntfs $userdataend"MB" $winend \
-              mkpart esp fat32 $winend 100% \
-              set 33 esp on
+            $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 10872MB $userdataend"MB"
+            $(pwd)/parted -s /dev/block/sda mkpart win ntfs $userdataend"MB" $winend
+            $(pwd)/parted -s /dev/block/sda mkpart esp fat32 $winend 100%
+            $(pwd)/parted -s /dev/block/sda set 33 esp on
             sync
             formatwinesp
             formatandroid

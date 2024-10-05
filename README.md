@@ -34,7 +34,7 @@ More coming soon!
   
 - ```Unlocked bootloader``` (If your bootloader is locked and you don't know how to unlock it use [this](https://github.com/ArKT-7/won-deployer/blob/main/guide/English/unlock-bootloader-en.md) guide)
 
-- ```Your Device Must be Rooted (guide soon!)```
+- ```Your Device Must be Rooted (https://arkt-7.github.io/nabu/)```
 ---
 ## Files you need to Download 
 ### Put this two file in your Device internal Storage

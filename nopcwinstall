@@ -324,8 +324,8 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 350 MB."
+if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 330 MB."
     repartition_windows
 fi
 

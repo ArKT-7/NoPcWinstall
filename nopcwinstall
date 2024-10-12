@@ -324,8 +324,8 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 600" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 600 MB."
+if [ $(echo "$size_esp_mb < 350" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 350 MB."
     repartition_windows
 fi
 
@@ -384,15 +384,9 @@ echo ""
 echo "Backing up Important partitions..."
 echo ""
 
-echo "Backing up boot.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img 2>&1 | grep 'bytes'
-
-echo "Backing up dtbo.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img 2>&1 | grep 'bytes'
-
-for part in persist fsc fsg modemst1 modemst2; do
+for part in boot$(getprop ro.boot.slot_suffix) dtbo$(getprop ro.boot.slot_suffix) fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
-  $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img 2>&1 | grep 'bytes'
+  $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img bs=64M 2>&1 | grep 'bytes'
 done
 
 
@@ -438,7 +432,7 @@ echo "Unzipping selected file..."
 $(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
-EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
+EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe.img")
 
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
@@ -555,8 +549,8 @@ $(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Drive
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp bs=8M
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64M
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
 
 # Clean up
 echo ""

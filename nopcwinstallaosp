@@ -1,9 +1,11 @@
+
+
 #!/data/data/com.termux/files/usr/bin/bash
 
 #!/bin/sh
 
 # Define URLs and target paths
-# URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
 URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
 URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
@@ -12,7 +14,7 @@ URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdis
 # URL_make_f2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/make_f2fs"
 # URL_mkfsf2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
 
-# TARGET_BUSYBOX="$(pwd)/busybox"
+TARGET_BUSYBOX="$(pwd)/busybox"
 TARGET_MKFS_FAT="$(pwd)/mkfs.fat"
 TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
@@ -26,7 +28,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test mode on now2dndjskdkdkjdjdkddkkdkfjdjddkkfkfjfk"
+    echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -71,6 +73,7 @@ download_and_set_permissions() {
 
 # Delete all files in $(pwd) except busybox
 $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +
+
 
 download_and_set_permissions "$URL_MKFS_FAT" "$TARGET_MKFS_FAT"
 download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
@@ -199,9 +202,10 @@ repartition_windows() {
             fi
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
+            echo ""
             if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 635 - 100)/1000" | bc)
-                echo "Min size is 30, max size is less than $winmax GB"
+                winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
+                echo "Min size is can be 30, max size is less than $winmax GB"
                 if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
                     echo "Invalid argument! please give corrent size accordingly"
                     exit 1
@@ -209,7 +213,7 @@ repartition_windows() {
                 echo ""
                 echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
                 echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 635" | bc)
+                userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
                 echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
                 echo ""
                 echo -n "Does that sound good? (y/n) "
@@ -218,7 +222,7 @@ repartition_windows() {
                 [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
             fi
 
-            winend=$((max-635))"MB"
+            winend=$((max-350))"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 10872MB $userdataend"MB"
@@ -323,8 +327,8 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 600" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 600 MB."
+if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 330 MB."
     repartition_windows
 fi
 
@@ -384,16 +388,15 @@ echo "Backing up Important partitions..."
 echo ""
 
 echo "Backing up boot.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img 2>&1 | grep 'bytes'
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img bs=64M 2>&1 | grep 'bytes'
 
 echo "Backing up dtbo.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img 2>&1 | grep 'bytes'
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img bs=64M 2>&1 | grep 'bytes'
 
 for part in persist fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
-  $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img 2>&1 | grep 'bytes'
+  $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img bs=64M 2>&1 | grep 'bytes'
 done
-
 
 echo ""
 echo ""
@@ -437,7 +440,7 @@ echo "Unzipping selected file..."
 $(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
-EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
+EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe.img")
 
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
@@ -554,8 +557,8 @@ $(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Drive
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp bs=8M
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64M
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
 
 # Clean up
 echo ""

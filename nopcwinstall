@@ -201,7 +201,7 @@ repartition_windows() {
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
             if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 635 - 100)/1000" | bc)
+                winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
                 echo "Min size is can be 30, max size is less than $winmax GB"
                 if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
                     echo "Invalid argument! please give corrent size accordingly"
@@ -210,7 +210,7 @@ repartition_windows() {
                 echo ""
                 echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
                 echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 635" | bc)
+                userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
                 echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
                 echo ""
                 echo -n "Does that sound good? (y/n) "
@@ -219,7 +219,7 @@ repartition_windows() {
                 [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
             fi
 
-            winend=$((max-635))"MB"
+            winend=$((max-350))"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 10872MB $userdataend"MB"

@@ -384,11 +384,16 @@ echo ""
 echo "Backing up Important partitions..."
 echo ""
 
-for part in boot$(getprop ro.boot.slot_suffix) dtbo$(getprop ro.boot.slot_suffix) fsc fsg modemst1 modemst2; do
+echo "Backing up boot.img..."
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img bs=64M 2>&1 | grep 'bytes'
+
+echo "Backing up dtbo.img..."
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img bs=64M 2>&1 | grep 'bytes'
+
+for part in persist fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
   $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img bs=64M 2>&1 | grep 'bytes'
 done
-
 
 echo ""
 echo ""

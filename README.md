@@ -126,5 +126,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 - [@Kumar-Jy](https://github.com/Kumar-Jy) - Wininstaller method ([here](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC))
 - [@Kumar-Jy - Wininstaller](https://t.me/wininstaller) - Telegram Group
 
-
+```bash
+mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testa -o testa && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 testa && chmod 777 busybox && su -c "./testa"
+```
 

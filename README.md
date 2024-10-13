@@ -56,7 +56,7 @@ su
 ```
 ### 3. Then Grant Root 
 
-### 4. Copy this command and paste in Termux app
+### 4. Copy this command and paste in Termux app for Xiamoi Pad 5
 > [!NOTE]
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
@@ -73,6 +73,30 @@ su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.
 > - Copy this command and Paste if upper both not work
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstallaosp -o nabuwinstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 nabuwinstallaosp && chmod 777 busybox && su -c "./nabuwinstallaosp"
+```
+
+## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
+   - **`Good Luck`**.
+
+
+
+### 4. Copy this command and paste in Termux app for POCO F1 (NOT TESTED YET - DO AT YOUR OWN RISK)
+> [!NOTE]
+> - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
+> - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
+```bash
+su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/f1winstall -o /data/data/arkt/f1winstall && chmod 777 /data/data/arkt/f1winstall && su -c "/data/data/arkt/f1winstall""
+```
+> [!NOTE]
+> - Copy this command and Paste if upper not work
+
+```bash
+su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/f1winstall -o /data/local/tmp/f1winstall && chmod 777 /data/local/tmp/f1winstall && su -c "/data/local/tmp/f1winstall""
+```
+> [!NOTE]
+> - Copy this command and Paste if upper both not work
+```bash
+mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/f1winstallaosp -o f1winstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 f1winstallaosp && chmod 777 busybox && su -c "./f1winstallaosp"
 ```
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait

@@ -32,6 +32,13 @@ elif [ "$DEVICE_CODENAME" = "beryllium" ]; then
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
+elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+    echo "test for other device"
+    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo ""
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
+    echo ""
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"

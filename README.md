@@ -61,18 +61,18 @@ su
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
 ```bash
-su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/data/arkt/nopcwinstall && chmod 777 /data/data/arkt/nopcwinstall && su -c "/data/data/arkt/nopcwinstall""
+su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /data/data/arkt/nabuwinstall && chmod 777 /data/data/arkt/nabuwinstall && su -c "/data/data/arkt/nabuwinstall""
 ```
 > [!NOTE]
 > - Copy this command and Paste if upper not work
 
 ```bash
-su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstall -o /data/local/tmp/nopcwinstall && chmod 777 /data/local/tmp/nopcwinstall && su -c "/data/local/tmp/nopcwinstall""
+su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /data/local/tmp/nabuwinstall && chmod 777 /data/local/tmp/nabuwinstall && su -c "/data/local/tmp/nabuwinstall""
 ```
 > [!NOTE]
 > - Copy this command and Paste if upper both not work
 ```bash
-mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nopcwinstallaosp -o nopcwinstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 nopcwinstallaosp && chmod 777 busybox && su -c "./nopcwinstallaosp"
+mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstallaosp -o nabuwinstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 nabuwinstallaosp && chmod 777 busybox && su -c "./nabuwinstallaosp"
 ```
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait

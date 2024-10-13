@@ -230,7 +230,7 @@ repartition_windows() {
             echo "then reboot. AND COMPLETE SETUP EVERYTHING."
             echo "INSTALL MAGISK AND THEN CONTINUE TO RE-RUN EVERYTHING."
             echo ""
-            echo "Repartitioning done! Press any key to reboot..."
+            echo "Repartitioning done! Press any key to reboot... AS THIS IS A TEST ENSKRIPT SO MAKE SURE TO CHECK EVERYTHING IS GOOD THEN REBOOT"
             read -n 1 -s key  # Wait for a key press
             echo "Waiting for 5 seconds before rebooting..."
             sleep 5
@@ -317,8 +317,8 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 330 MB."
+if [ $(echo "$size_esp_mb < 370" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 370 MB."
     repartition_windows
 fi
 
@@ -378,10 +378,10 @@ echo "Backing up Important partitions..."
 echo ""
 
 echo "Backing up boot.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img bs=64M 2>&1 | grep 'bytes'
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot of=/sdcard/importantbackups/boot.img bs=64M 2>&1 | grep 'bytes'
 
 echo "Backing up dtbo.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img bs=64M 2>&1 | grep 'bytes'
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo of=/sdcard/importantbackups/dtbo.img bs=64M 2>&1 | grep 'bytes'
 
 for part in persist fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
@@ -430,7 +430,7 @@ echo "Unzipping selected file..."
 $(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
-EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe.img")
+EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe" "newebbg.img" "ebbg" "newtianma.img" "tianma")
 
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
@@ -487,8 +487,8 @@ echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
 echo ""
 echo "Unmounting and formatting partitions..."
 $(pwd)/busybox umount /dev/block/by-name/{esp,win}
-$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPF1
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINF1
 
 # Mount partitions
 echo ""
@@ -526,7 +526,6 @@ echo ""
 echo "Copying files..."
 $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 $(pwd)/busybox mkdir -p /mnt/win/importantbackups
-copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
@@ -547,8 +546,32 @@ $(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Drive
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64M
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp bs=32M
+
+# Panel detection logic
+su -c 'if cat /proc/cmdline | grep -q "dsi_ebbg_fhd_ft8719_video_display"; then \
+  echo "EBBG panel detected"; \
+  copy_with_progress /sdcard/nopcwinstall/newebbg.img /sdcard/UEFI/newebbg.img; \
+  $(pwd)/busybox dd if=/sdcard/nopcwinstall/ebbg of=/dev/block/by-name/boot; \
+elif cat /proc/cmdline | grep -q "dsi_tianma_fhd_nt36672a_video_display"; then \
+  echo "Tianma panel detected"; \
+  copy_with_progress /sdcard/nopcwinstall/newtianma.img /sdcard/UEFI/newtianma.img; \
+  $(pwd)/busybox dd if=/sdcard/nopcwinstall/tianma of=/dev/block/by-name/boot; \
+else \
+  panel=$(cat /proc/cmdline | grep -Eo "j20s_36|k82_36"); \
+  case $panel in \
+    "j20s_36"|"k82_36") \
+      echo "Tianma panel detected"; \
+      copy_with_progress /sdcard/nopcwinstall/newtianma.img /sdcard/UEFI/newtianma.img; \
+      $(pwd)/busybox dd if=/sdcard/nopcwinstall/tianma of=/dev/block/by-name/boot; \
+      ;; \
+    *) \
+      echo "Unknown panel, detection failed"; \
+      ;; \
+  esac; \
+fi'
+
+
 
 # Clean up
 echo ""
@@ -569,18 +592,13 @@ echo "*         ask for help on Telegram Chat         *";
 echo "*      Telegram - '@ArKT_7', @wininstaller      *";
 echo "*                                               *";
 echo "*************************************************";
-if [ "$DEVICE_CODENAME" = "nabu" ]; then
+elif [ "$DEVICE_CODENAME" = "beryllium" ]; then
     echo ""
-    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
@@ -589,4 +607,5 @@ else
     exit 1
 fi
 sleep 10
-reboot
+echo "DEVICE WILL NOT REBOOT AUTOMATICALLY AS THIS IS A TEST ENSKRIPT SO MAKE SURE TO CHECK EVERYTHING IS GOOD THEN REBOOT"
+# reboot

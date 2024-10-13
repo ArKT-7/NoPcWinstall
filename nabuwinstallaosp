@@ -88,8 +88,8 @@ TARGET_FILE1="$(pwd)/Toolbox.zip"
 URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
 TARGET_FILE2="$(pwd)/userdata.img"
 
-URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
-TARGET_FILE3="$(pwd)/metadata.img"
+# URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
+# TARGET_FILE3="$(pwd)/metadata.img"
 
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
@@ -116,16 +116,16 @@ else
 fi
 
 # Download the metadata.img file
-echo "Downloading metadata.img"
-$(pwd)/busybox wget -O "$TARGET_FILE3" "$URL3"
+# echo "Downloading metadata.img"
+# $(pwd)/busybox wget -O "$TARGET_FILE3" "$URL3"
 
 # Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "Download complete for metadata.img."
-else
-    echo "Failed to download $URL3."
-    exit 1
-fi
+# if [ $? -eq 0 ]; then
+    # echo "Download complete for metadata.img."
+# else
+    # echo "Failed to download $URL3."
+    # exit 1
+# fi
 
 echo "All downloads completed."
 echo ""

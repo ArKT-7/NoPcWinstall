@@ -453,18 +453,6 @@ done
 echo ""
 echo "Searching for Windows files..."
 echo ""
-esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
-
-# Check if no ESD files were found
-if [ ${#esd_files[@]} -eq 0 ]; then
-    echo "No Windows files found. Please download and place an ESD file in the directory."
-    exit 1
-fi
-
-# List and select Windows files
-echo ""
-echo "Searching for Windows files..."
-echo ""
 
 # Search for both .esd and .wim files
 windows_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \) ))

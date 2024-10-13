@@ -46,7 +46,7 @@ download_and_set_permissions() {
     local url=$1
     local dest_file=$2
     echo "Downloading $(basename "$url")..."
-    curl -s -L -o "$dest_file" "$url"
+    $(pwd)/busybox wget -O "$dest_file" "$url"
     
     if [ $? -ne 0 ]; then
         echo "Failed to download $(basename "$url"). Exiting."
@@ -59,8 +59,9 @@ download_and_set_permissions() {
     echo "Permissions set for $(basename "$dest_file")"
 }
 
+
 # Download and set permissions for binaries
-download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+# download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 
 # Delete all files in $(pwd) except busybox
 $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +

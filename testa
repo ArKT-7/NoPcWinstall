@@ -27,7 +27,7 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
@@ -53,7 +53,7 @@ download_and_set_permissions() {
     local url=$1
     local dest_file=$2
     echo "Downloading $(basename "$url")..."
-    curl -s -L -o "$dest_file" "$url"
+    $(pwd)/busybox wget -O "$dest_file" "$url"
     
     if [ $? -ne 0 ]; then
         echo "Failed to download $(basename "$url"). Exiting."
@@ -66,8 +66,9 @@ download_and_set_permissions() {
     echo "Permissions set for $(basename "$dest_file")"
 }
 
+
 # Download and set permissions for binaries
-download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+# download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
 
 # Delete all files in $(pwd) except busybox
 $(pwd)/busybox find $(pwd) -mindepth 1 ! -name 'busybox' -exec $(pwd)/busybox rm -rf {} +
@@ -87,8 +88,8 @@ TARGET_FILE1="$(pwd)/Toolbox.zip"
 URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
 TARGET_FILE2="$(pwd)/userdata.img"
 
-URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
-TARGET_FILE3="$(pwd)/metadata.img"
+# URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
+# TARGET_FILE3="$(pwd)/metadata.img"
 
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
@@ -115,16 +116,16 @@ else
 fi
 
 # Download the metadata.img file
-echo "Downloading metadata.img"
-$(pwd)/busybox wget -O "$TARGET_FILE3" "$URL3"
+# echo "Downloading metadata.img"
+# $(pwd)/busybox wget -O "$TARGET_FILE3" "$URL3"
 
 # Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "Download complete for metadata.img."
-else
-    echo "Failed to download $URL3."
-    exit 1
-fi
+# if [ $? -eq 0 ]; then
+    # echo "Download complete for metadata.img."
+# else
+    # echo "Failed to download $URL3."
+    # exit 1
+# fi
 
 echo "All downloads completed."
 echo ""
@@ -151,19 +152,19 @@ part_win="/dev/block/by-name/win"
 part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
-win=/dev/block/sda32
-esp=/dev/block/sda33
+win=/dev/block/sda23
+esp=/dev/block/sda21
 
-removeparts(){ for i in 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
+removeparts(){ for i in 25 24 23 22 21; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 
 formatwinesp(){
-$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f $win -L WINNABU
+$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPF1
+$(pwd)/mkfs.ntfs -f $win -L WINF1
 }
 
 formatandroid(){
 echo "writing Userdata and Persist"
-$(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
+$(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda22
 # $(pwd)/busybox umount -a /dev/block/sda19
 # $(pwd)/busybox mke2fs -F /dev/block/sda19
 # $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
@@ -171,10 +172,10 @@ $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 }
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
-elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
-elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
-else echo "is this nabu?"; exit 1
+if [[ $blocksize =~ ^59[0-9]{9}$ ]]; then max=59.1
+elif [[ $blocksize =~ ^123[0-9]{9}$ ]]; then max=123
+elif [[ $blocksize =~ ^250[0-9]{9}$ ]]; then max=251
+else echo "is this beryllium?"; exit 1
 fi
 
 # Function to handle repartitioning
@@ -201,17 +202,17 @@ repartition_windows() {
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
             if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 635 - 100)/1000" | bc)
+                winmax=$(echo "$max - 2 - 0.1" | bc)
                 echo "Min size is can be 30, max size is less than $winmax GB"
                 if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
                     echo "Invalid argument! please give corrent size accordingly"
                     exit 1
                 fi
                 echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
+                echo "Windows will get $(echo "scale=2; $size_win*1000^3/1024^3"|bc -l) GB of space"
                 echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 635" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
+                userdataend=$(echo "$max - $size_win - 2" | bc)
+                echo "Android will get $(echo "scale=2;($userdataend-2)*1000^3/1024^3"|bc -l) GB of space"
                 echo ""
                 echo -n "Does that sound good? (y/n) "
                 read yn
@@ -219,13 +220,13 @@ repartition_windows() {
                 [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
             fi
 
-            winend=$((max-635))"MB"
+            winend=$(echo "scale=1;$max-2"|bc -l)"GB"
             removeparts
-            $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-            $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 10872MB $userdataend"MB"
-            $(pwd)/parted -s /dev/block/sda mkpart win ntfs $userdataend"MB" $winend
-            $(pwd)/parted -s /dev/block/sda mkpart esp fat32 $winend 100%
-            $(pwd)/parted -s /dev/block/sda set 33 esp on
+            $(pwd)/sgdisk --resize-table 32 /dev/block/sda
+            $(pwd)/parted -s /dev/block/sda mkpart esp fat32 1.611GB 2GB
+            $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 2GB $userdataend"GB"
+            $(pwd)/parted -s /dev/block/sda mkpart win ntfs $userdataend"GB" $max"GB"
+            $(pwd)/parted -s /dev/block/sda set 21 esp on
             sync
             formatwinesp
             formatandroid
@@ -237,7 +238,7 @@ repartition_windows() {
             echo "then reboot. AND COMPLETE SETUP EVERYTHING."
             echo "INSTALL MAGISK AND THEN CONTINUE TO RE-RUN EVERYTHING."
             echo ""
-            echo "Repartitioning done! Press any key to reboot..."
+            echo "Repartitioning done! Press any key to reboot... AS THIS IS A TEST ENSKRIPT SO MAKE SURE TO CHECK EVERYTHING IS GOOD THEN REBOOT"
             read -n 1 -s key  # Wait for a key press
             echo "Waiting for 5 seconds before rebooting..."
             sleep 5
@@ -324,8 +325,8 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 600" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 600 MB."
+if [ $(echo "$size_esp_mb < 370" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 370 MB."
     repartition_windows
 fi
 
@@ -385,16 +386,15 @@ echo "Backing up Important partitions..."
 echo ""
 
 echo "Backing up boot.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/boot.img 2>&1 | grep 'bytes'
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/boot of=/sdcard/importantbackups/boot.img bs=64M 2>&1 | grep 'bytes'
 
 echo "Backing up dtbo.img..."
-$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo$(getprop ro.boot.slot_suffix) of=/sdcard/importantbackups/dtbo.img 2>&1 | grep 'bytes'
+$(pwd)/busybox dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/dtbo of=/sdcard/importantbackups/dtbo.img bs=64M 2>&1 | grep 'bytes'
 
 for part in persist fsc fsg modemst1 modemst2; do
   echo "Backing up $part.img..."
-  $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img 2>&1 | grep 'bytes'
+  $(pwd)/busybox dd if=/dev/block/by-name/$part of=/sdcard/importantbackups/$part.img bs=64M 2>&1 | grep 'bytes'
 done
-
 
 echo ""
 echo ""
@@ -438,7 +438,7 @@ echo "Unzipping selected file..."
 $(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
-EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe")
+EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe" "newebbg.img" "ebbg" "newtianma.img" "tianma")
 
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
@@ -495,8 +495,8 @@ echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
 echo ""
 echo "Unmounting and formatting partitions..."
 $(pwd)/busybox umount /dev/block/by-name/{esp,win}
-$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+$(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPF1
+$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINF1
 
 # Mount partitions
 echo ""
@@ -534,7 +534,6 @@ echo ""
 echo "Copying files..."
 $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 $(pwd)/busybox mkdir -p /mnt/win/importantbackups
-copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
@@ -555,8 +554,32 @@ $(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Drive
 # Write images to the device
 echo ""
 echo "Writing winpe image to the device..."
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp bs=8M
-$(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix)
+$(pwd)/busybox dd if=/sdcard/nopcwinstall/pe of=/dev/block/by-name/esp bs=32M
+
+# Panel detection logic
+su -c 'if cat /proc/cmdline | grep -q "dsi_ebbg_fhd_ft8719_video_display"; then \
+  echo "EBBG panel detected"; \
+  copy_with_progress /sdcard/nopcwinstall/newebbg.img /sdcard/UEFI/newebbg.img; \
+  $(pwd)/busybox dd if=/sdcard/nopcwinstall/ebbg of=/dev/block/by-name/boot; \
+elif cat /proc/cmdline | grep -q "dsi_tianma_fhd_nt36672a_video_display"; then \
+  echo "Tianma panel detected"; \
+  copy_with_progress /sdcard/nopcwinstall/newtianma.img /sdcard/UEFI/newtianma.img; \
+  $(pwd)/busybox dd if=/sdcard/nopcwinstall/tianma of=/dev/block/by-name/boot; \
+else \
+  panel=$(cat /proc/cmdline | grep -Eo "j20s_36|k82_36"); \
+  case $panel in \
+    "j20s_36"|"k82_36") \
+      echo "Tianma panel detected"; \
+      copy_with_progress /sdcard/nopcwinstall/newtianma.img /sdcard/UEFI/newtianma.img; \
+      $(pwd)/busybox dd if=/sdcard/nopcwinstall/tianma of=/dev/block/by-name/boot; \
+      ;; \
+    *) \
+      echo "Unknown panel, detection failed"; \
+      ;; \
+  esac; \
+fi'
+
+
 
 # Clean up
 echo ""
@@ -579,16 +602,18 @@ echo "*                                               *";
 echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-    echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
+    echo ""
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo "test for other device"
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
+    echo ""
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
@@ -597,4 +622,5 @@ else
     exit 1
 fi
 sleep 10
-reboot
+echo "DEVICE WILL NOT REBOOT AUTOMATICALLY AS THIS IS A TEST ENSKRIPT SO MAKE SURE TO CHECK EVERYTHING IS GOOD THEN REBOOT"
+# reboot

@@ -77,10 +77,10 @@ echo ""
 URL1="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
 TARGET_FILE1="$(pwd)/Toolbox.zip"
 
-URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/f1/userdata.img"
+URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
 TARGET_FILE2="$(pwd)/userdata.img"
 
-# URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/fi/metadata.img"
+# URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
 # TARGET_FILE3="$(pwd)/metadata.img"
 
 # Download the Toolbox.zip file

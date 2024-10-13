@@ -154,7 +154,7 @@ part_userdata="/dev/block/by-name/userdata"
 win=/dev/block/sda32
 esp=/dev/block/sda33
 
-removeparts(){ for i in 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
+removeparts(){ for i in 34 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 
 formatwinesp(){
 $(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU

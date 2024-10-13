@@ -26,7 +26,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo ""
+    echo "lolololololo"
     echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -173,7 +173,7 @@ $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
 if [[ $blocksize =~ ^59[0-9]{9}$ ]]; then max=59.1
-elif [[ $blocksize =~ ^123[0-9]{9}$ ]]; then max=123
+elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=252
 elif [[ $blocksize =~ ^250[0-9]{9}$ ]]; then max=251
 else echo "is this beryllium?"; exit 1
 fi

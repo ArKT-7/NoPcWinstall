@@ -25,7 +25,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
 
-elif [ "$DEVICE_CODENAME" = "beryllium" ]; then
+if [ "$DEVICE_CODENAME" = "beryllium" ]; then
     echo ""
     echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
@@ -599,9 +599,16 @@ echo "*         ask for help on Telegram Chat         *";
 echo "*      Telegram - '@ArKT_7', @wininstaller      *";
 echo "*                                               *";
 echo "*************************************************";
-elif [ "$DEVICE_CODENAME" = "beryllium" ]; then
+if [ "$DEVICE_CODENAME" = "beryllium" ]; then
     echo ""
     echo "WinInstaller for Poco F1 ($DEVICE_CODENAME)"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo ""
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
+    echo ""
+elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+    echo "test for other device"
+    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"

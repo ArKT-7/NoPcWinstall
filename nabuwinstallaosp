@@ -544,7 +544,7 @@ copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
 echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
-copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
+copy_with_progress "$SELECTED_WINDOWS_FILE" /mnt/win/installer/install.esd
 
 # Unzip Toolbox.zip
 echo ""

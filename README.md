@@ -79,7 +79,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
    - **`Good Luck`**.
 
 
-
+<!-- 
 ### 4. Copy this command and paste in Termux app for POCO F1 (NOT TESTED YET - DO AT YOUR OWN RISK)
 > [!NOTE]
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
@@ -101,7 +101,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
    - **`Good Luck`**.
-
+-->
 > [!IMPORTANT]
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7)
 
@@ -125,8 +125,9 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 
 - [@Kumar-Jy](https://github.com/Kumar-Jy) - Wininstaller method ([here](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC))
 - [@Kumar-Jy - Wininstaller](https://t.me/wininstaller) - Telegram Group
-
+<!-- 
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testa -o testa && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 testa && chmod 777 busybox && su -c "./testa"
 ```
+-->
 

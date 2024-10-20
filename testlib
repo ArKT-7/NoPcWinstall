@@ -28,7 +28,7 @@ TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test-11"
+    echo "test-12"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""

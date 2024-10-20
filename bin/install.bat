@@ -4,28 +4,32 @@ setlocal enabledelayedexpansion
 :: Set console mode
 mode 800
 
+
 echo.
 echo ==========================================================
 echo Searching for the index value of "Windows drive"...
 echo ==========================================================
 echo.
 
+
 :: Initialize variables
 set imageFile=
 set targetDrive=
 
+
 :: Loop through all drives to find the image file
-for %%G in (C D E F G H I J K L M N O P Q R S T U V W Y Z) do (
-    if exist %%G:\Windows\System32 (
+for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+    if exist %%G:\boot.img (
         set targetDrive=%%G:
         goto :found
     )
 )
 
-echo Windows installation not found on any drive
+
 echo installation doesn't copy files properly and failed.
 pause
 exit /b
+
 
 :found
 echo.
@@ -88,9 +92,9 @@ echo.
 echo ==========================================================
 echo Now performing driver installation...
 echo ==========================================================
-REM call "X:\DriverInstaller\DriverInstaller.lnk"
 call "%targetDrive%\installer\Driver\DriverInstaller.lnk"
-
+
+
 echo.
 echo ==========================================================
 echo Rebooting in 5 seconds...

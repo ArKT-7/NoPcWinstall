@@ -26,7 +26,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test-7"
+    echo "test-8"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -404,23 +404,21 @@ echo "Size of Android partition: $size_userdata_gb GB"
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
-zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
 
-if [ ${#zip_files[@]} -eq 0 ]; then
-    echo "No ZIP files found. Please download and place a ZIP file in the directory."
-    exit 1
-fi
-
-echo "Available ZIP files:"
+# Using a loop to handle spaces in file paths
 count=1
-for file in "${zip_files[@]}"; do
-    # Only list files, not directories
+while IFS= read -r file; do
     if [ -f "$file" ]; then
         echo "$count. $(basename "$file")"
         files[$count]="$file"
         count=$((count + 1))
     fi
-done
+done < <("$(pwd)/busybox" find "$MAIN_DIR" -type f -name "*.zip")
+
+if [ $count -eq 1 ]; then
+    echo "No ZIP files found. Please download and place a ZIP file in the directory."
+    exit 1
+fi
 
 echo ""
 echo "Enter the serial number of the ZIP file to select:"

@@ -6,7 +6,7 @@ mode 800
 
 echo.
 echo ==========================================================
-echo Searching for the index value of "Windows Image"...
+echo Searching for the index value of "Windows drive"...
 echo ==========================================================
 echo.
 
@@ -15,13 +15,14 @@ set imageFile=
 set targetDrive=
 
 :: Loop through all drives to find the image file
-for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
-    if exist %%G:\boot.img (
+for %%G in (C D E F G H I J K L M N O P Q R S T U V W Y Z) do (
+    if exist %%G:\Windows\System32 (
         set targetDrive=%%G:
         goto :found
     )
 )
 
+echo Windows installation not found on any drive
 echo installation doesn't copy files properly and failed.
 pause
 exit /b
@@ -88,6 +89,14 @@ echo ==========================================================
 echo Now performing driver installation...
 echo ==========================================================
 call "X:\DriverInstaller\DriverInstaller.lnk"
+
+echo.
+echo ==========================================================
+echo Rebooting in 5 seconds...
+echo ==========================================================
+echo.
+
+echo this script is written by https://gitHub.com/Kumar-Jy and Modified by °⊥⋊ɹ∀° https://gitHub.com/ArKT-7
 
 echo.
 echo ==========================================================
@@ -95,10 +104,3 @@ echo Removing installer directory...
 echo ==========================================================
 cd %targetDrive%\
 rmdir /s /q "%targetDrive%\installer"
-echo.
-echo ==========================================================
-echo Rebooting in 5 seconds...
-echo ==========================================================
-echo.
-
-echo this script is written by https://gitHub.com/Kumar-Jy

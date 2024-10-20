@@ -414,9 +414,12 @@ fi
 echo "Available ZIP files:"
 count=1
 for file in "${zip_files[@]}"; do
-    echo "$count. $(basename "$file")"
-    files[$count]="$file"
-    count=$((count + 1))
+    # Only list files, not directories
+    if [ -f "$file" ]; then
+        echo "$count. $(basename "$file")"
+        files[$count]="$file"
+        count=$((count + 1))
+    fi
 done
 
 echo ""

@@ -448,28 +448,25 @@ for file in "${EXPECTED_FILES[@]}"; do
 done
 
 
-# List and select Windows files
-echo ""
-echo "Searching for Windows files..."
-echo ""
-esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
+# Search for both .esd and .wim files
+windows_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" -o -name "*.wim" ))
 
-# Check if no ESD files were found
-if [ ${#esd_files[@]} -eq 0 ]; then
-    echo "No Windows files found. Please download and place an ESD file in the directory."
+# Check if no .esd or .wim files were found
+if [ ${#windows_files[@]} -eq 0 ]; then
+    echo "No Windows files found. Please download and place an ESD or WIM file in the directory."
     exit 1
 fi
 
-# If only one ESD file is found, automatically select it
-if [ ${#esd_files[@]} -eq 1 ]; then
-    SELECTED_ESD_FILE="${esd_files[0]}"
-    echo "ESD file found: $(basename "$SELECTED_ESD_FILE")"
+# If only one .esd or .wim file is found, automatically select it
+if [ ${#windows_files[@]} -eq 1 ]; then
+    SELECTED_WINDOWS_FILE="${windows_files[0]}"
+    echo "Windows file found: $(basename "$SELECTED_WINDOWS_FILE")"
     echo "Automatically selecting this file."
 else
-    # If more than one ESD file is found, prompt user for selection
+    # If more than one file is found, prompt user for selection
     echo "Available Windows files:"
     count=1
-    for file in "${esd_files[@]}"; do
+    for file in "${windows_files[@]}"; do
         echo "$count. $(basename "$file")"
         files[$count]=$file
         count=$((count + 1))
@@ -485,10 +482,24 @@ else
         exit 1
     fi
 
-    SELECTED_ESD_FILE="${files[$selection]}"
+    SELECTED_WINDOWS_FILE="${files[$selection]}"
 fi
+
 echo ""
-echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
+echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
+
+# Check the file extension and set the appropriate destination filename
+extension="${SELECTED_WINDOWS_FILE##*.}"
+if [ "$extension" == "esd" ]; then
+    DEST_FILE="install.esd"
+elif [ "$extension" == "wim" ]; then
+    DEST_FILE="install.wim"
+else
+    echo "Unknown file type: $extension. Exiting."
+    exit 1
+fi
+
+
 
 # Unmount and format partitions
 echo ""
@@ -539,7 +550,7 @@ copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
 echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
-copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
+copy_with_progress "$SELECTED_WINDOWS_FILE" "/mnt/win/installer/$DEST_FILE"
 
 # Unzip Toolbox.zip
 echo ""

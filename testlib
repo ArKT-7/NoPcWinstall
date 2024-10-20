@@ -28,7 +28,7 @@ TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test-12"
+    echo "test-13"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -516,7 +516,36 @@ $(pwd)/busybox umount /dev/block/by-name/{esp,win}
 $(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
 $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 
-$(pwd)/wimlib-imagex apply "$SELECTED_WINDOWS_FILE" 1 /dev/block/by-name/win
+# $(pwd)/wimlib-imagex apply "$SELECTED_WINDOWS_FILE" 1 /dev/block/by-name/win
+
+
+# List all available indexes with their names using wimlib-imagex info
+echo "Available Images:"
+AVAILABLE_IMAGES=$(wimlib-imagex info "$SELECTED_WINDOWS_FILE" | grep -E 'Index:|Name:')
+
+# Display the indexes and names
+echo "$AVAILABLE_IMAGES"
+
+# Ask user to select the index number
+echo -n "Please enter the index number you want to apply: "
+read SELECTED_INDEX
+
+# Confirm the selected index by printing the name of the index
+SELECTED_NAME=$(wimlib-imagex info "$SELECTED_WINDOWS_FILE" | grep -A 1 "Index: *$SELECTED_INDEX" | grep 'Name:' | awk -F ': ' '{print $2}')
+echo "You have selected Index $SELECTED_INDEX: $SELECTED_NAME"
+
+# Ask for confirmation
+echo -n "Do you want to proceed with applying this image? (y/n): "
+read CONFIRMATION
+
+if [[ "$CONFIRMATION" == "y" || "$CONFIRMATION" == "Y" ]]; then
+    # Apply the selected index to the destination (win partition)
+    wimlib-imagex apply "$SELECTED_WINDOWS_FILE" "$SELECTED_INDEX" /dev/block/by-name/win
+    echo "Image applied successfully!"
+else
+    echo "Operation cancelled."
+fi
+
 
 # Mount partitions
 echo ""

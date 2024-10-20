@@ -26,7 +26,7 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test-9"
+    echo "test-11"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
@@ -494,6 +494,17 @@ fi
 echo ""
 echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
 
+# Check the file extension and set the appropriate destination filename
+extension="${SELECTED_WINDOWS_FILE##*.}"
+if [ "$extension" == "esd" ]; then
+    DEST_FILE="install.esd"
+elif [ "$extension" == "wim" ]; then
+    DEST_FILE="install.wim"
+else
+    echo "Unknown file type: $extension. Exiting."
+    exit 1
+fi
+
 
 # Unmount and format partitions
 echo ""
@@ -540,7 +551,6 @@ $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 $(pwd)/busybox mkdir -p /mnt/win/importantbackups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
-copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
 echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/

@@ -88,7 +88,8 @@ echo.
 echo ==========================================================
 echo Now performing driver installation...
 echo ==========================================================
-call "X:\DriverInstaller\DriverInstaller.lnk"
+REM call "X:\DriverInstaller\DriverInstaller.lnk"
+call "%targetDrive%\installer\Driver\DriverInstaller.lnk"
 
 echo.
 echo ==========================================================

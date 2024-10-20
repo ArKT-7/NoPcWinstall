@@ -516,6 +516,8 @@ $(pwd)/busybox umount /dev/block/by-name/{esp,win}
 $(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
 $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 
+$(pwd)/wimlib-imagex apply "$SELECTED_WINDOWS_FILE" 1 /dev/block/by-name/win
+
 # Mount partitions
 echo ""
 echo "Mounting partitions..."

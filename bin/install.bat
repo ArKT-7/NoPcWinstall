@@ -55,6 +55,11 @@ if not !foundESP! == true (
 
 if not defined VolumeNumber (
     echo No FAT32 ESP or PE volume found.
+    (
+    echo list vol
+    echo list part
+    echo exit
+    ) | diskpart
     exit /b 1
 )
 

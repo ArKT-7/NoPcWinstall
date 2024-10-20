@@ -415,7 +415,7 @@ echo "Available ZIP files:"
 count=1
 for file in "${zip_files[@]}"; do
     echo "$count. $(basename "$file")"
-    files[$count]=$file
+    files[$count]="$file"
     count=$((count + 1))
 done
 
@@ -431,10 +431,10 @@ fi
 
 SELECTED_ZIP_FILE="${files[$selection]}"
 
-# Unzip the selected file
+# Unzip the selected file, ensure paths with spaces are handled correctly
 echo ""
 echo "Unzipping selected file..."
-$(pwd)/busybox unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
+"$(pwd)/busybox" unzip "$SELECTED_ZIP_FILE" -d "$DIR_UNZIP"
 
 # Check for specific files
 EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe.img")
@@ -442,7 +442,7 @@ EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe.img")
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
         echo "Required file $file not found. Please re-run the script and select the correct ZIP."
-        $(pwd)/busybox rm -rf "$DIR_UNZIP"
+        "$(pwd)/busybox" rm -rf "$DIR_UNZIP"
         exit 1
     fi
 done

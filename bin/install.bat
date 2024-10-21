@@ -122,7 +122,7 @@ echo Rebooting in 5 seconds...
 echo ==========================================================
 echo.
 
-echo this script is written by https://gitHub.com/Kumar-Jy and Modified by °⊥⋊ɹ∀° https://gitHub.com/ArKT-7
+echo this script is written by https://gitHub.com/Kumar-Jy and Modified by ArKT °⊥⋊ɹ∀° https://gitHub.com/ArKT-7
 
 shutdown /r /f /t 5
 echo.

@@ -4,17 +4,6 @@ setlocal enabledelayedexpansion
 :: Set console mode
 mode 800
 
-:: Create a temporary .reg file to adjust font size
-echo Windows Registry Editor Version 5.00 > %temp%\fontsize.reg
-echo. >> %temp%\fontsize.reg
-echo [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment] >> %temp%\fontsize.reg
-echo "ConsoleFontSize"=dword:00100000 >> %temp%\fontsize.reg
-
-:: Apply the registry settings for the font size
-regedit /s %temp%\fontsize.reg
-
-:: Wait a little for registry change to apply
-timeout /t 1 > nul
 
 echo ==========================================================
 echo Searching for the index value of "Windows drive"...

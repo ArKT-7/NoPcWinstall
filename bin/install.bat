@@ -4,7 +4,12 @@ setlocal enabledelayedexpansion
 :: Set console mode
 mode 800
 
+:: Get the current user SID
+for /f "tokens=2 delims==" %%i in ('wmic useraccount where name^="%username%" get sid /value') do set SID=%%i
+
+:: Create registry keys to set font size
 reg add "HKEY_USERS\%SID%\Console\%SystemRoot%_System32_cmd.exe" /v FontSize /t REG_DWORD /d 0x000a0000 /f
+
 echo ==========================================================
 echo Searching for the index value of "Windows drive"...
 echo ==========================================================

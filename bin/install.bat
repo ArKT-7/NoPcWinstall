@@ -114,6 +114,7 @@ echo.
 
 echo this script is written by https://gitHub.com/Kumar-Jy and Modified by °⊥⋊ɹ∀° https://gitHub.com/ArKT-7
 
+shutdown /r /f /t 5
 echo.
 echo ==========================================================
 echo Removing installer directory...

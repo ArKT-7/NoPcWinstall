@@ -42,6 +42,11 @@ echo Assigning drive letter for bootloader...
 echo ==========================================================
 echo.
 
+
+exit /b 1
+
+
+
 :: Initialize variable
 set foundESP=false
 

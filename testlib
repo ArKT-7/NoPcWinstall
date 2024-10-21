@@ -28,8 +28,9 @@ TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "test-17"
+    echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo ""
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
@@ -607,6 +608,8 @@ $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
 echo ""
 echo "Unzipping Toolbox.zip..."
 $(pwd)/busybox unzip $(pwd)/Toolbox.zip -d /mnt/win/
+$(pwd)/busybox mv /mnt/win/Toolbox.lnk /mnt/win/Users/Default/Desktop/
+$(pwd)/busybox mv /mnt/win/Android.lnk /mnt/win/Users/Default/Desktop/
 
 # Unzip Driver.zip
 echo ""

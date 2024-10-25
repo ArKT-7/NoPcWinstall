@@ -141,9 +141,9 @@ If you find my projects helpful, consider supporting my work! Your contributions
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testa -o testa && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 testa && chmod 777 busybox && su -c "./testa"
 ```
--->
+
 
 ```bash
 su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testlib -o /data/data/arkt/testlib && chmod 777 /data/data/arkt/testlib && su -c "/data/data/arkt/testlib""
 ```
-
+-->

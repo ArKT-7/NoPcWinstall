@@ -88,7 +88,7 @@ if not !foundESP! == true (
 )
 
 if not defined VolumeNumber (
-    echo No FAT32 ESP or PE or required Minium 300mb volume found.
+    echo No FAT32 ESP or PE or required FAT32 Volume found.
     echo Take picture of error, force Reboot and ask for help.
     call %flashboot%
     pause

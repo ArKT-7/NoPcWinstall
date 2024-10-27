@@ -386,14 +386,6 @@ fi
 # Continue with other operations if checks pass
 echo "Partition sizes are sufficient."
 echo ""
-echo "installing latest WOA HELPER APP FOR DUALBOOT TO WINDOWS"
-pm install $(pwd)/woa_helper.apk
-echo ""
-
-
-
-exit
-
 
 repartition_conf() {
     echo "ESP and Windows partitions already exist."
@@ -618,10 +610,11 @@ copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/nopcwinstall/sta.exe /mnt/win/installer/sta.exe
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
-echo "Copying Important .img Backup files just in case if needed further..."
 copy_with_progress $(pwd)/install.bat /mnt/win/installer/install.bat
 copy_with_progress $(pwd)/sta.exe /mnt/win/installer/sta.exe
+echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
+echo "Copying Windows file please wait this will take time..."
 copy_with_progress "$SELECTED_WINDOWS_FILE" "/mnt/win/installer/$DEST_FILE"
 
 # Unzip Toolbox.zip
@@ -639,7 +632,9 @@ echo ""
 echo "Writing winpe image to the device..."
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64M
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
-
+echo ""
+echo "installing latest WOA HELPER APP for dualboot to Windows"
+pm install $(pwd)/woa_helper.apk
 # Clean up
 echo ""
 echo "Cleaning up..."

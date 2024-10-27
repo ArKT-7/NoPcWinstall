@@ -47,7 +47,7 @@ exit /b 1
 echo.
 echo ============================================================
 echo           Windows drive set to %targetDrive%
-echo           flashboot path: "%flashboot%"
+echo   flashboot path: "%flashboot%"
 echo ============================================================
 echo.
 

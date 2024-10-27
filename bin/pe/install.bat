@@ -25,12 +25,12 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     if exist %%G:\installer\install.esd (
         set imageFile=%%G:\installer\install.esd
         set targetDrive=%%G:
-		set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
+	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
         goto :found
     ) else if exist %%G:\installer\install.wim (
         set imageFile=%%G:\installer\install.wim
         set targetDrive=%%G:
-		set "flashboot=%%G:\installer\sta.exe -n"
+	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
         goto :found
     )
 )

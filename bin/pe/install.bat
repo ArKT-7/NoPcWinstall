@@ -129,7 +129,7 @@ echo.
 echo Applying image to %targetDrive%...
 dism /Apply-Image /ImageFile:%imageFile% /Index:%index% /ApplyDir:%targetDrive%
 echo Image applied successfully!
-xcopy /y "%targetDrive%\*.lnk" "%targetDrive%\Users\Default\Desktop" 2>nul
+move /y "%targetDrive%\*.lnk" "%targetDrive%\Users\Default\Desktop" 2>nul
 
 echo.
 echo ============================================================

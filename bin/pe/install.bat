@@ -25,7 +25,7 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     if exist %%G:\installer\install.esd (
         set imageFile=%%G:\installer\install.esd
         set targetDrive=%%G:
-		set "flashboot=%%G:\installer\sta.exe -n"
+		set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
         goto :found
     ) else if exist %%G:\installer\install.wim (
         set imageFile=%%G:\installer\install.wim
@@ -50,6 +50,8 @@ echo ============================================================
 echo.
 
 echo ============================================================
+echo Debug: targetDrive is set to "%targetDrive%"
+echo flashboot path test 2 : "%flashboot%"
 echo Serching index of Windows in the following order ........
 echo       1.  Windows 11 Pro
 echo       2.  Windows 11 IoT Enterprise LTSC
@@ -156,8 +158,21 @@ if not !foundESP! == true (
     )
 )
 
+:: If neither ESP nor PE was found, search for any FAT32 volume of at least 300 MB
 if not defined VolumeNumber (
-    echo No FAT32 ESP or PE volume found.
+    echo No FAT32 ESP or PE volume found. Searching for any FAT32 volume with at least 300 MB...
+    for /f "tokens=2,3,4,5 delims= " %%C in ('echo list volume ^| diskpart ^| findstr /I "FAT32"') do (
+        set volumeSize=%%D
+        set unit=%%E
+        if "!unit!"=="MB" if !volumeSize! GEQ 300 (
+            set VolumeNumber=%%C
+            goto :volFound
+        )
+    )
+)
+
+if not defined VolumeNumber (
+    echo No FAT32 ESP or PE or required Minium 300mb volume found.
     echo Take picture of error, force Reboot and ask for help.
     call %flashboot%
     pause

@@ -573,9 +573,8 @@ $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 # Mount partitions
 echo ""
 echo "Mounting partitions..."
-$(pwd)/busybox mkdir -p /mnt/{win,esp}
-$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
-$(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
+$(pwd)/busybox mkdir -p /mnt/win
+$(pwd)/mount.ntfs -o big_writes /dev/block/by-name/win /mnt/win
 
  copy_with_progress() {
     local src_file=$1

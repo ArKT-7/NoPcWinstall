@@ -52,8 +52,8 @@ exit /b 1
 :found
 echo.
 echo ============================================================
-echo           Image file found at %imageFile%
-echo           Windows drive set to %targetDrive%
+echo   Image file found at %imageFile%
+echo   Windows drive set to %targetDrive%
 REM echo           flashboot path : "%flashboot%"
 echo ============================================================
 echo.
@@ -254,4 +254,4 @@ echo ==========================================================
 echo             Cleaning Installation File........
 echo ==========================================================
 cd %targetDrive%
-rmdir /s /q "%targetDrive%\installer" >nul 2>&1
+rmdir /s /q "%targetDrive%\installer"

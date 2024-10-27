@@ -28,7 +28,7 @@ TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "TESTA 4"
+    echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
@@ -608,14 +608,14 @@ $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 $(pwd)/busybox mkdir -p /mnt/win/importantbackups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
-copy_with_progress /sdcard/nopcwinstall/sta.exe /mnt/win/installer/sta.exe
+$(pwd)/busybox cp /sdcard/nopcwinstall/sta.exe /mnt/win/installer/sta.exe
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
 copy_with_progress $(pwd)/install.bat /mnt/win/installer/install.bat
 copy_with_progress $(pwd)/sta.exe /mnt/win/installer/sta.exe
 echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
 echo "Copying Windows file please wait this will take time..."
-# copy_with_progress "$SELECTED_WINDOWS_FILE" "/mnt/win/installer/$DEST_FILE"
+copy_with_progress "$SELECTED_WINDOWS_FILE" "/mnt/win/installer/$DEST_FILE"
 
 # Unzip Toolbox.zip
 echo ""
@@ -625,7 +625,7 @@ $(pwd)/busybox unzip $(pwd)/Toolbox.zip -d /mnt/win/
 # Unzip Driver.zip
 echo ""
 echo "Unzipping Driver.zip..."
-# $(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
+$(pwd)/busybox unzip /sdcard/nopcwinstall/Driver.zip -d /mnt/win/installer/Driver
 
 # Write images to the device
 echo ""

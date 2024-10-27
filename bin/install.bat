@@ -47,8 +47,7 @@ exit /b 1
 echo.
 echo ============================================================
 echo           Windows drive set to %targetDrive%
-echo           Debug: targetDrive is set to "%targetDrive%"
-echo           flashboot path test 2 : "%flashboot%"
+echo           flashboot path: "%flashboot%"
 echo ============================================================
 echo.
 
@@ -122,10 +121,10 @@ echo ==========================================================
 echo           Now performing driver installation...
 echo ==========================================================
 
-:: Searching for an XML file in the target directory and renaming it to sog.xml
+:: Searching for an XML file in the target directory and renaming it to arkt.xml
 set xmlFound=false
 for %%F in (%targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\*.xml) do (
-    ren "%%F" sog.xml
+    ren "%%F" arkt.xml
     set xmlFound=true
     goto :fileFound
 )
@@ -138,17 +137,17 @@ if "!xmlFound!"=="false" (
 )
 
 :fileFound
-echo XML file found and renamed to sog.xml.
+echo XML file found and renamed to arkt.xml.
+echo.
 
 :continue
-REM call "X:\DriverInstaller\DriverInstaller.lnk"
-%targetDrive%\Installer\Driver\tools\DriverUpdater\%PROCESSOR_ARCHITECTURE%\DriverUpdater.exe -r %targetDrive%\Installer\Driver -d %targetDrive%\Installer\Driver\definitions\Desktop\ARM64\Internal\sog.xml -p %targetDrive%
+%targetDrive%\Installer\Driver\tools\DriverUpdater\%PROCESSOR_ARCHITECTURE%\DriverUpdater.exe -r %targetDrive%\Installer\Driver -d %targetDrive%\Installer\Driver\definitions\Desktop\ARM64\Internal\arkt.xml -p %targetDrive%
 
 echo.
 echo ==========================================================
 echo Installation Completd.Rebooting in Windows in 5 seconds. 
 echo This script is written by Kumar-Jy, telegram : @kumar_jy
-echo
+echo.
 echo This script is modified by Github : ArKT-7, telegram : @kumar_jy
 echo ==========================================================
 REM shutdown /r /t 5

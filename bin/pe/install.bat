@@ -19,7 +19,7 @@ echo.
 :: Initialize variables
 set imageFile=
 set targetDrive=
-set flashboot=%targetDrive%/installer/sta.exe -n
+set "flashboot=%targetDrive%\installer\sta.exe -n"
 
 :: Loop through all drives to find the image file
 for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (

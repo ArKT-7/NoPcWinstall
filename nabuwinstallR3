@@ -28,7 +28,7 @@ TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "TESTA 1"
+    echo "TESTA 2"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
@@ -100,7 +100,7 @@ TARGET_FILE4="$(pwd)/install.bat"
 URL5="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/sta.exe"
 TARGET_FILE5="$(pwd)/sta.exe"
 
-URL6="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/woa_helper.apk"
+URL6="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/woa_helper.apk"
 TARGET_FILE6="$(pwd)/woa_helper.apk"
 
 # Download the Toolbox.zip file
@@ -164,14 +164,14 @@ else
 fi
 
 # Download the woa_helper.apk file
-echo "Downloading sta.exe"
+echo "Downloading woa_helper.apk"
 $(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
     echo "Download complete for woa_helper.apk"
 else
-    echo "Failed to download $URL5."
+    echo "Failed to download $URL6."
     exit 1
 fi
 

@@ -97,6 +97,9 @@ TARGET_FILE2="$(pwd)/userdata.img"
 URL4="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/install.bat"
 TARGET_FILE4="$(pwd)/install.bat"
 
+URL5="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/sta.exe"
+TARGET_FILE5="$(pwd)/sta.exe"
+
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
 $(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
@@ -144,6 +147,18 @@ fi
     # echo "Failed to download $URL3."
     # exit 1
 # fi
+
+# Download the sta.exe file
+echo "Downloading sta.exe"
+$(pwd)/busybox wget -O "$TARGET_FILE5" "$URL5"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for sta.exe"
+else
+    echo "Failed to download $URL5."
+    exit 1
+fi
 
 echo "All downloads completed."
 echo ""
@@ -602,6 +617,7 @@ $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 $(pwd)/busybox mkdir -p /mnt/win/importantbackups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress $(pwd)/install.bat /mnt/win/installer/install.bat
+copy_with_progress $(pwd)/sta.exe /mnt/win/installer/sta.exe
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
 echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/

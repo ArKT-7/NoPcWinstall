@@ -9,6 +9,7 @@ URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mk
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
 URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
+URL_WIMLIB="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/wimlib-imagex"
 # URL_make_f2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/make_f2fs"
 # URL_mkfsf2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
 
@@ -18,6 +19,7 @@ TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 TARGET_PARTED="$(pwd)/parted"
 TARGET_SGDISK="$(pwd)/sgdisk"
+TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 # TARGET_make_f2fs="$(pwd)/make_f2fs"
 # TARGET_mkfsf2fs="$(pwd)/mkfs.f2fs"
 
@@ -26,18 +28,19 @@ TARGET_SGDISK="$(pwd)/sgdisk"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo ""
+    echo "TESTAAA 88"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
+    echo ""
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo "test for other device"
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""
 else
     echo ""
@@ -54,7 +57,7 @@ download_and_set_permissions() {
     local dest_file=$2
     echo "Downloading $(basename "$url")..."
     curl -s -L -o "$dest_file" "$url"
-    
+
     if [ $? -ne 0 ]; then
         echo "Failed to download $(basename "$url"). Exiting."
         echo ""
@@ -77,6 +80,7 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
+download_and_set_permissions "$URL_WIMLIB" "$TARGET_WIMLIB"
 # download_and_set_permissions "$URL_make_f2fs" "$TARGET_make_f2fs"
 # download_and_set_permissions "$URL_mkfsf2fs" "$TARGET_mkfsf2fs"
 echo ""
@@ -89,6 +93,15 @@ TARGET_FILE2="$(pwd)/userdata.img"
 
 # URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
 # TARGET_FILE3="$(pwd)/metadata.img"
+
+URL4="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/install.bat"
+TARGET_FILE4="$(pwd)/install.bat"
+
+URL5="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/sta.exe"
+TARGET_FILE5="$(pwd)/sta.exe"
+
+URL6="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/woa_helper.apk"
+TARGET_FILE6="$(pwd)/woa_helper.apk"
 
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
@@ -125,6 +138,42 @@ fi
     # echo "Failed to download $URL3."
     # exit 1
 # fi
+
+# Download the install.bat file
+echo "Downloading install.bat"
+$(pwd)/busybox wget -O "$TARGET_FILE4" "$URL4"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for install.bat"
+else
+    echo "Failed to download $URL4."
+    exit 1
+fi
+
+# Download the sta.exe file
+echo "Downloading sta.exe"
+$(pwd)/busybox wget -O "$TARGET_FILE5" "$URL5"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for sta.exe"
+else
+    echo "Failed to download $URL5."
+    exit 1
+fi
+
+# Download the woa_helper.apk file
+echo "Downloading woa_helper.apk"
+$(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for woa_helper.apk"
+else
+    echo "Failed to download $URL6."
+    exit 1
+fi
 
 echo "All downloads completed."
 echo ""
@@ -188,7 +237,7 @@ repartition_windows() {
             echo "Repartitioning cancelled."
             exit
         fi
-       
+
         while true; do
             # Prompt the user for the Windows partition size
             echo "Enter the size for the Windows partition in GB:"
@@ -250,7 +299,7 @@ repartition_windows() {
 }
 
 
-   
+
 
 
 # Function to convert bytes to gigabytes and megabytes
@@ -404,20 +453,21 @@ echo "Size of Android partition: $size_userdata_gb GB"
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
-zip_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" ))
 
-if [ ${#zip_files[@]} -eq 0 ]; then
+# Using a loop to handle spaces in file paths
+count=1
+while IFS= read -r file; do
+    if [ -f "$file" ]; then
+        echo "$count. $(basename "$file")"
+        files[$count]="$file"
+        count=$((count + 1))
+    fi
+done < <("$(pwd)/busybox" find "$MAIN_DIR" -type f -name "*.zip")
+
+if [ $count -eq 1 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
     exit 1
 fi
-
-echo "Available ZIP files:"
-count=1
-for file in "${zip_files[@]}"; do
-    echo "$count. $(basename "$file")"
-    files[$count]=$file
-    count=$((count + 1))
-done
 
 echo ""
 echo "Enter the serial number of the ZIP file to select:"
@@ -441,7 +491,7 @@ EXPECTED_FILES=("Driver.zip" "uefi.img" "install.bat" "pe.img")
 
 for file in "${EXPECTED_FILES[@]}"; do
     if [ ! -f "$DIR_UNZIP/$file" ]; then
-        echo "Required file $file not found. Please re-run the script and select the correct ZIP."
+        echo "Required file $file not found. Please re-run the script and select/download the correct wininstaller latest ZIP."
         $(pwd)/busybox rm -rf "$DIR_UNZIP"
         exit 1
     fi
@@ -452,32 +502,34 @@ done
 echo ""
 echo "Searching for Windows files..."
 echo ""
-esd_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f -name "*.esd" ))
 
-# Check if no ESD files were found
-if [ ${#esd_files[@]} -eq 0 ]; then
-    echo "No Windows files found. Please download and place an ESD file in the directory."
+# Search for both .esd and .wim files
+mapfile -t windows_files < <("$(pwd)/busybox" find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \))
+
+# Check if no .esd or .wim files were found
+if [ ${#windows_files[@]} -eq 0 ]; then
+    echo "No Windows files found. Please download and place an ESD or WIM file in the directory."
     exit 1
 fi
 
-# If only one ESD file is found, automatically select it
-if [ ${#esd_files[@]} -eq 1 ]; then
-    SELECTED_ESD_FILE="${esd_files[0]}"
-    echo "ESD file found: $(basename "$SELECTED_ESD_FILE")"
+# If only one .esd or .wim file is found, automatically select it
+if [ ${#windows_files[@]} -eq 1 ]; then
+    SELECTED_WINDOWS_FILE="${windows_files[0]}"
+    echo "Windows file found: $(basename "$SELECTED_WINDOWS_FILE")"
     echo "Automatically selecting this file."
 else
-    # If more than one ESD file is found, prompt user for selection
+    # If more than one file is found, prompt user for selection
     echo "Available Windows files:"
     count=1
-    for file in "${esd_files[@]}"; do
+    for file in "${windows_files[@]}"; do
         echo "$count. $(basename "$file")"
-        files[$count]=$file
+        files[$count]="$file"
         count=$((count + 1))
     done
 
     echo ""
     echo "Enter the serial number of the Windows file to select:"
-    read selection
+    read -r selection
 
     # Validate Windows file selection
     if [ -z "${files[$selection]}" ]; then
@@ -485,10 +537,31 @@ else
         exit 1
     fi
 
-    SELECTED_ESD_FILE="${files[$selection]}"
+    SELECTED_WINDOWS_FILE="${files[$selection]}"
 fi
+
 echo ""
-echo "Selected Windows file: $(basename "$SELECTED_ESD_FILE")"
+echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
+echo "Windows file path: "$SELECTED_WINDOWS_FILE"
+echo "Windows file path 2: $SELECTED_WINDOWS_FILE
+
+# Check the file extension and set the appropriate destination filename
+extension="${SELECTED_WINDOWS_FILE##*.}"
+if [ "$extension" == "esd" ]; then
+    DEST_FILE="install.esd"
+elif [ "$extension" == "wim" ]; then
+    DEST_FILE="install.wim"
+else
+    echo "Unknown file type: $extension. Exiting."
+    exit 1
+fi
+
+# List all available indexes with their names using wimlib-imagex info
+echo "Available Images:"
+AVAILABLE_IMAGES=$($(pwd)/wimlib-imagex info "$SELECTED_WINDOWS_FILE" | grep -E '^Index:|^Name:')
+
+# Display the indexes and names
+echo "$AVAILABLE_IMAGES"
 
 # Unmount and format partitions
 echo ""
@@ -500,9 +573,8 @@ $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 # Mount partitions
 echo ""
 echo "Mounting partitions..."
-$(pwd)/busybox mkdir -p /mnt/{win,esp}
+$(pwd)/busybox mkdir -p /mnt/win
 $(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
-$(pwd)/busybox mount /dev/block/by-name/esp /mnt/esp
 
  copy_with_progress() {
     local src_file=$1
@@ -535,11 +607,14 @@ $(pwd)/busybox mkdir -p /mnt/win/installer/Driver
 $(pwd)/busybox mkdir -p /mnt/win/importantbackups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
-copy_with_progress /sdcard/nopcwinstall/rmdir.bat /mnt/win/rmdir.bat
+$(pwd)/busybox cp /sdcard/nopcwinstall/sta.exe /mnt/win/installer/sta.exe
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
+copy_with_progress $(pwd)/install.bat /mnt/win/installer/install.bat
+copy_with_progress $(pwd)/sta.exe /mnt/win/installer/sta.exe
 echo "Copying Important .img Backup files just in case if needed further..."
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
-copy_with_progress "$SELECTED_ESD_FILE" /mnt/win/installer/install.esd
+echo "Copying Windows file please wait this will take time..."
+copy_with_progress "$SELECTED_WINDOWS_FILE" "/mnt/win/installer/$DEST_FILE"
 
 # Unzip Toolbox.zip
 echo ""
@@ -556,7 +631,9 @@ echo ""
 echo "Writing winpe image to the device..."
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64M
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
-
+echo ""
+echo "installing latest WOA HELPER APP for dualboot to Windows"
+pm install $(pwd)/woa_helper.apk
 # Clean up
 echo ""
 echo "Cleaning up..."
@@ -579,18 +656,16 @@ echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo "test for other device"
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 else
     echo ""
-    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
+    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7 "
     echo "Device - $DEVICE_CODENAME"
     echo ""
     exit 1

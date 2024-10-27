@@ -148,7 +148,7 @@ echo ==========================================================
 echo Installation Completd.Rebooting in Windows in 5 seconds. 
 echo This script is written by Kumar-Jy, telegram : @kumar_jy
 echo.
-echo This script is modified by Github : ArKT-7, telegram : @kumar_jy
+echo This script is modified by Github : ArKT-7, telegram : @ArKT_7
 echo ==========================================================
 REM shutdown /r /t 5
 call %flashboot%

@@ -127,7 +127,6 @@ echo ==========================================================
 :: Searching for an XML file in the target directory and renaming it to sog.xml
 set xmlFound=false
 for %%F in (%targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\*.xml) do (
-    ren "%%F" sog.xml
     set xmlFound=true
     goto :fileFound
 )
@@ -140,10 +139,10 @@ if "!xmlFound!"=="false" (
 )
 
 :fileFound
-echo XML file found and renamed to sog.xml.
+echo XML file found and now Continuing for driver Installation.
 
 :continue
-call "X:\DriverInstaller\DriverInstaller.lnk"
+call "%targetDrive%\installer\Driver\DriverInstaller.lnk"
 
 echo.
 echo ==========================================================

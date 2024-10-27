@@ -254,4 +254,4 @@ echo ==========================================================
 echo             Cleaning Installation File........
 echo ==========================================================
 cd %targetDrive%
-rmdir /s /q "%targetDrive%\installer"
+rmdir /s /q "%targetDrive%\installer" >nul 2>&1

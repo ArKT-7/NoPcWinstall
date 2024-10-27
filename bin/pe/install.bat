@@ -35,7 +35,7 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     )
 )
 
-:: Loop through all drives to find the image file
+:: Loop through all drives to find the boot file
 for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     if exist %%G:\boot.img (
         set targetDrive=%%G:

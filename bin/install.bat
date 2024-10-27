@@ -52,8 +52,6 @@ echo           flashboot path test 2 : "%flashboot%"
 echo ============================================================
 echo.
 
-move /y "%targetDrive%\*.lnk" "%targetDrive%\Users\Default\Desktop" 2>nul
-
 echo.
 echo ============================================================
 echo           Assigning drive letter for 
@@ -127,6 +125,7 @@ echo ==========================================================
 :: Searching for an XML file in the target directory and renaming it to sog.xml
 set xmlFound=false
 for %%F in (%targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\*.xml) do (
+    ren "%%F" sog.xml
     set xmlFound=true
     goto :fileFound
 )
@@ -139,10 +138,11 @@ if "!xmlFound!"=="false" (
 )
 
 :fileFound
-echo XML file found and now Continuing for driver Installation.
+echo XML file found and renamed to sog.xml.
 
 :continue
-call "%targetDrive%\installer\Driver\DriverInstaller.lnk"
+REM call "X:\DriverInstaller\DriverInstaller.lnk"
+%targetDrive%\Installer\Driver\tools\DriverUpdater\%PROCESSOR_ARCHITECTURE%\DriverUpdater.exe -r %targetDrive%\Installer\Driver -d %targetDrive%\Installer\Driver\definitions\Desktop\ARM64\Internal\sog.xml -p %targetDrive%
 
 echo.
 echo ==========================================================

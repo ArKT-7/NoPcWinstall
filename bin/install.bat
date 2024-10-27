@@ -11,8 +11,7 @@ echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo                 Searching for the index value 
-echo                     of "Windows Image"...
+echo            Searching for windows installed drive
 echo ============================================================
 echo.
 
@@ -37,8 +36,8 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     )
 )
 
-No windows installation found
-echo Take picture of error, force Reboot and ask for help...
+echo No windows installation found
+echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
 call %flashboot%
 pause
 exit /b 1
@@ -47,7 +46,7 @@ exit /b 1
 echo.
 echo ============================================================
 echo               Windows drive set to %targetDrive%
-echo          flashboot path: "%flashboot%"
+REM echo          flashboot path: "%flashboot%"
 echo ============================================================
 
 echo.
@@ -87,7 +86,7 @@ if not !foundESP! == true (
 
 if not defined VolumeNumber (
     echo No FAT32 ESP or PE or required FAT32 Volume found.
-    echo Take picture of error, force Reboot and ask for help.
+    echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
     call %flashboot%
     pause
     exit /b 1
@@ -105,13 +104,13 @@ echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber
 
 echo.
 echo ============================================================
-echo    Volume %VolumeNumber% has been formatted with FAT32,
+echo          Volume %VolumeNumber% has been formatted with FAT32,
 echo          Assigned letter S, and labeled "ESPNABU".
 echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo                 Creating bootloader file...
+echo                Creating bootloader file...
 echo ============================================================
 echo.
 bcdboot %targetDrive%\windows /s S: /f UEFI
@@ -132,6 +131,7 @@ for %%F in (%targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\*.
 
 if "!xmlFound!"=="false" (
     echo No XML files found in %targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\.
+    echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
     %flashboot%
     pause
     exit /b 1
@@ -150,12 +150,13 @@ echo Installation Completd.Rebooting in Windows in 5 seconds.
 echo This script is written by Kumar-Jy, telegram : @kumar_jy
 echo.
 echo This script is modified by Github : ArKT-7, telegram : @ArKT_7
+echo.
 echo ==========================================================
-REM shutdown /r /t 5
-call %flashboot%
+shutdown /r /t 5
+REM call %flashboot%
 echo.
 echo ==========================================================
 echo              Cleaning Installation File........
 echo ==========================================================
-REM cd %targetDrive%
-REM rmdir /s /q "%targetDrive%\installer"
+cd %targetDrive%
+rmdir /s /q "%targetDrive%\installer"

@@ -40,7 +40,6 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     if exist %%G:\boot.img (
         set targetDrive=%%G:
 	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
-        goto :found
     )
 )
 

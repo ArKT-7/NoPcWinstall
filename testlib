@@ -474,7 +474,7 @@ echo "Searching for Windows files..."
 echo ""
 
 # Search for both .esd and .wim files
-windows_files=($( $(pwd)/busybox find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \) ))
+windows_files=($( "$(pwd)/busybox" find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \) ))
 
 # Check if no .esd or .wim files were found
 if [ ${#windows_files[@]} -eq 0 ]; then
@@ -493,7 +493,7 @@ else
     count=1
     for file in "${windows_files[@]}"; do
         echo "$count. $(basename "$file")"
-        files[$count]=$file
+        files[$count]="$file"
         count=$((count + 1))
     done
 

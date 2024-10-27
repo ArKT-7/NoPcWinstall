@@ -80,7 +80,7 @@ if not !foundESP! == true (
 
 :: If no FAT32 ESP and PE volume found, search for any FAT32
 if not !foundESP! == true (
-    echo No FAT32 ESP volume found. Searching for PE...
+    echo No FAT32 ESP volume found. Searching for any FAT32...
     for /f "tokens=2,3,4 delims= " %%B in ('echo list volume ^| diskpart ^| findstr /I "FAT32"') do (
         set VolumeNumber=%%B
         goto :volFound

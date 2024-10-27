@@ -6,13 +6,13 @@ mode 800
 
 echo.
 echo ============================================================
-echo            Welcome to Windows Installation on ARM64 
+echo           Welcome to Windows Installation on ARM64 
 echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo             Searching for the index value 
-echo                 of "Windows Image"...
+echo                 Searching for the index value 
+echo                     of "Windows Image"...
 echo ============================================================
 echo.
 
@@ -46,15 +46,16 @@ exit /b 1
 :found
 echo.
 echo ============================================================
-echo           Windows drive set to %targetDrive%
-echo   flashboot path: "%flashboot%"
+echo               Windows drive set to %targetDrive%
+echo          flashboot path: "%flashboot%"
 echo ============================================================
+
 echo.
 
 echo.
 echo ============================================================
-echo           Assigning drive letter for 
-echo                  bootloader...
+echo                 Assigning drive letter for 
+echo                        bootloader...
 echo ============================================================
 echo.
 
@@ -104,13 +105,13 @@ echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber
 
 echo.
 echo ============================================================
-echo           %VolumeNumber% has been formatted with FAT32,
-echo           Assigned letter S, and labeled "ESPNABU".
+echo    Volume %VolumeNumber% has been formatted with FAT32,
+echo          Assigned letter S, and labeled "ESPNABU".
 echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo           Creating bootloader file...
+echo                 Creating bootloader file...
 echo ============================================================
 echo.
 bcdboot %targetDrive%\windows /s S: /f UEFI
@@ -154,7 +155,7 @@ REM shutdown /r /t 5
 call %flashboot%
 echo.
 echo ==========================================================
-echo           Cleaning Installation File........
+echo              Cleaning Installation File........
 echo ==========================================================
 REM cd %targetDrive%
 REM rmdir /s /q "%targetDrive%\installer"

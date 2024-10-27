@@ -96,7 +96,7 @@ if not defined VolumeNumber (
 )
 
 :volFound
-echo Found FAT32 volume with ESP or PE, Volume Number %VolumeNumber%
+echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber%
 
 :: Format the volume, assign the drive letter S, and label it "ESPNABU"
 (

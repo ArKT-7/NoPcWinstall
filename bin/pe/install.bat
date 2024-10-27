@@ -35,6 +35,15 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     )
 )
 
+:: Loop through all drives to find the image file
+for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+    if exist %%G:\boot.img (
+        set targetDrive=%%G:
+	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
+        goto :found
+    )
+)
+
 echo Neither ESD nor WIM file found on any drive.
 echo Take picture of error, force Reboot and ask for help...
 call %flashboot%
@@ -46,12 +55,12 @@ echo.
 echo ============================================================
 echo           Image file found at %imageFile%
 echo           Windows drive set to %targetDrive%
+echo           Debug: targetDrive is set to "%targetDrive%"
+echo           flashboot path test 2 : "%flashboot%"
 echo ============================================================
 echo.
 
 echo ============================================================
-echo Debug: targetDrive is set to "%targetDrive%"
-echo flashboot path test 2 : "%flashboot%"
 echo Serching index of Windows in the following order ........
 echo       1.  Windows 11 Pro
 echo       2.  Windows 11 IoT Enterprise LTSC

@@ -3,7 +3,7 @@
 #!/bin/sh
 
 # Define URLs and target paths
-URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/busybox"
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
 URL_MKFS_FAT="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.fat"
 URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.ntfs"
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
@@ -574,9 +574,7 @@ $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 echo ""
 echo "Mounting partitions..."
 $(pwd)/busybox mkdir -p /mnt/win
-$(pwd)/busybox mount -t ntfs /dev/block/by-name/win /mnt/win
-
-# $(pwd)/mount.ntfs -o big_writes /dev/block/by-name/win /mnt/win
+$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
 
  copy_with_progress() {
     local src_file=$1

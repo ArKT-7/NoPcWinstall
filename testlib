@@ -28,7 +28,7 @@ TARGET_WIMLIB="$(pwd)/wimlib-imagex"
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "TESTA = 4"
+    echo "TESTA = 5"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
@@ -512,8 +512,8 @@ fi
 
 echo ""
 echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
-
-
+echo "Windows file path: "$SELECTED_WINDOWS_FILE"
+echo "Windows file path 2: $SELECTED_WINDOWS_FILE
 
 # Check the file extension and set the appropriate destination filename
 extension="${SELECTED_WINDOWS_FILE##*.}"

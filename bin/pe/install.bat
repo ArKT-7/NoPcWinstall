@@ -6,13 +6,13 @@ mode 800
 
 echo.
 echo ============================================================
-echo            Welcome to Windows Installation on ARM64 
+echo          Welcome to Windows Installation on ARM64 
 echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo             Searching for the index value 
-echo                 of "Windows Image"...
+echo              Searching for the index value 
+echo                  of "Windows Image"...
 echo ============================================================
 echo.
 
@@ -44,7 +44,7 @@ for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
 )
 
 echo Neither ESD nor WIM file found on any drive.
-echo Take picture of error, force Reboot and ask for help...
+echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
 call %flashboot%
 pause
 exit /b 1
@@ -54,7 +54,7 @@ echo.
 echo ============================================================
 echo           Image file found at %imageFile%
 echo           Windows drive set to %targetDrive%
-echo           flashboot path : "%flashboot%"
+REM echo           flashboot path : "%flashboot%"
 echo ============================================================
 echo.
 
@@ -122,6 +122,7 @@ if "%index%"=="" (
 if "%index%"=="" (
     echo "Index not found for the specified Windows version."
 	echo "Please check your Windows image and restart installation."
+        echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
 	call %flashboot%
     pause
     exit /b
@@ -143,8 +144,8 @@ move /y "%targetDrive%\*.lnk" "%targetDrive%\Users\Default\Desktop" 2>nul
 
 echo.
 echo ============================================================
-echo           Assigning drive letter for 
-echo                  bootloader...
+echo                 Assigning drive letter for 
+echo                        bootloader...
 echo ============================================================
 echo.
 
@@ -176,7 +177,7 @@ if not !foundESP! == true (
 
 if not defined VolumeNumber (
     echo No FAT32 ESP or PE or required FAT32 Volume found.
-    echo Take picture of error, force Reboot and ask for help.
+    echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
     call %flashboot%
     pause
     exit /b 1
@@ -194,21 +195,21 @@ echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber
 
 echo.
 echo ============================================================
-echo           %VolumeNumber% has been formatted with FAT32,
+echo           Volume %VolumeNumber% has been formatted with FAT32,
 echo           Assigned letter S, and labeled "ESPNABU".
 echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo           Creating bootloader file...
+echo                 Creating bootloader file...
 echo ============================================================
 echo.
 bcdboot %targetDrive%\windows /s S: /f UEFI
 
 echo.
 echo ==========================================================
-echo           Windows installation process 
-echo                    completed!
+echo              Windows installation process 
+echo                       completed!
 echo ==========================================================
 echo.
 echo.
@@ -226,6 +227,7 @@ for %%F in (%targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\*.
 
 if "!xmlFound!"=="false" (
     echo No XML files found in %targetDrive%\installer\Driver\definitions\Desktop\ARM64\Internal\.
+    echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
     %flashboot%
     pause
     exit /b 1
@@ -249,7 +251,7 @@ shutdown /r /t 5
 
 echo.
 echo ==========================================================
-echo           Cleaning Installation File........
+echo             Cleaning Installation File........
 echo ==========================================================
 cd %targetDrive%
 rmdir /s /q "%targetDrive%\installer"

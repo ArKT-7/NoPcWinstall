@@ -156,11 +156,11 @@ echo This script is written by Kumar-Jy, telegram : @kumar_jy
 echo
 echo This script is modified by Github : ArKT-7, telegram : @kumar_jy
 echo ==========================================================
-shutdown /r /t 5
-
+REM shutdown /r /t 5
+call %flashboot%
 echo.
 echo ==========================================================
 echo           Cleaning Installation File........
 echo ==========================================================
-cd %targetDrive%
-rmdir /s /q "%targetDrive%\installer"
+REM cd %targetDrive%
+REM rmdir /s /q "%targetDrive%\installer"

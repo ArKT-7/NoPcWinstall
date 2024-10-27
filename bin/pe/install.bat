@@ -166,21 +166,17 @@ if not !foundESP! == true (
     )
 )
 
-:: If neither ESP nor PE was found, search for any FAT32 volume of at least 300 MB
-if not defined VolumeNumber (
-    echo No FAT32 ESP or PE volume found. Searching for any FAT32 volume with at least 300 MB...
-    for /f "tokens=2,3,4,5 delims= " %%C in ('echo list volume ^| diskpart ^| findstr /I "FAT32"') do (
-        set volumeSize=%%D
-        set unit=%%E
-        if "!unit!"=="MB" if !volumeSize! GEQ 300 (
-            set VolumeNumber=%%C
-            goto :volFound
-        )
+:: If no FAT32 ESP and PE volume found, search for any FAT32
+if not !foundESP! == true (
+    echo No FAT32 ESP volume found. Searching for any FAT32...
+    for /f "tokens=2,3,4 delims= " %%B in ('echo list volume ^| diskpart ^| findstr /I "FAT32"') do (
+        set VolumeNumber=%%B
+        goto :volFound
     )
 )
 
 if not defined VolumeNumber (
-    echo No FAT32 ESP or PE or required Minium 300mb volume found.
+    echo No FAT32 ESP or PE or required FAT32 Volume found.
     echo Take picture of error, force Reboot and ask for help.
     call %flashboot%
     pause
@@ -188,7 +184,7 @@ if not defined VolumeNumber (
 )
 
 :volFound
-echo Found FAT32 volume with ESP or PE, Volume Number %VolumeNumber%
+echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber%
 
 :: Format the volume, assign the drive letter S, and label it "ESPNABU"
 (

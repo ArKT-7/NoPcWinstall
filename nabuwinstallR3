@@ -28,7 +28,8 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo ""
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
     echo ""
@@ -90,6 +91,9 @@ TARGET_FILE2="$(pwd)/userdata.img"
 # URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
 # TARGET_FILE3="$(pwd)/metadata.img"
 
+URL4="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/install.bat"
+TARGET_FILE4="$(pwd)/install.bat"
+
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
 $(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
@@ -125,6 +129,18 @@ fi
     # echo "Failed to download $URL3."
     # exit 1
 # fi
+
+# Download the install.bat file
+echo "Downloading install.bat"
+$(pwd)/busybox wget -O "$TARGET_FILE4" "$URL4"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for install.bat."
+else
+    echo "Failed to download $URL4."
+    exit 1
+fi
 
 echo "All downloads completed."
 echo ""
@@ -553,6 +569,7 @@ copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
 echo "Copying Important .img Backup files just in case if needed further..."
+copy_with_progress $(pwd)/install.bat /mnt/win/installer/install.bat
 $(pwd)/busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
 copy_with_progress "$SELECTED_WINDOWS_FILE" "/mnt/win/installer/$DEST_FILE"
 
@@ -594,16 +611,13 @@ echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
     echo "test for other device"
     echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"

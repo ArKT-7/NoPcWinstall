@@ -100,6 +100,9 @@ TARGET_FILE4="$(pwd)/install.bat"
 URL5="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/sta.exe"
 TARGET_FILE5="$(pwd)/sta.exe"
 
+URL6="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/pe/woa_helper.apk"
+TARGET_FILE6="$(pwd)/woa_helper.apk"
+
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
 $(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
@@ -155,6 +158,18 @@ $(pwd)/busybox wget -O "$TARGET_FILE5" "$URL5"
 # Check if the download was successful
 if [ $? -eq 0 ]; then
     echo "Download complete for sta.exe"
+else
+    echo "Failed to download $URL5."
+    exit 1
+fi
+
+# Download the woa_helper.apk file
+echo "Downloading sta.exe"
+$(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Download complete for woa_helper.apk"
 else
     echo "Failed to download $URL5."
     exit 1
@@ -371,6 +386,14 @@ fi
 # Continue with other operations if checks pass
 echo "Partition sizes are sufficient."
 echo ""
+echo "installing latest WOA HELPER APP FOR DUALBOOT TO WINDOWS"
+pm install $(pwd)/woa_helper.apk
+echo ""
+
+
+
+exit
+
 
 repartition_conf() {
     echo "ESP and Windows partitions already exist."

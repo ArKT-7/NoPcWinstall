@@ -525,11 +525,10 @@ else
     SELECTED_WINDOWS_FILE="${files[$selection]}"
 fi
 
-
-echo "Windows file path: "$SELECTED_WINDOWS_FILE"
 echo ""
 echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
-
+echo "Windows file path: "$SELECTED_WINDOWS_FILE"
+echo "Windows file path 2: $SELECTED_WINDOWS_FILE
 
 # Check the file extension and set the appropriate destination filename
 extension="${SELECTED_WINDOWS_FILE##*.}"

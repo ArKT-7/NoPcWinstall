@@ -74,8 +74,7 @@ su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstallaosp -o nabuwinstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 nabuwinstallaosp && chmod 777 busybox && su -c "./nabuwinstallaosp"
 ```
-## ⚠️ Warning
-> [!NOTE]
+> [!WARNING]
 > - this command used wimlib-imagex to install, you may get error - but it faster than all
 > - well you can try this, just if get any issue contact in Telegram
 ```bash

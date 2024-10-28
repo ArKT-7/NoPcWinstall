@@ -307,13 +307,14 @@ echo "Searching for ZIP files..."
 
 # Using a loop to handle spaces in file paths
 count=1
-while IFS= read -r file; do
+for file in $(busybox find "$MAIN_DIR" -type f -name "*.zip"); do
     if [ -f "$file" ]; then
         echo "$count. $(basename "$file")"
         files[$count]="$file"
         count=$((count + 1))
     fi
-done < <("busybox" find "$MAIN_DIR" -type f -name "*.zip")
+done
+
 
 if [ $count -eq 1 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
@@ -355,7 +356,10 @@ echo "Searching for Windows files..."
 echo ""
 
 # Search for both .esd and .wim files
-mapfile -t windows_files < <("busybox" find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \))
+windows_files=()
+for file in $(busybox find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \)); do
+    windows_files+=("$file")
+done
 
 # Check if no .esd or .wim files were found
 if [ ${#windows_files[@]} -eq 0 ]; then

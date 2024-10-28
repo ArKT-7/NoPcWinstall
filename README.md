@@ -127,7 +127,7 @@ If you find my projects helpful, consider supporting my work! Your contributions
   <a href="https://www.buymeacoffee.com/ArKT">
     <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/buymecoffee.png" alt="Buy Me A Coffee" style="height: 60px; width: 217px;"></a>
   
-  &nbsp;&nbsp;&nbsp; <!-- This adds space between the images -->
+  <span style="display: inline-block; width: 25px;"></span> <!-- Gap between images -->
 
   <a href="https://www.paypal.me/arkt7">
     <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/Paypal.png" alt="Donate with PayPal" style="height: 60px; width: 217px;"></a>

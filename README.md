@@ -121,17 +121,17 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 
 ## Support My Work
 
-If you find my projects helpful, consider supporting my work! Your contributions will help me keep developing and sharing useful resources.
+#### If you find my projects helpful, consider supporting my work! Your contributions will help me keep developing and sharing useful resources.
 
 <p align="left">
-  <a href="https://www.buymeacoffee.com/ArKT">
-    <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/buymecoffee.png" alt="Buy Me A Coffee" style="height: 60px; width: 217px;"></a>
-  
-  <span style="display: inline-block; width: 25px;"></span> <!-- Gap between images -->
-
-  <a href="https://www.paypal.me/arkt7">
-    <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/Paypal.png" alt="Donate with PayPal" style="height: 60px; width: 217px;"></a>
+  <a href="https://www.buymeacoffee.com/ArKT" target="_blank">
+    <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/buymecoffee.png" alt="Buy Me A Coffee" style="height: 60px !important; width: 217px !important;">
+  </a>
+  <a href="https://www.paypal.me/arkt7" target="_blank">
+    <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/Paypal.png" alt="Donate with PayPal" style="height: 60px !important; width: 217px !important;">
+  </a>
 </p>
+
 
 
 

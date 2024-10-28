@@ -125,12 +125,12 @@ If you find my projects helpful, consider supporting my work! Your contributions
 
 <p align="left">
   <a href="https://www.buymeacoffee.com/ArKT">
-    <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/buymecoffee.png" alt="Buy Me A Coffee" style="height: 60px !important; width: 217px !important;"></a>
- 
+    <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/buymecoffee.png" alt="Buy Me A Coffee" style="height: 60px !important; width: 217px !important; margin-right: 10px;"></a>
+  
   <a href="https://www.paypal.me/arkt7">
     <img src="https://github.com/ArKT-7/WIN-ARM-DOWNLOADER/blob/main/assets/Paypal.png" alt="Donate with PayPal" style="height: 60px !important; width: 217px !important;"></a>
-
 </p>
+
 
 ## Credits and Thankfull to
 

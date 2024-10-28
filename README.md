@@ -76,7 +76,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 ```
 > [!WARNING]
 > - this command used wimlib-imagex to install, you may get error - but it faster than all
-> - well you can try this, just if get any issue contact in Telegram
+> - well you can try this, just in case if you get any error contact in Telegram
 ```bash
 su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwimlib -o /data/data/arkt/nabuwimlib && chmod 777 /data/data/arkt/nabuwimlib && su -c "/data/data/arkt/nabuwimlib""
 ```

@@ -40,7 +40,7 @@ More coming soon!
 ### Put this two file in your Device internal Storage
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
     
-- [```Nabu_WinInstaller_26102024.zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller) (```Download Latest directly by clcicking here - ``` [Nabu_WinInstaller_26102024.zip](https://drive.google.com/file/d/1eRG5SUd1a2bnBXyXmyvvTclh8HWlyZU-/view?usp=sharing))
+- [```Nabu_WinInstaller_26102024.zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller) (```Download Latest directly by clcicking here - ``` [Nabu_WinInstaller_26102024.zip](https://drive.google.com/file/d/1h9WmjZgWalu3OaWfnXgRjnruCBzubbd5/view?usp=sharing))
 > [!NOTE]
 > - If you are doing partitioning(first time install) or re-partitioning, make sure to download and put these files in your Nabu only after completing the partition process, as the device will be formatted during partitioning so also make sure to backup your data if doing partitioning.
 

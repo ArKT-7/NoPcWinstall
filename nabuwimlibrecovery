@@ -486,10 +486,8 @@ busybox mkdir -p /mnt/win/installer/Driver
 busybox mkdir -p /mnt/win/importantbackups
 copy_with_progress /sdcard/nopcwinstall/uefi.img /sdcard/UEFI/uefi.img
 copy_with_progress /sdcard/nopcwinstall/install.bat /mnt/win/installer/install.bat
-busybox cp /sdcard/nopcwinstall/sta.exe /mnt/win/installer/sta.exe
+copy_with_progress /sdcard/nopcwinstall/sta.exe /mnt/win/installer/sta.exe
 copy_with_progress /sdcard/importantbackups/boot.img /mnt/win/boot.img
-copy_with_progress install.bat /mnt/win/installer/install.bat
-copy_with_progress sta.exe /mnt/win/installer/sta.exe
 echo "Copying Important .img Backup files just in case if needed further..."
 busybox cp -r /sdcard/importantbackups/* /mnt/win/importantbackups/
 

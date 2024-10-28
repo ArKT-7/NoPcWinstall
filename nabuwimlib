@@ -696,4 +696,5 @@ else
     exit 1
 fi
 sleep 10
-reboot
+exit
+# reboot

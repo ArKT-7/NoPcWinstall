@@ -35,9 +35,10 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+# elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+ elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
     echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+    # echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "

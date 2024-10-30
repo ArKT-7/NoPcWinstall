@@ -576,8 +576,7 @@ echo ""
 echo "Mounting partitions..."
 $(pwd)/busybox mkdir -p /mnt/win
 echo "Mounting partitions... using busybox"
-$(pwd)/busybox mount -t ntfs /dev/block/by-name/win /mnt/win
-# $(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
 
  copy_with_progress() {
     local src_file=$1

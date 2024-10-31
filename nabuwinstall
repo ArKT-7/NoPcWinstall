@@ -575,7 +575,7 @@ $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 echo ""
 echo "Mounting partitions..."
 $(pwd)/busybox mkdir -p /mnt/win
-echo "Mounting partitions... using busybox"
+# echo "Mounting partitions... using busybox"
 $(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
 
  copy_with_progress() {

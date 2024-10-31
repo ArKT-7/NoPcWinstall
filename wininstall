@@ -7,13 +7,6 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo "TESTA = 5"
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
-    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo ""
-    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
-    echo ""
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'"
@@ -510,7 +503,7 @@ busybox rm -rf "$DIR_UNZIP"
 echo "*************************************************";
 echo "*         Pre - installation Completed          *";
 echo "*                                               *";
-echo "*            rebooting in 10 sec and            *";
+echo "*              Now Reboot manually              *";
 echo "*                                               *";
 echo "*     Installation will start automaticly       *";
 echo "*   Now just wait and dont press any button     *";
@@ -524,12 +517,7 @@ echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-    echo ""
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
     echo ""
 else
     echo ""

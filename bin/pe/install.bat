@@ -3,48 +3,60 @@ setlocal enabledelayedexpansion
 
 :: Set console mode
 mode 800
+echo.
+echo ============================================================
+echo            Welcome to Windows Installation on ARM64
+echo ============================================================
+echo.
+
+:: Initialize variables
+set flashboot=
+set targetDrive=
+
+:: Loop through all drives to find the image file
+for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+    if exist %%G:\installer\install.bat (
+		set flashboot=%%G\installer\sta.exe -n
+		set targetDrive=%%G:
+        goto :found
+    )
+)
+
+echo install.bat not found.
+echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7 , Group - https://t.me/wininstaller
+pause
+exit /b 1
+
+:found
+
+:: Check if Windows is already installed
+if exist %targetDrive%\Windows\Explorer.exe (
+    echo Windows is already installed.
+    goto :formatAndAssign
+)
 
 echo.
 echo ============================================================
-echo          Welcome to Windows Installation on ARM64 
-echo ============================================================
-echo.
-echo.
-echo ============================================================
-echo              Searching for the index value 
-echo                  of "Windows Image"...
+echo             Searching for the index value
+echo                 of "Windows Image"...
 echo ============================================================
 echo.
 
 :: Initialize variables
 set imageFile=
-set targetDrive=
 
 :: Loop through all drives to find the image file
 for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     if exist %%G:\installer\install.esd (
         set imageFile=%%G:\installer\install.esd
-        set targetDrive=%%G:
-	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
         goto :found
     ) else if exist %%G:\installer\install.wim (
-        set imageFile=%%G:\installer\install.wim
-        set targetDrive=%%G:
-	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
         goto :found
-    )
-)
-
-:: Loop through all drives to find the boot file
-for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
-    if exist %%G:\boot.img (
-        set targetDrive=%%G:
-	set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
     )
 )
 
 echo Neither ESD nor WIM file found on any drive.
-echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
+echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7 , Group - https://t.me/wininstaller
 call %flashboot%
 pause
 exit /b 1
@@ -52,12 +64,10 @@ exit /b 1
 :found
 echo.
 echo ============================================================
-echo   Image file found at %imageFile%
-echo   Windows drive set to %targetDrive%
-REM echo           flashboot path : "%flashboot%"
+echo           Image file found at %imageFile%
+echo           Windows drive set to %targetDrive%
 echo ============================================================
 echo.
-
 echo ============================================================
 echo Serching index of Windows in the following order ........
 echo       1.  Windows 11 Pro
@@ -121,18 +131,16 @@ if "%index%"=="" (
 )
 if "%index%"=="" (
     echo "Index not found for the specified Windows version."
-	echo "Please check your Windows image and restart installation."
-        echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
-	call %flashboot%
+    echo "Please check your Windows image and restart installation."
+    call %flashboot%
     pause
     exit /b
 )
 
 :indexFound
-
 echo ============================================================
-echo           Index value %index% found for %Name% 
-echo           starting winddows installation.....
+echo           Index value %index% found for %Name%
+echo           starting windows installation.....
 echo ============================================================
 echo.
 
@@ -140,12 +148,12 @@ echo.
 echo Applying image to %targetDrive%...
 dism /Apply-Image /ImageFile:%imageFile% /Index:%index% /ApplyDir:%targetDrive%
 echo Image applied successfully!
-move /y "%targetDrive%\*.lnk" "%targetDrive%\Users\Default\Desktop" 2>nul
-
 echo.
+
+:formatAndAssign
 echo ============================================================
-echo                 Assigning drive letter for 
-echo                        bootloader...
+echo           Assigning drive letter for
+echo                  bootloader...
 echo ============================================================
 echo.
 
@@ -166,7 +174,7 @@ if not !foundESP! == true (
     )
 )
 
-:: If no FAT32 ESP and PE volume found, search for any FAT32
+):: If no FAT32 ESP and PE volume found, search for any FAT32
 if not !foundESP! == true (
     echo No FAT32 ESP volume found. Searching for any FAT32...
     for /f "tokens=2,3,4 delims= " %%B in ('echo list volume ^| diskpart ^| findstr /I "FAT32"') do (
@@ -177,14 +185,14 @@ if not !foundESP! == true (
 
 if not defined VolumeNumber (
     echo No FAT32 ESP or PE or required FAT32 Volume found.
-    echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7...
+    echo Take picture of error, force Reboot and ask for help to telegram - @ArKT_7 , Group - https://t.me/wininstaller
     call %flashboot%
     pause
     exit /b 1
 )
 
 :volFound
-echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber%
+echo Found FAT32 volume with ESP or PE, Volume Number %VolumeNumber%
 
 :: Format the volume, assign the drive letter S, and label it "ESPNABU"
 (
@@ -195,21 +203,22 @@ echo Found FAT32 volume with ESP or PE or any FAT32, Volume Number %VolumeNumber
 
 echo.
 echo ============================================================
-echo           Volume %VolumeNumber% has been formatted with FAT32,
+echo           %VolumeNumber% has been formatted with FAT32,
 echo           Assigned letter S, and labeled "ESPNABU".
 echo ============================================================
 echo.
 echo.
 echo ============================================================
-echo                 Creating bootloader file...
+echo           Creating bootloader file...
 echo ============================================================
 echo.
+
 bcdboot %targetDrive%\windows /s S: /f UEFI
 
 echo.
 echo ==========================================================
-echo              Windows installation process 
-echo                       completed!
+echo           Windows installation process
+echo                    completed!
 echo ==========================================================
 echo.
 echo.
@@ -239,7 +248,6 @@ echo.
 
 :continue
 %targetDrive%\Installer\Driver\tools\DriverUpdater\%PROCESSOR_ARCHITECTURE%\DriverUpdater.exe -r %targetDrive%\Installer\Driver -d %targetDrive%\Installer\Driver\definitions\Desktop\ARM64\Internal\arkt.xml -p %targetDrive%
-
 echo.
 echo ==========================================================
 echo Installation Completd.Rebooting in Windows in 5 seconds. 

@@ -4,7 +4,8 @@
 DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
-    echo "TESTA = 5"
+    echo ""
+	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7'"
@@ -13,17 +14,12 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 else
     echo ""
+    echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
     echo "Device - $DEVICE_CODENAME"
     echo ""
     exit 1
 fi
-
-echo "All downloads completed."
-echo ""
-echo "All binaries have been downloaded and permissions set."
-echo ""
-echo ""
 
 # Functions to convert bytes
 bytes_to_gb() {
@@ -47,21 +43,6 @@ part_userdata="/dev/block/by-name/userdata"
 win=/dev/block/sda32
 esp=/dev/block/sda33
 
-removeparts(){ for i in 34 33 32 31; do parted -s /dev/block/sda rm $i 2>/dev/null; done }
-
-formatwinesp(){
-mkfs.fat -F32 -s1 $esp -n ESPNABU
-mkfs.ntfs -f $win -L WINNABU
-}
-
-formatandroid(){
-echo "writing Userdata and Persist"
-busybox dd if=userdata.img of=/dev/block/sda31
-# busybox umount -a /dev/block/sda19
-# busybox mke2fs -F /dev/block/sda19
-# busybox dd if=metadata.img of=/dev/block/sda19
-busybox dd if=persist.img of=/dev/block/bootdevice/by-name/persist
-}
 
 blocksize=$(busybox blockdev --getsize64 /dev/block/sda)
 if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
@@ -93,42 +74,13 @@ repartition_windows() {
             echo "backuping persist.img..."
             busybox dd if=/dev/block/bootdevice/by-name/persist of=persist.img 2>&1 | grep 'bytes'
             echo ""
-            if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
-                echo "Min size is can be 30, max size is less than $winmax GB"
-                if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
-                    echo "Invalid argument! please give corrent size accordingly"
-                    exit 1
-                fi
-                echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
-                echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
-                echo ""
-                echo -n "Does that sound good? (y/n) "
-                read yn
-                echo ""
-                [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
-            fi
-
-            winend=$((max-350))"MB"
-            removeparts
-            sgdisk --resize-table 64 /dev/block/sda
-            parted -s /dev/block/sda mkpart userdata ext4 10872MB $userdataend"MB"
-            parted -s /dev/block/sda mkpart win ntfs $userdataend"MB" $winend
-            parted -s /dev/block/sda mkpart esp fat32 $winend 100%
-            parted -s /dev/block/sda set 33 esp on
-            sync
-            formatwinesp
-            formatandroid
-            echo "done!"
-
+            partition $size_win
+            echo ""
             echo "Repartitioning completed."
             echo ""
             echo "NOW YOUR DEVICE WILL BOOT TO RECOVERY. THEN WIPE DATA THERE,"
             echo "then reboot. AND COMPLETE SETUP EVERYTHING."
-            echo "INSTALL MAGISK AND THEN CONTINUE TO RE-RUN EVERYTHING."
+            echo "Then start this Modded Recovery and restart install."
             echo ""
             echo "Repartitioning done! Press any key to reboot..."
             read -n 1 -s key  # Wait for a key press
@@ -222,8 +174,8 @@ if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
     repartition_windows
 fi
 
-if [ $(echo "$size_win_gb < 30" | bc) -eq 1 ]; then
-    echo "Windows partition is less than 30 GB."
+if [ $(echo "$size_win_gb < 25" | bc) -eq 1 ]; then
+    echo "Windows partition is less than 25 GB."
     repartition_windows
 fi
 

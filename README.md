@@ -24,7 +24,7 @@ More coming soon!
 ---
 ## Get Started
 > [!TIP]
-> To open this site quickly, enter this URL: [**bit.ly/arkt7**](https://bit.ly/arkt7).
+> To open this site quickly, enter this URL ▶️ [**bit.ly/arkt7**](https://bit.ly/arkt7).
 > 
 > It's better if you factory reset(format) your Android device before fresh installing or re-partition install and also make sure to backup data your data
 

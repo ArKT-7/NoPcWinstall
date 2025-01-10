@@ -408,9 +408,8 @@ repartition_conf
 echo ""
 echo "Proceeding with the rest of the Things..."
 echo ""
-
-
 echo "fixing GPT for 24h2 Windows"
+echo ""
 GDISK_BINARY="$(pwd)/gdisk"
 
 run_gdisk() {
@@ -430,9 +429,9 @@ for i in a b c d e f; do
     DEVICE="/dev/block/sd$i"
     run_gdisk "$DEVICE"
 done
-
-
-
+echo "GPT fix Done!"
+echo ""
+echo ""
 # Define directories
 MAIN_DIR="/sdcard/"
 DIR_UNZIP="/sdcard/nopcwinstall/"

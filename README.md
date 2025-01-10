@@ -113,7 +113,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 
 ---
 ## Miscellaneous
--  ```WOA HELPER APP``` (for Dualbooting from Android To Windows [Downlaod and Install](https://github.com/Marius586/WoA-Helper-update/releases/tag/WOA))
+-  ```WOA HELPER APP``` (for Dualbooting from Android To Windows [Downlaod and Install](https://github.com/n00b69/woa-helper/releases/tag/APK))
   
 ```Official Guides For Xiaomi Pad 5 (Nabu)```
 

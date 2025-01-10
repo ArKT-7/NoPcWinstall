@@ -16,7 +16,7 @@ set targetDrive=
 :: Loop through all drives to find the image file
 for %%G in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     if exist %%G:\installer\install.bat (
-		set "flashboot=%%G:\installer\sta.exe -n -p %%G:\boot.img"
+		set flashboot=%%G:\installer\sta.exe -p %%G:\boot.img -n 
 		set targetDrive=%%G:
         goto :found
     )

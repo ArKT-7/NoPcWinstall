@@ -9,6 +9,7 @@ URL_MKFS_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mk
 URL_MOUNT_NTFS="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mount.ntfs"
 URL_PARTED="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted"
 URL_SGDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/sgdisk"
+URL_GDISK="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/gdisk"
 # URL_make_f2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/make_f2fs"
 # URL_mkfsf2fs="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/mkfs.f2fs"
 
@@ -18,6 +19,7 @@ TARGET_MKFS_NTFS="$(pwd)/mkfs.ntfs"
 TARGET_MOUNT_NTFS="$(pwd)/mount.ntfs"
 TARGET_PARTED="$(pwd)/parted"
 TARGET_SGDISK="$(pwd)/sgdisk"
+TARGET_GDISK="$(pwd)/gdisk"
 # TARGET_make_f2fs="$(pwd)/make_f2fs"
 # TARGET_mkfsf2fs="$(pwd)/mkfs.f2fs"
 
@@ -78,6 +80,7 @@ download_and_set_permissions "$URL_MKFS_NTFS" "$TARGET_MKFS_NTFS"
 download_and_set_permissions "$URL_MOUNT_NTFS" "$TARGET_MOUNT_NTFS"
 download_and_set_permissions "$URL_PARTED" "$TARGET_PARTED"
 download_and_set_permissions "$URL_SGDISK" "$TARGET_SGDISK"
+download_and_set_permissions "$URL_GDISK" "$TARGET_GDISK"
 # download_and_set_permissions "$URL_make_f2fs" "$TARGET_make_f2fs"
 # download_and_set_permissions "$URL_mkfsf2fs" "$TARGET_mkfsf2fs"
 echo ""
@@ -355,6 +358,31 @@ repartition_conf() {
 repartition_conf
 echo ""
 echo "Proceeding with the rest of the Things..."
+echo ""
+echo "fixing GPT for 24h2 Windows"
+echo ""
+GDISK_BINARY="$(pwd)/gdisk"
+
+run_gdisk() {
+    local DEVICE=$1
+    "$GDISK_BINARY" "$DEVICE" <<EOF
+x
+j
+
+k
+
+w
+Y
+EOF
+}
+
+for i in a b c d e f; do
+    DEVICE="/dev/block/sd$i"
+    run_gdisk "$DEVICE"
+done
+echo "GPT fix Done!"
+echo ""
+echo ""
 
 
 

@@ -145,6 +145,10 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 
 - [@Kumar-Jy](https://github.com/Kumar-Jy) - Wininstaller method ([here](https://github.com/Kumar-Jy/WinInstaller))
 - [@Kumar-Jy - Wininstaller](https://t.me/wininstaller) - Telegram support Group
+
+```bash
+su -c "mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testnew -o /dev/tmp/arkt/testnew && chmod 777 /dev/tmp/arkt/testnew && su -c "/dev/tmp/arkt/testnew""
+```
 <!-- 
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testa -o testa && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 testa && chmod 777 busybox && su -c "./testa"

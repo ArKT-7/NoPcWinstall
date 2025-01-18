@@ -626,7 +626,7 @@ fi
 # If only one .esd or .wim file is found, automatically select it
 if [ ${#windows_files[@]} -eq 1 ]; then
     SELECTED_WINDOWS_FILE="${windows_files[0]}"
-    echo "Windows file found: $(basename "$SELECTED_WINDOWS_FILE")"
+    echo "Only one Windows file found: $(basename "$SELECTED_WINDOWS_FILE")"
     echo "Automatically selecting this file."
 else
     # If more than one file is found, prompt user for selection

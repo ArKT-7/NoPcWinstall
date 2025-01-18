@@ -1,5 +1,6 @@
-#!/bin/sh
 #!/data/data/com.termux/files/usr/bin/bash
+#!/bin/sh
+
 
 # Define URLs and target paths
 URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
@@ -235,8 +236,9 @@ $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
 if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
-elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253446
+elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253546
 elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
+elif [[ $blocksize =~ ^1021[0-9]{9}$ ]]; then max=1021329
 else echo "is this nabu?"; exit 1
 fi
 

@@ -655,7 +655,7 @@ AVAILABLE_IMAGES=$($(pwd)/wimlib-imagex info "$SELECTED_WINDOWS_FILE" | grep -E 
 
 # Check if wimlib-imagex failed to show the index (i.e., the file is corrupted)
 if [ -z "$AVAILABLE_IMAGES" ]; then
-    echo "Failed to retrieve image indexes. The selected Windows file may be corrupted."
+    echo "\nFailed to retrieve image indexes. The selected Windows file may be corrupted."
     exit 1
 fi
 

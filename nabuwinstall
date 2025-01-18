@@ -216,13 +216,13 @@ esp=/dev/block/sda33
 # removeparts(){ for i in 34 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 removeparts() { 
     for i in 34 34 33 32 31; do 
-        $(pwd)/sgdisk --delete=$i /dev/block/sda 2>/dev/null || echo "Failed to delete partition $i";
+        $(pwd)/sgdisk --delete=$i /dev/block/sda 2>/dev/null || echo "unable to delete partition $i probably doesn't exists";
     done 
 }
 
-formatwinesp(){
-$(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f $win -L WINNABU
+formatwinesp() {
+    $(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
+    LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
 formatandroid(){

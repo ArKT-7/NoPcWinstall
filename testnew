@@ -42,7 +42,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 # elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
  elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
-    echo "testing for port rom"
+    echo "testing for port rom testa 444444"
     echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
@@ -270,11 +270,17 @@ repartition_windows() {
         while true; do
             # Prompt the user for the Windows partition size
             echo "Enter the size for the Windows partition in GB:"
-            read -r size_win
-            if ! [[ $size_win =~ ^[0-9]+$ ]]; then
-                echo "Invalid size. Please enter a number."
-                continue
-            fi
+			while true; do
+				read -r size_win
+				case $size_win in
+					''|*[!0-9]*) # Match empty input or any non-digit characters
+						echo "Invalid size. Please enter a number."
+						;;
+					*) # Valid input (numbers only)
+						break
+						;;
+				esac
+			done
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""

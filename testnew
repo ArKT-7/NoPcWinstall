@@ -51,7 +51,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
 	echo ""
 	echo ""
 	echo ""
-    echo "testing for port rom testa 444444"
+    echo "testing for port rom testa 555555555555"
 	echo ""
 	echo ""
     echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
@@ -125,7 +125,7 @@ TARGET_FILE6="$(pwd)/woa_helper.apk"
 
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
-$(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
+#$(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -137,7 +137,7 @@ fi
 
 # Download the userdata.img file
 echo "Downloading userdata.img"
-$(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
+#$(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -185,7 +185,7 @@ fi
 
 # Download the woa_helper.apk file
 echo "Downloading woa_helper.apk"
-$(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
+# $(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -231,6 +231,7 @@ removeparts() {
 }
 
 formatwinesp() {
+    $(pwd)/busybox umount /dev/block/by-name/{esp,win}
     $(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
     LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
@@ -365,29 +366,6 @@ repartition_windows() {
         exit
     fi
 }
-
-
-
-
-
-# Function to convert bytes to gigabytes and megabytes
-bytes_to_gb() {
-    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
-}
-
-bytes_to_mb() {
-    echo "scale=2; $1 / (1024 * 1024)" | bc
-}
-
-# Function to check if a partition exists
-partition_exists() {
-    [ -e "$1" ]
-}
-
-# Define partition paths
-part_win="/dev/block/by-name/win"
-part_esp="/dev/block/by-name/esp"
-part_userdata="/dev/block/by-name/userdata"
 
 
 
@@ -601,8 +579,15 @@ echo ""
 echo "Searching for Windows files..."
 echo ""
 
-# Search for both .esd and .wim files
-mapfile -t windows_files < <("$(pwd)/busybox" find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \))
+# Initialize variables
+windows_files=() # Array to store Windows files
+
+# Search for both .esd and .wim files using find and handle spaces in file names
+while IFS= read -r file; do
+    if [ -f "$file" ]; then
+        windows_files+=("$file")
+    fi
+done <<< "$(find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \))"
 
 # Check if no .esd or .wim files were found
 if [ ${#windows_files[@]} -eq 0 ]; then
@@ -640,8 +625,7 @@ fi
 
 echo ""
 echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
-echo "Windows file path: "$SELECTED_WINDOWS_FILE"
-echo "Windows file path 2: $SELECTED_WINDOWS_FILE
+echo "Windows file path: $SELECTED_WINDOWS_FILE"
 
 # Check the file extension and set the appropriate destination filename
 extension="${SELECTED_WINDOWS_FILE##*.}"
@@ -658,22 +642,30 @@ fi
 echo "Available Images:"
 AVAILABLE_IMAGES=$($(pwd)/wimlib-imagex info "$SELECTED_WINDOWS_FILE" | grep -E '^Index:|^Name:')
 
+# Check if wimlib-imagex failed to show the index (i.e., the file is corrupted)
+if [ -z "$AVAILABLE_IMAGES" ]; then
+    echo "Failed to retrieve image indexes. The selected Windows file may be corrupted."
+    exit 1
+fi
+
 # Display the indexes and names
 echo "$AVAILABLE_IMAGES"
+
+
 
 # Unmount and format partitions
 echo ""
 echo "Unmounting and formatting partitions..."
 $(pwd)/busybox umount /dev/block/by-name/{esp,win}
 $(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 
 # Mount partitions
 echo ""
 echo "Mounting partitions..."
 $(pwd)/busybox mkdir -p /mnt/win
 # echo "Mounting partitions... using busybox"
-$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
 
  copy_with_progress() {
     local src_file=$1

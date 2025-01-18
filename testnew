@@ -518,6 +518,7 @@ echo "Size of Windows Partition: $size_win_gb GB"
 echo "Size of ESP Partition: $size_esp_mb MB"
 echo "Size of Android partition: $size_userdata_gb GB"
 
+
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
@@ -525,28 +526,36 @@ echo "Searching for ZIP files..."
 # Initialize variables
 count=1
 files=() # Array to store file paths
+temp_file="./zip_list.txt" # Temporary file in the current working directory
 
-# Capture the output of find directly in a variable
-zip_files=$($(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip")
+# Use find and write results to a temporary file
+$(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" > "$temp_file"
 
-# Loop through the captured output
-for file in $zip_files; do
+# Read the find results line by line
+while IFS= read -r file; do
     if [ -f "$file" ]; then
-        echo "$count. $(basename "$file")"
-        files[$count]="$file"
+        # Extract relative path by removing "/sdcard/" prefix
+        relative_path="${file#/sdcard/}"
+        
+        echo "$count. $relative_path"
+        files[$count]="$file" # Store the full file path
         count=$((count + 1))
     fi
-done
+done < "$temp_file"
+
+# Clean up the temporary file
+rm -f "$temp_file"
 
 # Check if no ZIP files were found
-if [ $count -eq 1 ]; then
+if [ "$count" -eq 1 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
     exit 1
 fi
 
+# Prompt user for selection if multiple files are found
 echo ""
 echo "Enter the serial number of the ZIP file to select:"
-read selection
+read -r selection
 
 # Validate ZIP file selection
 if [ -z "${files[$selection]}" ]; then
@@ -571,6 +580,8 @@ for file in "${EXPECTED_FILES[@]}"; do
         exit 1
     fi
 done
+
+
 
 
 

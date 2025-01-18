@@ -1,6 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/bash
 #!/bin/sh
-
+#!/data/data/com.termux/files/usr/bin/bash
 
 # Define URLs and target paths
 URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"
@@ -35,6 +34,10 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
@@ -43,9 +46,16 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 # elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
  elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
-    echo "test for other device"
+    echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+    echo "testing for port rom testa 555555555555"
+	echo ""
+	echo ""
     echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7' "
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""
@@ -221,6 +231,7 @@ removeparts() {
 }
 
 formatwinesp() {
+    $(pwd)/busybox umount /dev/block/by-name/{esp,win}
     $(pwd)/mkfs.fat -F32 -s1 $esp -n ESPNABU
     LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
@@ -235,12 +246,26 @@ $(pwd)/busybox dd if=$(pwd)/persist.img of=/dev/block/bootdevice/by-name/persist
 }
 
 blocksize=$($(pwd)/busybox blockdev --getsize64 /dev/block/sda)
-if [[ $blocksize =~ ^125[0-9]{9}$ ]]; then max=125586
-elif [[ $blocksize =~ ^253[0-9]{9}$ ]]; then max=253546
-elif [[ $blocksize =~ ^509[0-9]{9}$ ]]; then max=509465
-elif [[ $blocksize =~ ^1021[0-9]{9}$ ]]; then max=1021329
-else echo "is this nabu?"; exit 1
-fi
+
+case $blocksize in
+    125[0-9]*)
+        max=125586
+        ;;
+    253[0-9]*)
+        max=253546
+        ;;
+    509[0-9]*)
+        max=509465
+        ;;
+    1021[0-9]*)
+        max=1021329
+        ;;
+    *)
+        echo "is this nabu?"
+        exit 1
+        ;;
+esac
+
 
 # Function to handle repartitioning
 repartition_windows() {
@@ -257,32 +282,60 @@ repartition_windows() {
         while true; do
             # Prompt the user for the Windows partition size
             echo "Enter the size for the Windows partition in GB:"
-            read -r size_win
-            if ! [[ $size_win =~ ^[0-9]+$ ]]; then
-                echo "Invalid size. Please enter a number."
-                continue
-            fi
+			while true; do
+				read -r size_win
+				case $size_win in
+					''|*[!0-9]*) # Match empty input or any non-digit characters
+						echo "Invalid size. Please enter a number."
+						;;
+					*) # Valid input (numbers only)
+						break
+						;;
+				esac
+			done
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
-            if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
-                echo "Min size is can be 30, max size is less than $winmax GB"
-                if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
-                    echo "Invalid argument! please give corrent size accordingly"
-                    exit 1
-                fi
-                echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
-                echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
-                echo ""
-                echo -n "Does that sound good? (y/n) "
-                read yn
-                echo ""
-                [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
-            fi
+            if [ -n "$size_win" ]; then
+			winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
+			echo "Min size can be 30, max size is less than $winmax GB"
+
+			# Validate size_win: Numeric value with optional decimal and within range
+			case $size_win in
+				''|*[!0-9.]*|*.*.*) # Invalid input: Empty, non-numeric, or multiple decimals
+					echo "Invalid argument! Please provide a correct size."
+					exit 1
+					;;
+				*) # Valid input: Check range
+					if [ "$(echo "$size_win < 30 || $size_win > $winmax" | bc)" -eq 1 ]; then
+						echo "Invalid argument! Please give the correct size accordingly."
+						exit 1
+					fi
+					;;
+			esac
+
+			echo ""
+			echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
+			echo ""
+			userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
+			echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
+			echo ""
+			echo -n "Does that sound good? (y/n) "
+			read yn
+			echo ""
+
+			# Validate "y" or "n" input
+			case $yn in
+				[Yy]*)
+					# Continue
+					;;
+				*)
+					echo "Rethink things carefully about the size and then re-run this script."
+					echo ""
+					exit 1
+					;;
+			esac
+		fi
 
             winend=$((max-350))"MB"
             removeparts
@@ -313,29 +366,6 @@ repartition_windows() {
         exit
     fi
 }
-
-
-
-
-
-# Function to convert bytes to gigabytes and megabytes
-bytes_to_gb() {
-    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
-}
-
-bytes_to_mb() {
-    echo "scale=2; $1 / (1024 * 1024)" | bc
-}
-
-# Function to check if a partition exists
-partition_exists() {
-    [ -e "$1" ]
-}
-
-# Define partition paths
-part_win="/dev/block/by-name/win"
-part_esp="/dev/block/by-name/esp"
-part_userdata="/dev/block/by-name/userdata"
 
 
 
@@ -394,8 +424,8 @@ if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
     repartition_windows
 fi
 
-if [ $(echo "$size_win_gb < 30" | bc) -eq 1 ]; then
-    echo "Windows partition is less than 30 GB."
+if [ $(echo "$size_win_gb < 25" | bc) -eq 1 ]; then
+    echo "Windows partition is less than 25 GB."
     repartition_windows
 fi
 
@@ -488,36 +518,58 @@ echo "Size of Windows Partition: $size_win_gb GB"
 echo "Size of ESP Partition: $size_esp_mb MB"
 echo "Size of Android partition: $size_userdata_gb GB"
 
+
 # List and select ZIP files
 echo ""
 echo "Searching for ZIP files..."
 
-# Using a loop to handle spaces in file paths
+# Initialize variables
 count=1
+files=() # Array to store file paths
+temp_file="./zip_list.txt" # Temporary file in the current working directory
+
+# Use find to search for ZIP files while excluding "Android" and hidden folders
+$(pwd)/busybox find "$MAIN_DIR" \
+    -type d \( -name "Android" -o -name ".*" \) -prune -o \
+    -type f -name "*.zip" -print > "$temp_file"
+
+# Read the find results line by line
 while IFS= read -r file; do
     if [ -f "$file" ]; then
-        echo "$count. $(basename "$file")"
-        files[$count]="$file"
+        echo "$count. $(basename "$file")" # Print only the filename
+        files[$count]="$file" # Store the full file path
         count=$((count + 1))
     fi
-done < <("$(pwd)/busybox" find "$MAIN_DIR" -type f -name "*.zip")
+done < "$temp_file"
 
-if [ $count -eq 1 ]; then
+# Clean up the temporary file
+rm -f "$temp_file"
+
+# Check if no ZIP files were found
+if [ "$count" -eq 1 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
     exit 1
 fi
 
-echo ""
-echo "Enter the serial number of the ZIP file to select:"
-read selection
+# Automatically select the ZIP file if only one is available
+if [ "$count" -eq 2 ]; then
+    SELECTED_ZIP_FILE="${files[1]}"
+    echo "Only one ZIP file found: $(basename "$SELECTED_ZIP_FILE")"
+    echo "Automatically selecting this file."
+else
+    # Prompt user for selection if multiple files are found
+    echo ""
+    echo "Enter the serial number of the ZIP file to select:"
+    read -r selection
 
-# Validate ZIP file selection
-if [ -z "${files[$selection]}" ]; then
-    echo "Invalid selection. Exiting."
-    exit 1
+    # Validate ZIP file selection
+    if [ -z "${files[$selection]}" ]; then
+        echo "Invalid selection. Exiting."
+        exit 1
+    fi
+
+    SELECTED_ZIP_FILE="${files[$selection]}"
 fi
-
-SELECTED_ZIP_FILE="${files[$selection]}"
 
 # Unzip the selected file
 echo ""
@@ -536,13 +588,34 @@ for file in "${EXPECTED_FILES[@]}"; do
 done
 
 
+
+
+
+
+
 # List and select Windows files
 echo ""
 echo "Searching for Windows files..."
 echo ""
 
-# Search for both .esd and .wim files
-mapfile -t windows_files < <("$(pwd)/busybox" find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \))
+# Initialize variables
+windows_files=() # Array to store Windows files
+temp_file="./windows_list.txt" # Temporary file to store find results
+
+# Search for .esd and .wim files while excluding "Android" and hidden folders
+find "$MAIN_DIR" \
+    -type d \( -name "Android" -o -name ".*" \) -prune -o \
+    -type f \( -name "*.esd" -o -name "*.wim" \) -print > "$temp_file"
+
+# Read the find results line by line
+while IFS= read -r file; do
+    if [ -f "$file" ]; then
+        windows_files+=("$file")
+    fi
+done < "$temp_file"
+
+# Clean up the temporary file
+rm -f "$temp_file"
 
 # Check if no .esd or .wim files were found
 if [ ${#windows_files[@]} -eq 0 ]; then
@@ -553,7 +626,7 @@ fi
 # If only one .esd or .wim file is found, automatically select it
 if [ ${#windows_files[@]} -eq 1 ]; then
     SELECTED_WINDOWS_FILE="${windows_files[0]}"
-    echo "Windows file found: $(basename "$SELECTED_WINDOWS_FILE")"
+    echo "Only one Windows file found: $(basename "$SELECTED_WINDOWS_FILE")"
     echo "Automatically selecting this file."
 else
     # If more than one file is found, prompt user for selection
@@ -580,14 +653,13 @@ fi
 
 echo ""
 echo "Selected Windows file: $(basename "$SELECTED_WINDOWS_FILE")"
-echo "Windows file path: "$SELECTED_WINDOWS_FILE"
-echo "Windows file path 2: $SELECTED_WINDOWS_FILE
+echo "Windows file path: $SELECTED_WINDOWS_FILE"
 
 # Check the file extension and set the appropriate destination filename
 extension="${SELECTED_WINDOWS_FILE##*.}"
-if [ "$extension" == "esd" ]; then
+if [ "$extension" = "esd" ]; then
     DEST_FILE="install.esd"
-elif [ "$extension" == "wim" ]; then
+elif [ "$extension" = "wim" ]; then
     DEST_FILE="install.wim"
 else
     echo "Unknown file type: $extension. Exiting."
@@ -598,22 +670,31 @@ fi
 echo "Available Images:"
 AVAILABLE_IMAGES=$($(pwd)/wimlib-imagex info "$SELECTED_WINDOWS_FILE" | grep -E '^Index:|^Name:')
 
+# Check if wimlib-imagex failed to show the index (i.e., the file is corrupted)
+if [ -z "$AVAILABLE_IMAGES" ]; then
+    echo "\nFailed to retrieve image indexes. The selected Windows file may be corrupted."
+    exit 1
+fi
+
 # Display the indexes and names
 echo "$AVAILABLE_IMAGES"
+
+
+
 
 # Unmount and format partitions
 echo ""
 echo "Unmounting and formatting partitions..."
 $(pwd)/busybox umount /dev/block/by-name/{esp,win}
 $(pwd)/mkfs.fat -F32 -s1 /dev/block/by-name/esp -n ESPNABU
-$(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
+LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mkfs.ntfs -f /dev/block/by-name/win -L WINNABU
 
 # Mount partitions
 echo ""
 echo "Mounting partitions..."
 $(pwd)/busybox mkdir -p /mnt/win
 # echo "Mounting partitions... using busybox"
-$(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
+LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mount.ntfs /dev/block/by-name/win /mnt/win
 
  copy_with_progress() {
     local src_file=$1
@@ -672,7 +753,9 @@ $(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
 echo ""
 echo "installing latest WOA HELPER APP for dualboot to Windows"
-pm install $(pwd)/woa_helper.apk
+$(pwd)/busybox mkdir -p /data/local/tmp/
+$(pwd)/busybox cp $(pwd)/woa_helper.apk /data/local/tmp/
+pm install -t /data/local/tmp/woa_helper.apk
 # Clean up
 echo ""
 echo "Cleaning up..."
@@ -681,7 +764,7 @@ $(pwd)/busybox rm -rf "$DIR_UNZIP"
 echo "*************************************************";
 echo "*         Pre - installation Completed          *";
 echo "*                                               *";
-echo "*            rebooting in 10 sec and            *";
+echo "*            you can reboot now so              *";
 echo "*                                               *";
 echo "*     Installation will start automaticly       *";
 echo "*   Now just wait and dont press any button     *";
@@ -694,17 +777,28 @@ echo "*                                               *";
 echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
+	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
+    echo ""
+# elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+ elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
+    echo ""
+	echo ""
+    echo "testing for port rom testa 555555555555"
+	echo ""
+	echo ""
+    echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
+    echo ""
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""
 else
     echo ""
-    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7 "
+    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
     echo "Device - $DEVICE_CODENAME"
     echo ""
     exit 1

@@ -1,6 +1,5 @@
-#!/data/data/com.termux/files/usr/bin/bash
-
 #!/bin/sh
+#!/data/data/com.termux/files/usr/bin/bash
 
 # Define URLs and target paths
 URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox"

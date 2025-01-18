@@ -295,24 +295,46 @@ repartition_windows() {
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
-            if [[ -n $size_win ]]; then
-                winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
-                echo "Min size is can be 30, max size is less than $winmax GB"
-                if ! [[ $size_win =~ ^[0-9]{1,3}(\.[0-9])?$ && $(echo "30 < $size_win && $size_win < $winmax" | bc) == 1 ]]; then
-                    echo "Invalid argument! please give corrent size accordingly"
-                    exit 1
-                fi
-                echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
-                echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
-                echo ""
-                echo -n "Does that sound good? (y/n) "
-                read yn
-                echo ""
-                [[ $yn =~ ^[Yy].*$ ]] || { echo "Rethink things carefully about the size and then re-run this script."; echo ""; exit 1; }
-            fi
+            if [ -n "$size_win" ]; then
+			winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
+			echo "Min size can be 30, max size is less than $winmax GB"
+
+			# Validate size_win: Numeric value with optional decimal and within range
+			case $size_win in
+				''|*[!0-9.]*|*.*.*) # Invalid input: Empty, non-numeric, or multiple decimals
+					echo "Invalid argument! Please provide a correct size."
+					exit 1
+					;;
+				*) # Valid input: Check range
+					if [ "$(echo "$size_win < 30 || $size_win > $winmax" | bc)" -eq 1 ]; then
+						echo "Invalid argument! Please give the correct size accordingly."
+						exit 1
+					fi
+					;;
+			esac
+
+			echo ""
+			echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
+			echo ""
+			userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
+			echo "Android will get $(echo "scale=2; ($userdataend-10872)/1024" | bc) GB of space"
+			echo ""
+			echo -n "Does that sound good? (y/n) "
+			read yn
+			echo ""
+
+			# Validate "y" or "n" input
+			case $yn in
+				[Yy]*)
+					# Continue
+					;;
+				*)
+					echo "Rethink things carefully about the size and then re-run this script."
+					echo ""
+					exit 1
+					;;
+			esac
+		fi
 
             winend=$((max-350))"MB"
             removeparts

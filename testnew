@@ -125,7 +125,7 @@ TARGET_FILE6="$(pwd)/woa_helper.apk"
 
 # Download the Toolbox.zip file
 echo "Downloading additional Windows tools file (Toolbox.zip), office, activator, and other things"
-#$(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
+$(pwd)/busybox wget -O "$TARGET_FILE1" "$URL1"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -137,7 +137,7 @@ fi
 
 # Download the userdata.img file
 echo "Downloading userdata.img"
-#$(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
+$(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
@@ -185,7 +185,7 @@ fi
 
 # Download the woa_helper.apk file
 echo "Downloading woa_helper.apk"
-# $(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
+$(pwd)/busybox wget -O "$TARGET_FILE6" "$URL6"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then

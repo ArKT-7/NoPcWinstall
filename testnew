@@ -544,16 +544,20 @@ echo "Size of Android partition: $size_userdata_gb GB"
 echo ""
 echo "Searching for ZIP files..."
 
-# Using a loop to handle spaces in file paths
+# Initialize variables
 count=1
-while IFS= read -r file; do
+files=() # POSIX-compliant way to handle indexed arrays
+
+# Using a while loop with find
+$(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" | while IFS= read -r file; do
     if [ -f "$file" ]; then
         echo "$count. $(basename "$file")"
-        files[$count]="$file"
+        files[$count]="$file" # Collect file paths in an array
         count=$((count + 1))
     fi
-done < <("$(pwd)/busybox" find "$MAIN_DIR" -type f -name "*.zip")
+done
 
+# Check if no files were found
 if [ $count -eq 1 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
     exit 1
@@ -586,6 +590,7 @@ for file in "${EXPECTED_FILES[@]}"; do
         exit 1
     fi
 done
+
 
 
 # List and select Windows files

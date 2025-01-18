@@ -528,8 +528,10 @@ count=1
 files=() # Array to store file paths
 temp_file="./zip_list.txt" # Temporary file in the current working directory
 
-# Use find and write results to a temporary file
-$(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" > "$temp_file"
+# Use find to search for ZIP files while excluding "Android" and hidden folders
+$(pwd)/busybox find "$MAIN_DIR" \
+    -type d \( -name "Android" -o -name ".*" \) -prune -o \
+    -type f -name "*.zip" -print > "$temp_file"
 
 # Read the find results line by line
 while IFS= read -r file; do
@@ -580,6 +582,7 @@ for file in "${EXPECTED_FILES[@]}"; do
         exit 1
     fi
 done
+
 
 
 

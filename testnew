@@ -546,18 +546,21 @@ echo "Searching for ZIP files..."
 
 # Initialize variables
 count=1
-files=() # POSIX-compliant way to handle indexed arrays
+files=() # Array to store file paths
 
-# Using a while loop with find
-$(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip" | while IFS= read -r file; do
+# Capture the output of find directly in a variable
+zip_files=$($(pwd)/busybox find "$MAIN_DIR" -type f -name "*.zip")
+
+# Loop through the captured output
+for file in $zip_files; do
     if [ -f "$file" ]; then
         echo "$count. $(basename "$file")"
-        files[$count]="$file" # Collect file paths in an array
+        files[$count]="$file"
         count=$((count + 1))
     fi
 done
 
-# Check if no files were found
+# Check if no ZIP files were found
 if [ $count -eq 1 ]; then
     echo "No ZIP files found. Please download and place a ZIP file in the directory."
     exit 1

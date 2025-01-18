@@ -67,7 +67,7 @@ su -c "cd / && mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/
 > - Copy this command and Paste if upper not work
 
 ```bash
-su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /data/local/tmp/nabuwinstall && chmod 777 /data/local/tmp/nabuwinstall && su -c "/data/local/tmp/nabuwinstall""
+su -c "cd / && mkdir -p /data/local/tmp && chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /data/local/tmp/nabuwinstall && chmod 777 /data/local/tmp/nabuwinstall && su -c "/data/local/tmp/nabuwinstall""
 ```
 > [!NOTE]
 > - Copy this command and Paste if upper both not work
@@ -78,7 +78,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 > - this command used wimlib-imagex to install, you may get error - but it faster than all
 > - well you can try this, just in case if you get any error contact in Telegram
 ```bash
-su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwimlib -o /data/data/arkt/nabuwimlib && chmod 777 /data/data/arkt/nabuwimlib && su -c "/data/data/arkt/nabuwimlib""
+su -c "cd / && mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwimlib -o /dev/tmp/arkt/nabuwimlib && chmod 777 /dev/tmp/arkt/nabuwimlib && su -c "/dev/tmp/arkt/nabuwimlib""
 ```
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait

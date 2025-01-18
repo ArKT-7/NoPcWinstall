@@ -61,7 +61,7 @@ su
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
 ```bash
-su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /data/data/arkt/nabuwinstall && chmod 777 /data/data/arkt/nabuwinstall && su -c "/data/data/arkt/nabuwinstall""
+su -c "cd / && mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /dev/tmp/arkt/nabuwinstall && chmod 777 /dev/tmp/arkt/nabuwinstall && su -c "/dev/tmp/arkt/nabuwinstall""
 ```
 > [!NOTE]
 > - Copy this command and Paste if upper not work

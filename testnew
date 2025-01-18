@@ -724,7 +724,9 @@ $(pwd)/busybox dd if=/sdcard/nopcwinstall/pe.img of=/dev/block/by-name/esp bs=64
 $(pwd)/busybox dd if=/sdcard/nopcwinstall/uefi.img of=/dev/block/by-name/boot$(getprop ro.boot.slot_suffix) bs=8M
 echo ""
 echo "installing latest WOA HELPER APP for dualboot to Windows"
-pm install $(pwd)/woa_helper.apk
+$(pwd)/busybox mkdir -p /data/local/tmp/
+$(pwd)/busybox cp $(pwd)/woa_helper.apk /data/local/tmp/
+pm install /data/local/tmp/woa_helper.apk
 # Clean up
 echo ""
 echo "Cleaning up..."

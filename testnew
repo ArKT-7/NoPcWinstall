@@ -536,10 +536,7 @@ $(pwd)/busybox find "$MAIN_DIR" \
 # Read the find results line by line
 while IFS= read -r file; do
     if [ -f "$file" ]; then
-        # Extract relative path by removing "/sdcard/" prefix
-        relative_path="${file#/sdcard/}"
-        
-        echo "$count. $relative_path"
+        echo "$count. $(basename "$file")" # Print only the filename
         files[$count]="$file" # Store the full file path
         count=$((count + 1))
     fi
@@ -554,18 +551,25 @@ if [ "$count" -eq 1 ]; then
     exit 1
 fi
 
-# Prompt user for selection if multiple files are found
-echo ""
-echo "Enter the serial number of the ZIP file to select:"
-read -r selection
+# Automatically select the ZIP file if only one is available
+if [ "$count" -eq 2 ]; then
+    SELECTED_ZIP_FILE="${files[1]}"
+    echo "Only one ZIP file found: $(basename "$SELECTED_ZIP_FILE")"
+    echo "Automatically selecting this file."
+else
+    # Prompt user for selection if multiple files are found
+    echo ""
+    echo "Enter the serial number of the ZIP file to select:"
+    read -r selection
 
-# Validate ZIP file selection
-if [ -z "${files[$selection]}" ]; then
-    echo "Invalid selection. Exiting."
-    exit 1
+    # Validate ZIP file selection
+    if [ -z "${files[$selection]}" ]; then
+        echo "Invalid selection. Exiting."
+        exit 1
+    fi
+
+    SELECTED_ZIP_FILE="${files[$selection]}"
 fi
-
-SELECTED_ZIP_FILE="${files[$selection]}"
 
 # Unzip the selected file
 echo ""
@@ -588,6 +592,7 @@ done
 
 
 
+
 # List and select Windows files
 echo ""
 echo "Searching for Windows files..."
@@ -595,13 +600,22 @@ echo ""
 
 # Initialize variables
 windows_files=() # Array to store Windows files
+temp_file="./windows_list.txt" # Temporary file to store find results
 
-# Search for both .esd and .wim files using find and handle spaces in file names
+# Search for .esd and .wim files while excluding "Android" and hidden folders
+find "$MAIN_DIR" \
+    -type d \( -name "Android" -o -name ".*" \) -prune -o \
+    -type f \( -name "*.esd" -o -name "*.wim" \) -print > "$temp_file"
+
+# Read the find results line by line
 while IFS= read -r file; do
     if [ -f "$file" ]; then
         windows_files+=("$file")
     fi
-done <<< "$(find "$MAIN_DIR" -type f \( -name "*.esd" -o -name "*.wim" \))"
+done < "$temp_file"
+
+# Clean up the temporary file
+rm -f "$temp_file"
 
 # Check if no .esd or .wim files were found
 if [ ${#windows_files[@]} -eq 0 ]; then
@@ -643,9 +657,9 @@ echo "Windows file path: $SELECTED_WINDOWS_FILE"
 
 # Check the file extension and set the appropriate destination filename
 extension="${SELECTED_WINDOWS_FILE##*.}"
-if [ "$extension" == "esd" ]; then
+if [ "$extension" = "esd" ]; then
     DEST_FILE="install.esd"
-elif [ "$extension" == "wim" ]; then
+elif [ "$extension" = "wim" ]; then
     DEST_FILE="install.wim"
 else
     echo "Unknown file type: $extension. Exiting."
@@ -664,6 +678,7 @@ fi
 
 # Display the indexes and names
 echo "$AVAILABLE_IMAGES"
+
 
 
 

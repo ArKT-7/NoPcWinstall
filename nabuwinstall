@@ -36,8 +36,6 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 	echo ""
 	echo ""
-	echo ""
-	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
@@ -49,12 +47,8 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 	echo ""
 	echo ""
-	echo ""
-	echo ""
-    echo "testing for port rom testa 555555555555"
-	echo ""
-	echo ""
     echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
+	echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
@@ -62,7 +56,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
-    echo "Device - $DEVICE_CODENAME"
+    echo "your Device - $DEVICE_CODENAME"
     echo ""
     exit 1
 fi
@@ -108,8 +102,8 @@ echo ""
 URL1="https://raw.githubusercontent.com/arkt-7/won-deployer/main/files/Toolbox.zip"
 TARGET_FILE1="$(pwd)/Toolbox.zip"
 
-URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
-TARGET_FILE2="$(pwd)/userdata.img"
+#URL2="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/userdata.img"
+#TARGET_FILE2="$(pwd)/userdata.img"
 
 # URL3="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/metadata.img"
 # TARGET_FILE3="$(pwd)/metadata.img"
@@ -136,16 +130,16 @@ else
 fi
 
 # Download the userdata.img file
-echo "Downloading userdata.img"
-$(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
+# echo "Downloading userdata.img"
+# $(pwd)/busybox wget -O "$TARGET_FILE2" "$URL2"
 
 # Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "Download complete for userdata.img."
-else
-    echo "Failed to download $URL2."
-    exit 1
-fi
+# if [ $? -eq 0 ]; then
+    # echo "Download complete for userdata.img."
+# else
+    # echo "Failed to download $URL2."
+    # exit 1
+# fi
 
 # Download the metadata.img file
 # echo "Downloading metadata.img"
@@ -236,9 +230,9 @@ formatwinesp() {
     LD_PRELOAD=$(pwd)/libfuse-lite.so:$(pwd)/libntfs-3g.so $(pwd)/mkfs.ntfs -f $win -L WINNABU
 }
 
-formatandroid(){
-echo "writing Userdata and Persist"
-$(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
+flashpersist(){
+echo "writing Persist backup"
+# $(pwd)/busybox dd if=$(pwd)/userdata.img of=/dev/block/sda31
 # $(pwd)/busybox umount -a /dev/block/sda19
 # $(pwd)/busybox mke2fs -F /dev/block/sda19
 # $(pwd)/busybox dd if=$(pwd)/metadata.img of=/dev/block/sda19
@@ -346,7 +340,7 @@ repartition_windows() {
             $(pwd)/parted -s /dev/block/sda set 33 esp on
             sync
             formatwinesp
-            formatandroid
+            flashpersist
             echo "done!"
 
             echo "Repartitioning completed."

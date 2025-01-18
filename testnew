@@ -446,8 +446,8 @@ if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
     repartition_windows
 fi
 
-if [ $(echo "$size_win_gb < 30" | bc) -eq 1 ]; then
-    echo "Windows partition is less than 30 GB."
+if [ $(echo "$size_win_gb < 25" | bc) -eq 1 ]; then
+    echo "Windows partition is less than 25 GB."
     repartition_windows
 fi
 

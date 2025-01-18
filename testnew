@@ -42,9 +42,9 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 # elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
  elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
-    echo "test for other device"
+    echo "testing for port rom"
     echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
-    echo "this script is Written and Made By ArKT, Telegram - '@ArKT_7', Github - 'ArKT-7' "
+    echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""

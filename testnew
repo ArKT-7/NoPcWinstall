@@ -726,7 +726,7 @@ echo ""
 echo "installing latest WOA HELPER APP for dualboot to Windows"
 $(pwd)/busybox mkdir -p /data/local/tmp/
 $(pwd)/busybox cp $(pwd)/woa_helper.apk /data/local/tmp/
-pm install /data/local/tmp/woa_helper.apk
+pm install -t /data/local/tmp/woa_helper.apk
 # Clean up
 echo ""
 echo "Cleaning up..."

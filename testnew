@@ -735,7 +735,7 @@ $(pwd)/busybox rm -rf "$DIR_UNZIP"
 echo "*************************************************";
 echo "*         Pre - installation Completed          *";
 echo "*                                               *";
-echo "*            rebooting in 10 sec and            *";
+echo "*            you can reboot now so              *";
 echo "*                                               *";
 echo "*     Installation will start automaticly       *";
 echo "*   Now just wait and dont press any button     *";
@@ -748,17 +748,28 @@ echo "*                                               *";
 echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
+	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+    echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
-elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
-    echo "test for other device"
-    echo "WinInstaller for Samsung S23 Ultra ($DEVICE_CODENAME)"
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
+    echo ""
+# elif [ "$DEVICE_CODENAME" = "dm3q" ]; then
+ elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
+    echo ""
+	echo ""
+    echo "testing for port rom testa 555555555555"
+	echo ""
+	echo ""
+    echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
+    echo ""
+    echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
     echo ""
 else
     echo ""
-    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7 "
+    echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
     echo "Device - $DEVICE_CODENAME"
     echo ""
     exit 1

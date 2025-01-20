@@ -39,6 +39,7 @@ More coming soon!
 ## Files you need to Download 
 ### Put this two file in your Device internal Storage
 - [```ARM Windows ESD```](https://arkt-7.github.io/woawin/) (Select - Build:  ```Select Build Number``` and Language:  ```Select your Language```)
+- [```ARM Windows LTSC 24H2```](https://1drv.ms/u/c/e503a90e3c75d1ba/EVCqzhjMZ7RCoYKEDJ4FxPsB4wstPHbwNs-Zt2zncX0vCA?e=FM6BDW)
     
 - [```Nabu_WinInstaller_R7_261224.zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller) (```Download Latest directly from here ▶️``` [Nabu_WinInstaller_R7_261224.zip](https://drive.google.com/file/d/1E84a1FdF9enRu3VbJQ-4sjwyFlN9Axcs/view?usp=sharing))
 > [!NOTE]

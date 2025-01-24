@@ -57,7 +57,7 @@ su
 ```
 ### 3. Then Grant Root 
 
-### 4. Copy this command and paste in Termux app for Xiamoi Pad 5
+### 4. Copy this command and paste in Termux app for Xiaomi Pad 5
 > [!NOTE]
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart

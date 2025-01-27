@@ -34,7 +34,7 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-	echo "TESTA 3"
+	echo "TESTA 4"
 	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
@@ -215,11 +215,11 @@ part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
 win=/dev/block/sda32
-esp=/dev/block/sda31
+esp=/dev/block/sda33
 
 # removeparts(){ for i in 34 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 removeparts() { 
-    for i in 37 36 35 34 34 33 32 31; do 
+    for i in 34 34 33 32 31; do 
         $(pwd)/sgdisk --delete=$i /dev/block/sda 2>/dev/null || echo "unable to delete partition $i probably doesn't exists";
     done 
 }
@@ -260,6 +260,7 @@ case $blocksize in
         ;;
 esac
 
+
 # Function to handle repartitioning
 repartition_windows() {
     echo "Do you want to proceed with partitioning? (y/n)"
@@ -275,68 +276,68 @@ repartition_windows() {
         while true; do
             # Prompt the user for the Windows partition size
             echo "Enter the size for the Windows partition in GB:"
-            while true; do
-                read -r size_win
-                case $size_win in
-                    ''|*[!0-9]*) # Match empty input or any non-digit characters
-                        echo "Invalid size. Please enter a number."
-                        ;;
-                    *) # Valid input (numbers only)
-                        break
-                        ;;
-                esac
-            done
+			while true; do
+				read -r size_win
+				case $size_win in
+					''|*[!0-9]*) # Match empty input or any non-digit characters
+						echo "Invalid size. Please enter a number."
+						;;
+					*) # Valid input (numbers only)
+						break
+						;;
+				esac
+			done
             echo "backuping persist.img..."
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
             if [ -n "$size_win" ]; then
-                winmax=$(echo "($max - 11222)/1000" | bc)
-                echo "Min size can be 30, max size is less than $winmax GB"
+			winmax=$(echo "($max - 10872 - 350 - 100)/1000" | bc)
+			echo "Min size can be 30, max size is less than $winmax GB"
 
-                # Validate size_win: Numeric value with optional decimal and within range
-                case $size_win in
-                    ''|*[!0-9.]*|*.*.*) # Invalid input: Empty, non-numeric, or multiple decimals
-                        echo "Invalid argument! Please provide a correct size."
-                        exit 1
-                        ;;
-                    *) # Valid input: Check range
-                        if [ "$(echo "$size_win < 30 || $size_win > $winmax" | bc)" -eq 1 ]; then
-                            echo "Invalid argument! Please give the correct size accordingly."
-                            exit 1
-                        fi
-                        ;;
-                esac
+			# Validate size_win: Numeric value with optional decimal and within range
+			case $size_win in
+				''|*[!0-9.]*|*.*.*) # Invalid input: Empty, non-numeric, or multiple decimals
+					echo "Invalid argument! Please provide a correct size."
+					exit 1
+					;;
+				*) # Valid input: Check range
+					if [ "$(echo "$size_win < 30 || $size_win > $winmax" | bc)" -eq 1 ]; then
+						echo "Invalid argument! Please give the correct size accordingly."
+						exit 1
+					fi
+					;;
+			esac
 
-                echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
-                echo ""
-                userdataend=$(echo "$max - $size_win*1000" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-11222)/1024" | bc) GB of space"
-                echo ""
-                echo -n "Does that sound good? (y/n) "
-                read yn
-                echo ""
+			echo ""
+			echo "Windows will get $(echo "scale=2; $size_win*1000/1000" | bc) GB of space"
+			echo ""
+			userdataend=$(echo "$max - $size_win*1000 - 350" | bc)
+			echo "Android will get $(echo "scale=2; ($userdataend-10872)/1000" | bc) GB of space"
+			echo ""
+			echo -n "Does that sound good? (y/n) "
+			read yn
+			echo ""
 
-                # Validate "y" or "n" input
-                case $yn in
-                    [Yy]*)
-                        # Continue
-                        ;;
-                    *)
-                        echo "Rethink things carefully about the size and then re-run this script."
-                        echo ""
-                        exit 1
-                        ;;
-                esac
-            fi
+			# Validate "y" or "n" input
+			case $yn in
+				[Yy]*)
+					# Continue
+					;;
+				*)
+					echo "Rethink things carefully about the size and then re-run this script."
+					echo ""
+					exit 1
+					;;
+			esac
+		fi
 
-            winend=$(echo "$max - $size_win*1000" | bc)"MB"
+            winend=$((max-350))"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
-            $(pwd)/parted -s /dev/block/sda mkpart esp fat32 10872MB 11222MB
-            $(pwd)/parted -s /dev/block/sda mkpart win ntfs 11222MB $winend
-            $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 $winend 100%
-            $(pwd)/parted -s /dev/block/sda set 31 esp on
+            $(pwd)/parted -s /dev/block/sda mkpart userdata ext4 10872MB $userdataend"MB"
+            $(pwd)/parted -s /dev/block/sda mkpart win ntfs $userdataend"MB" $winend
+            $(pwd)/parted -s /dev/block/sda mkpart esp fat32 $winend 100%
+            $(pwd)/parted -s /dev/block/sda set 33 esp on
             sync
             formatwinesp
             flashpersist
@@ -359,7 +360,6 @@ repartition_windows() {
         exit
     fi
 }
-
 
 
 

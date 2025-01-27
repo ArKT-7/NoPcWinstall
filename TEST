@@ -34,7 +34,7 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-	echo ""
+	echo "TESTA 2"
 	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""

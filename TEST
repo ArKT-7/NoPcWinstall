@@ -197,11 +197,11 @@ echo ""
 
 # Functions to convert bytes
 bytes_to_gb() {
-    echo "scale=2; $1 / (1024 * 1024 * 1024)" | bc
+    echo "scale=2; $1 / (1000 * 1000 * 1000)" | bc
 }
 
 bytes_to_mb() {
-    echo "scale=2; $1 / (1024 * 1024)" | bc
+    echo "scale=2; $1 / (1000 * 1000)" | bc
 }
 
 # Function to check if a partition exists
@@ -308,10 +308,10 @@ repartition_windows() {
                 esac
 
                 echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
+                echo "Windows will get $(echo "scale=2; $size_win*1000/1000" | bc) GB of space"
                 echo ""
                 userdataend=$(echo "$max - $size_win*1000 - 11222" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-11222)/1024" | bc) GB of space"
+                echo "Android will get $(echo "scale=2; ($userdataend-11222)/1000" | bc) GB of space"
                 echo ""
                 echo -n "Does that sound good? (y/n) "
                 read yn

@@ -34,7 +34,7 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-	echo "TESTA 2"
+	echo "TESTA 3"
 	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
@@ -215,7 +215,7 @@ part_esp="/dev/block/by-name/esp"
 part_userdata="/dev/block/by-name/userdata"
 
 win=/dev/block/sda32
-esp=/dev/block/sda33
+esp=/dev/block/sda31
 
 # removeparts(){ for i in 34 33 32 31; do $(pwd)/parted -s /dev/block/sda rm $i 2>/dev/null; done }
 removeparts() { 
@@ -290,7 +290,7 @@ repartition_windows() {
             $(pwd)/busybox dd if=/dev/block/bootdevice/by-name/persist of=$(pwd)/persist.img 2>&1 | grep 'bytes'
             echo ""
             if [ -n "$size_win" ]; then
-                winmax=$(echo "($max - 11222 - 100)/1000" | bc)
+                winmax=$(echo "($max - 11222)/1000" | bc)
                 echo "Min size can be 30, max size is less than $winmax GB"
 
                 # Validate size_win: Numeric value with optional decimal and within range
@@ -308,10 +308,10 @@ repartition_windows() {
                 esac
 
                 echo ""
-                echo "Windows will get $(echo "scale=2; $size_win*1000/1000" | bc) GB of space"
+                echo "Windows will get $(echo "scale=2; $size_win*1000/1024" | bc) GB of space"
                 echo ""
-                userdataend=$(echo "$max - $size_win*1000 - 11222" | bc)
-                echo "Android will get $(echo "scale=2; ($userdataend-11222)/1000" | bc) GB of space"
+                userdataend=$(echo "$max - $size_win*1000" | bc)
+                echo "Android will get $(echo "scale=2; ($userdataend-11222)/1024" | bc) GB of space"
                 echo ""
                 echo -n "Does that sound good? (y/n) "
                 read yn
@@ -330,7 +330,7 @@ repartition_windows() {
                 esac
             fi
 
-            winend=$((max-350))"MB"
+            winend=$(echo "$max - $size_win*1000" | bc)"MB"
             removeparts
             $(pwd)/sgdisk --resize-table 64 /dev/block/sda
             $(pwd)/parted -s /dev/block/sda mkpart esp fat32 10872MB 11222MB
@@ -359,6 +359,7 @@ repartition_windows() {
         exit
     fi
 }
+
 
 
 

@@ -34,7 +34,7 @@ DEVICE_CODENAME=$(getprop ro.product.device)
 
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
-	echo "TESTA 4"
+	echo ""
 	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
@@ -772,6 +772,7 @@ echo "*************************************************";
 if [ "$DEVICE_CODENAME" = "nabu" ]; then
     echo ""
 	echo ""
+	echo ""
     echo "WinInstaller for Xiaomi Pad 5 ($DEVICE_CODENAME)"
     echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
@@ -782,10 +783,9 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
  elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
     echo ""
 	echo ""
-    echo "testing for port rom testa 555555555555"
-	echo ""
 	echo ""
     echo "WinInstaller for Xiaomi Pad 5(colorOS) ($DEVICE_CODENAME)"
+	echo ""
     echo "this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7' "
     echo ""
     echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy' "
@@ -793,7 +793,7 @@ if [ "$DEVICE_CODENAME" = "nabu" ]; then
 else
     echo ""
     echo "This device is not supported yet. Please contact the developer on Telegram @ArKT_7"
-    echo "Device - $DEVICE_CODENAME"
+    echo "your Device - $DEVICE_CODENAME"
     echo ""
     exit 1
 fi

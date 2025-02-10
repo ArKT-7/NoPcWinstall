@@ -154,7 +154,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 - [@Kumar-Jy - Wininstaller](https://t.me/wininstaller) - Telegram support Group
 
 ```bash
-su -c "mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/TEST -o /dev/tmp/arkt/TEST && chmod 777 /dev/tmp/arkt/TEST && su -c "/dev/tmp/arkt/TEST""
+su -c "mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted -o /dev/tmp/arkt/parted && chmod 777 /dev/tmp/arkt/parted && su -c "/dev/tmp/arkt/parted /dev/block/sda""
 ```
 <!--
 ```bash

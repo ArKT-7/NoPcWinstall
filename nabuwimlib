@@ -1,5 +1,3 @@
-#!/data/data/com.termux/files/usr/bin/bash
-
 #!/bin/sh
 
 # Define URLs and target paths

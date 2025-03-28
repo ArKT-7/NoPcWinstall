@@ -68,13 +68,7 @@ su
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
 ```bash
-su -c "cd / && mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /dev/tmp/arkt/nabuwinstall && chmod 777 /dev/tmp/arkt/nabuwinstall && su -c "/dev/tmp/arkt/nabuwinstall""
-```
-> [!NOTE]
-> - Copy this command and Paste if upper not work
-
-```bash
-su -c "cd / && mkdir -p /data/local/tmp && chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall -o /data/local/tmp/nabuwinstall && chmod 777 /data/local/tmp/nabuwinstall && su -c "/data/local/tmp/nabuwinstall""
+su -c "cd / && mkdir -p /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL -o nabuwinstall https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall && chmod 777 nabuwinstall && su -c ./nabuwinstall"
 ```
 > [!NOTE]
 > - Copy this command and Paste if upper both not work
@@ -85,7 +79,7 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 > - this command used wimlib-imagex to install, you may get error - but it faster than all
 > - well you can try this, just in case if you get any error contact in Telegram
 ```bash
-su -c "cd / && mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwimlib -o /dev/tmp/arkt/nabuwimlib && chmod 777 /dev/tmp/arkt/nabuwimlib && su -c "/dev/tmp/arkt/nabuwimlib""
+su -c "cd / && mkdir -p /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL -o nabuwimlib https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwimlib && chmod 777 nabuwimlib && su -c ./nabuwimlib"
 ```
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
@@ -152,11 +146,11 @@ mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.github
 
 - [@Kumar-Jy](https://github.com/Kumar-Jy) - Wininstaller method ([here](https://github.com/Kumar-Jy/WinInstaller))
 - [@Kumar-Jy - Wininstaller](https://t.me/wininstaller) - Telegram support Group
-
+<!--
 ```bash
 su -c "mkdir -p /dev/tmp/arkt && chmod 777 /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/parted -o /dev/tmp/arkt/parted && chmod 777 /dev/tmp/arkt/parted && su -c "/dev/tmp/arkt/parted /dev/block/sda""
 ```
-<!--
+
 ```bash
 mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/testa -o testa && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 testa && chmod 777 busybox && su -c "./testa"
 ```

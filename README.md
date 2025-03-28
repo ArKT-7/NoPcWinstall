@@ -42,7 +42,7 @@ More coming soon!
 
 - [```ARM Windows 24H2 LTSC IOT (Only)```](https://drive.google.com/file/d/1WvTUIldcmffprJ2ZrdrLjlKqlz_vSlYa/view?usp=drivesdk) 
     
-- [```Nabu_WinInstaller_R8.1_040225.zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller)
+- [```Nabu_WinInstaller_SB_R8.2.1_250225.zip```](https://github.com/Kumar-Jy/Windows-in-NABU-Without-PC/releases/tag/Nabu-WinInstaller)
 <!--
   (```Download Latest directly from here ▶️``` [Nabu_WinInstaller_R7_261224.zip](https://drive.google.com/file/d/1E84a1FdF9enRu3VbJQ-4sjwyFlN9Axcs/view?usp=sharing)) 
   

@@ -19,6 +19,7 @@ rm -rf "$WORK_DIR"
 mkdir -p "$WORK_DIR"
 rm -rf "$BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
+cd "$BIN_DIR"
 
 log() {
     echo ""
@@ -49,6 +50,27 @@ bytes_to_gb() {
 
 bytes_to_mb() {
     "$BIN_DIR/busybox" awk -v bytes="$1" 'BEGIN { printf "%.2f", bytes / (1000 * 1000) }'
+}
+
+copy_folder_with_progress() {
+    local src="$1"
+    local dst="$2"
+    local total_size
+    total_size=$("$BIN_DIR/busybox" du -sb "$src" | "$BIN_DIR/busybox" awk '{print $1}')
+    mkdir -p "$dst"
+    #echo "[INFO] Copying folder from $src to $dst..."
+    (cd "$src" && "$BIN_DIR/busybox" tar -cf - .) | "$BIN_DIR/pv" -s "$total_size" | (cd "$dst" && "$BIN_DIR/busybox" tar -xf -)
+    #echo ""
+    #echo "[INFO] Folder copy completed."
+}
+
+copy_file_with_progress() {
+    local src="$1"
+    local dst="$2"
+    #log "[INFO] Copying $src to $dst with progress..."
+    "$BIN_DIR/pv" "$src" | "$BIN_DIR/busybox" dd of="$dst" bs=4M status=none
+    echo ""
+    #log "[INFO] File copy completed."
 }
 
 # Define partition paths and other stuffs
@@ -268,7 +290,7 @@ while IFS= read -r file; do
 done < "$temp_file"
 rm -f "$temp_file"
 if [ "$count" -eq 1 ]; then
-    log "[Warning] No valid Wininstaller ZIP files found (must download it first!)."
+    log "[ERROR] No valid Wininstaller ZIP files found (must download it first!).\n"
     exit 1
 fi
 
@@ -282,22 +304,111 @@ else
     echo -n "\nEnter the serial number of the ZIP file to select: "
     read -r selection
     if [ -z "${files[$selection]}" ]; then
-        log "[Warning] Invalid selection, exiting xD, try again!\n"
+        log "[ERROR] Invalid selection, exiting xD, try again!\n"
         exit 1
     fi
     SELECTED_ZIP_FILE="${files[$selection]}"
 fi
 
 log "[INFO] Extracting Wininstaller zip, please wait..."
-"$BIN_DIR/busybox" unzip -o -q "$SELECTED_ZIP_FILE" -d "$WORK_DIR"
+
+spinner='|/-\\'
+spin_i=0
+start_time=$(date +%s)
+total_files=$("$BIN_DIR/busybox" unzip -l "$SELECTED_ZIP_FILE" | "$BIN_DIR/busybox" grep -vE 'Archive|----' | "$BIN_DIR/busybox" wc -l | tr -d ' ')
+"$BIN_DIR/busybox" unzip -o -q "$SELECTED_ZIP_FILE" -d "$WORK_DIR" &
+unzip_pid=$!
+while kill -0 "$unzip_pid" 2>/dev/null; do
+    now=$(date +%s)
+    elapsed=$((now - start_time))
+    hours=$((elapsed / 3600))
+    minutes=$(((elapsed % 3600) / 60))
+    seconds=$((elapsed % 60))
+    elapsed_formatted=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
+    extracted_files=$("$BIN_DIR/busybox" find "$WORK_DIR" -type f | wc -l)
+    if [ "$total_files" -gt 0 ]; then
+        percent=$((extracted_files * 100 / total_files))
+        [ "$percent" -gt 100 ] && percent=100
+    else
+        percent=0
+    fi
+    spin_char=$(printf "%s" "$spinner" | cut -c $(( (spin_i % 4) + 1 )) )
+    spin_i=$((spin_i + 1))
+    printf "\r[%s] Extracting... %d%% Elapsed: %s" "$spin_char" "$percent" "$elapsed_formatted"
+    sleep 0.3
+done
+wait "$unzip_pid"
+printf "\r\033[K"  # Clear line after finish
 
 for file in "${required_files[@]}"; do
-    if ! find "$WORK_DIR" -type f -name "$file" | grep -q .; then
+    if ! "$BIN_DIR/busybox" find "$WORK_DIR" -type f -name "$file" | grep -q .; then
         log "[ERROR] Extraction failed — missing: $file\n"
         exit 1
     fi
 done
+"$BIN_DIR/busybox" mv "$WORK_DIR/installer/pe.img" "$WORK_DIR" 
+"$BIN_DIR/busybox" mv "$WORK_DIR/installer/uefi.img" "$WORK_DIR" 
 log "[INFO] All required files extracted successfully.\n"
+
+log "[INFO] Searching for Windows .esd/.wim files...\n"
+
+count=1
+files=()
+temp_file="$BIN_DIR/win_list.txt"
+
+"$BIN_DIR/busybox" find "/sdcard/" \
+    -type d \( -name "Android" -o -name ".*" \) -prune -o \
+    -type f \( -iname "*.esd" -o -iname "*.wim" \) -print > "$temp_file"
+
+while IFS= read -r file; do
+    if [ -f "$file" ]; then
+        RELATIVE_PATH=${file#/sdcard/}
+        echo "$count. $RELATIVE_PATH"
+        files[$count]="$file"
+        count=$((count + 1))
+    fi
+done < "$temp_file"
+rm -f "$temp_file"
+
+if [ "$count" -eq 1 ]; then
+    log "[ERROR] No .esd or .wim files found. Please copy it to internal storage first!\n"
+    exit 1
+fi
+
+# Automatically select the file if only one is found
+if [ "$count" -eq 2 ]; then
+    SELECTED_WIN_FILE="${files[1]}"
+    echo "\nOnly one valid .esd/.wim file found: $(basename "$SELECTED_WIN_FILE")"
+    echo "Automatically selecting this file!"
+else
+    echo -n "\nEnter the serial number of the Windows .esd/.wim file to select: "
+    read -r selection
+    if [ -z "${files[$selection]}" ]; then
+        log "[ERROR] Invalid selection, exiting xD, try again!\n"
+        exit 1
+    fi
+    SELECTED_WIN_FILE="${files[$selection]}"
+fi
+echo "\n\nSelected Windows file path: $SELECTED_WIN_FILE"
+
+# Check the file extension and set the appropriate destination filename
+extension="${SELECTED_WIN_FILE##*.}"
+if [ "$extension" = "esd" ]; then
+    DEST_FILE="install.esd"
+elif [ "$extension" = "wim" ]; then
+    DEST_FILE="install.wim"
+else
+    log "[ERROR] Unknown file type: $extension. Exiting.\n"
+    exit 1
+fi
+
+log "[INFO] Available editions:\n"
+AVAILABLE_IMAGES=$("$BIN_DIR/wimlib-imagex" info "$SELECTED_WIN_FILE" | grep -E '^Index:|^Name:')
+if [ -z "$AVAILABLE_IMAGES" ]; then
+    log "[ERROR] Failed to retrieve image indexes. The selected Windows file may be corrupted.\n"
+    exit 1
+fi
+echo "$AVAILABLE_IMAGES\n"
 
 log "[INFO] fixing GPT for 24h2 Windows\n\n"
 for dev in a b c d e f; do
@@ -318,10 +429,52 @@ for part in persist fsc fsg modemst1 modemst2; do
 done
 log "[SUCCESS] Backing up partitions Done!\n"
 
+# Unmount and format partitions
+log "[INFO] Unmounting and formatting partitions...\n"
+umount -lf /dev/block/platform/soc/1d84000.ufshc/by-name/{esp,win} 2>/dev/null
+"$BIN_DIR/mkfs.fat" -F32 -s1 /dev/block/platform/soc/1d84000.ufshc/by-name/esp -n ESPNABU
+LD_PRELOAD=$BIN_DIR/libfuse-lite.so:$BIN_DIR/libntfs-3g.so $BIN_DIR/mkfs.ntfs -f /dev/block/platform/soc/1d84000.ufshc/by-name/win -L WINNABU
+
+# Mount partitions
+log "[INFO] Mounting partitions..."
+mkdir -p "$WORK_DIR/win"
+if ! LD_PRELOAD="$BIN_DIR/libfuse-lite.so:$BIN_DIR/libntfs-3g.so" \
+    "$BIN_DIR/mount.ntfs" /dev/block/platform/soc/1d84000.ufshc/by-name/win "$WORK_DIR/win"; then
+    log "[ERROR] Failed to mount NTFS partition at $WORK_DIR/win\n"
+    exit 1
+fi
+
+log "[INFO] Copying Drivers to Win, please wait..."
+copy_folder_with_progress "$WORK_DIR/installer" "$WORK_DIR/win/installer"
+
+log "[INFO] Copying ToolBox to Win, please wait..."
+copy_folder_with_progress "$WORK_DIR/ToolBox" "$WORK_DIR/win/ToolBox"
+
+log "[INFO] Copying backuped images to Win, please wait..."
+copy_folder_with_progress "$BACKUP_DIR" "$WORK_DIR/win/backup-images"
+
+log "[INFO] Copying Windows file to Win, please wait..."
+copy_file_with_progress "$SELECTED_WIN_FILE" "$WORK_DIR/win/$DEST_FILE"
+
+log "[INFO] Copying boot.img file to Windows partition..."
+copy_file_with_progress "$BACKUP_DIR/boot.img" "$WORK_DIR/win/boot.img"
+
+log "[INFO] flashing winpe image to the device..."
+"$BIN_DIR/pv" -s "$("$BIN_DIR/busybox" stat -c%s "$WORK_DIR/pe.img")" "$WORK_DIR/pe.img" > /dev/block/platform/soc/1d84000.ufshc/by-name/esp
+
+log "[INFO] flashing uefi image to the device..."
+"$BIN_DIR/pv" -s "$("$BIN_DIR/busybox" stat -c%s "$WORK_DIR/uefi.img")" "$WORK_DIR/uefi.img" > /dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix)
+
+log "[INFO] installing WOA HELPER APP for dualboot to Windows..."
+"$BIN_DIR/busybox" cp "$WORK_DIR/woahelper.apk" "$BIN_DIR/woahelper.apk"
+pm install -t "$BIN_DIR/woahelper.apk"
+
+log "[INFO] Cleaning up..."
 cd
+umount -lf /dev/block/platform/soc/1d84000.ufshc/by-name/{esp,win} 2>/dev/null
 rm -rf "/tmp/arkt"
 rm -rf "$WORK_DIR"
-echo "[SUCCESS] Cleanup complete."
+log "[SUCCESS] Cleanup complete, All Set!"
 
 echo "*************************************************"
 echo "  ArKT Magic No PC Wininstall Process Complete!  "

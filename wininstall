@@ -11,11 +11,14 @@ URL_TOOLSBIN="$BASE_URL/bin.zip"
 
 BIN_DIR="/tmp/arkt/winstall"
 WORK_DIR="/sdcard/ArKT-Winstall"
+BACKUP_DIR="/sdcard/ArKT-Winstall-Backups"
 
 rm -rf "$BIN_DIR"
 mkdir -p "$BIN_DIR"
 rm -rf "$WORK_DIR"
 mkdir -p "$WORK_DIR"
+rm -rf "$BACKUP_DIR"
+mkdir -p "$BACKUP_DIR"
 
 log() {
     echo ""
@@ -150,9 +153,10 @@ repartition_windows() {
     log "[INFO] Repartitioning done!"
     log "[INFO] Waiting for 5 seconds before rebooting..."
     sleep 5
-    svc power reboot
+    reboot
 }
 
+clear
 echo "\n\nThis script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'\n"
 echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'\n"
 
@@ -232,7 +236,28 @@ for dev in a b c d e f; do
     "$BIN_DIR/gdisk" "/dev/block/sd$dev" <<< $'x\nj\n\nk\n\nw\nY\n'
     echo " "
 done
-log "[INFO] GPT fix Done!\n"
+log "[SUCCESS] GPT fix Done!\n"
+
+# Backup critical partitions
+log "[INFO] Backing up important partitions...\n"
+for part in boot dtbo vendor_boot; do
+    echo "Backing up $part.img..."
+    "$BIN_DIR/busybox" dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/$part$(getprop ro.boot.slot_suffix) of=$BACKUP_DIR/$part.img bs=8M 2>&1 | grep 'bytes'
+done
+for part in persist fsc fsg modemst1 modemst2; do
+    echo "Backing up $part.img..."
+    "$BIN_DIR/busybox" dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/$part of=$BACKUP_DIR/$part.img bs=8M 2>&1 | grep 'bytes'
+done
+log "[SUCCESS] Backing up partitions Done!\n"
+
+# Print sizes
+echo "\nSize of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB\n"
+
+
+log "[INFO] Searching for WinInstaller ZIP files...\n"
+
 
 cd
 rm -rf "/tmp/arkt"

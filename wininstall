@@ -7,20 +7,7 @@
 # Define URLs and target paths for binaries
 BASE_URL="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin"
 URL_BUSYBOX="$BASE_URL/busybox"
-URL_MKFS_FAT="$BASE_URL/mkfs.fat"
-URL_MKFS_NTFS="$BASE_URL/mkfs.ntfs"
-URL_MOUNT_NTFS="$BASE_URL/mount.ntfs"
-URL_PARTED="$BASE_URL/parted"
-URL_SGDISK="$BASE_URL/sgdisk"
-URL_GDISK="$BASE_URL/gdisk"
-URL_WIMLIB="$BASE_URL/wimlib-imagex"
-URL_LIB1="$BASE_URL/libfuse-lite.so"
-URL_LIB2="$BASE_URL/libntfs-3g.so"
-URL_GPT="$BASE_URL/stock_gpt_nabu"
-URL_DMSETUP="$BASE_URL/dmsetup"
-URL_MAKEF2FS="$BASE_URL/make_f2fs"
-URL_MKE2FS="$BASE_URL/mke2fs"
-URL_PV="$BASE_URL/pv"
+URL_TOOLSBIN="$BASE_URL/bin.zip"
 
 BIN_DIR="/tmp/arkt/winstall"
 WORK_DIR="/sdcard/ArKT-Winstall"
@@ -61,10 +48,110 @@ bytes_to_mb() {
     "$BIN_DIR/busybox" awk -v bytes="$1" 'BEGIN { printf "%.2f", bytes / (1000 * 1000) }'
 }
 
-# Define partition paths
+# Define partition paths and other stuffs
+disk="/dev/block/sda"
 part_win="/dev/block/platform/soc/1d84000.ufshc/by-name/win"
 part_esp="/dev/block/platform/soc/1d84000.ufshc/by-name/esp"
 part_userdata="/dev/block/platform/soc/1d84000.ufshc/by-name/userdata"
+win="/dev/block/platform/soc/1d84000.ufshc/sda32"
+esp="/dev/block/platform/soc/1d84000.ufshc/sda31"
+userdata="/dev/block/sda33"
+metadata="/dev/block/sda19"
+RESERVED_START=11222
+RESERVED_END=7000
+
+repartition_windows() {
+    echo -n "\nDo you want to proceed with partitioning? (y/n): "
+    read -r first_confirmation
+    first_confirmation=$(echo "$first_confirmation" | tr '[:upper:]' '[:lower:]')
+    if [[ "$first_confirmation" != "y" && "$first_confirmation" != "yes" ]]; then
+        log "[INFO] Repartitioning cancelled.\n"
+        exit 0
+    fi
+    echo -n "\n[Warning] All data will be erased. Do you want to continue? (y/n): "
+    read -r second_confirmation
+    second_confirmation=$(echo "$second_confirmation" | tr '[:upper:]' '[:lower:]')
+    if [[ "$second_confirmation" != "y" && "$second_confirmation" != "yes" ]]; then
+        log "[INFO] Repartitioning cancelled.\n"
+        exit 0
+    fi
+    blocksize=$("$BIN_DIR/busybox" blockdev --getsize64 /dev/block/sda)
+    max=$(bytes_to_mb "$blocksize" | cut -d'.' -f1)
+    usable_mb=$((max - RESERVED_START - RESERVED_END))
+    winmax=$((usable_mb / 1000))
+    log "[INFO] Maximum space available for Windows: $winmax GB\n"
+    while true; do
+        echo -n "Enter desired Windows size in GB (e.g., 70), or press Enter for 50% split: "
+        read -r input
+        size=$(echo "$input" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]' | sed 's/gb$//;s/[^0-9.]//g')
+        if [ -z "$input" ]; then
+            winend=$(((max + RESERVED_START) / 2))
+        else
+            case "$size" in
+                ''|*[!0-9.]*)
+                    echo "[Warning] Invalid input. Please enter a number like 70.\n"
+                    continue
+                    ;;
+            esac
+            size_int=$(echo "$size" | cut -d'.' -f1)
+            if [ "$size_int" -lt 25 ] || [ "$size_int" -gt "$winmax" ]; then
+                echo "[Warning] Invalid size. Please choose between 25 GB and $winmax GB.\n"
+                continue 
+            fi
+            winend=$("$BIN_DIR/busybox" awk -v sz="$size" -v start="$RESERVED_START" '
+                BEGIN {
+                    mb = int(sz * 1000 + 0.5)
+                    aligned = int((mb + 1023) / 1024) * 1024
+                    print aligned + start
+                }')
+        fi
+        windows_gb=$("$BIN_DIR/busybox" awk -v end="$winend" -v start="$RESERVED_START" 'BEGIN { printf "%.2f", (end - start)/1000 }')
+        userdata_gb=$("$BIN_DIR/busybox" awk -v end="$winend" -v total="$max" 'BEGIN { printf "%.2f", (total - end)/1000 }')
+        echo "\nWindows Partition: $windows_gb GB"
+        echo "Android Partition: $userdata_gb GB\n"
+        while true; do
+            echo -n "Does this look good? (y/n): "
+            read -r yn
+            case "$yn" in
+                [Yy]* ) confirm_ok=1; break ;;
+                [Nn]* ) echo "OK, Please enter a new Windows size.\n"; confirm_ok=0; break ;;
+                * ) echo "Please enter y or n."; echo "" ;;
+            esac
+        done
+        [ "$confirm_ok" -eq 1 ] && break
+    done
+    log "[INFO] Proceeding with Windows partitioning...\n"
+    for dev in a b c d e f; do
+        "$BIN_DIR/gdisk" "/dev/block/sd$dev" <<< $'x\nj\n\nk\n\nw\nY\n'
+        echo " "
+    done
+    for i in sdcard data; do
+        umount -lf /$i 2>/dev/null
+    done
+    "$BIN_DIR/dmsetup" remove -f userdata 2>/dev/null
+    for i in esp win linux firmware mnt userdata metadata misc vendor; do
+        umount -lf /dev/block/platform/soc/1d84000.ufshc/by-name/$i 2>/dev/null
+    done
+    "$BIN_DIR/sgdisk" --clear --load-backup="$BIN_DIR/stock_gpt_nabu" "$disk"
+    "$BIN_DIR/sgdisk" --resize-table 64 "$disk"
+    "$BIN_DIR/parted" -s "$disk" \
+        rm 31 \
+        mkpart esp fat32 10872MB 11222MB \
+        mkpart win ntfs 11222MB "${winend}MB" \
+        mkpart userdata ext4 "${winend}MB" 100% \
+        set 31 esp on
+    sync
+    "$BIN_DIR/make_f2fs" -f -g android "$userdata"
+    "$BIN_DIR/mke2fs" -t ext4 -F "$metadata"
+    "$BIN_DIR/mkfs.fat" -F32 -s1 "$esp" -n ESPNABU
+    "$BIN_DIR/mkfs.ntfs" -f "$win" -L WINNABU
+    sync
+    "$BIN_DIR/parted" "$disk" p free
+    log "[INFO] Repartitioning done!"
+    log "[INFO] Waiting for 5 seconds before rebooting..."
+    sleep 5
+    svc power reboot
+}
 
 echo "\n\nThis script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'\n"
 echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'\n"
@@ -79,29 +166,15 @@ fi
 
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$BIN_DIR/busybox"
-download_and_set_permissions "$URL_MKFS_FAT" "$BIN_DIR/mkfs.fat"
-download_and_set_permissions "$URL_MKFS_NTFS" "$BIN_DIR/mkfs.ntfs"
-download_and_set_permissions "$URL_MOUNT_NTFS" "$BIN_DIR/mount.ntfs"
-download_and_set_permissions "$URL_PARTED" "$BIN_DIR/parted"
-download_and_set_permissions "$URL_SGDISK" "$BIN_DIR/sgdisk"
-download_and_set_permissions "$URL_GDISK" "$BIN_DIR/gdisk"
-download_and_set_permissions "$URL_WIMLIB" "$BIN_DIR/wimlib"
-download_and_set_permissions "$URL_LIB1" "$BIN_DIR/libfuse-lite.so"
-download_and_set_permissions "$URL_LIB2" "$BIN_DIR/libntfs-3g.so"
-download_and_set_permissions "$URL_GPT" "$BIN_DIR/stock_gpt_nabu"
-download_and_set_permissions "$URL_DMSETUP" "$BIN_DIR/dmsetup"
-download_and_set_permissions "$URL_MAKEF2FS" "$BIN_DIR/make_f2fs"
-download_and_set_permissions "$URL_MKE2FS" "$BIN_DIR/mke2fs"
-download_and_set_permissions "$URL_PV" "$BIN_DIR/pv"
-
+download_and_set_permissions "$URL_TOOLSBIN" "$BIN_DIR/bin.zip"
+"$BIN_DIR/busybox" unzip -o -q "$BIN_DIR/bin.zip" -d "$BIN_DIR"
+chmod -R 777 "$BIN_DIR"
 log "[INFO] All binaries have been downloaded and permissions set."
 
 echo "\n\nThis script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'\n"
 echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'\n"
 
 log "[INFO] let's proceed further!\n"
-
-max=$("$BIN_DIR/busybox" blockdev --getsize64 /dev/block/sda | "$BIN_DIR/busybox" awk '{print int($1 / 1000000)}')
 
 # Get sizes in bytes
 size_win=$("$BIN_DIR/busybox" blockdev --getsize64 "$part_win" 2>/dev/null)
@@ -120,8 +193,7 @@ if [ ! -e "$part_win" ] || [ ! -e "$part_esp" ]; then
     echo "Current Size of ESP Partition: NOTHING LOL\n"
     echo "Current Size of Android Partition: $size_userdata_gb GB"
     log "[INFO] need to do partitioning for windows"
-    exit 1
-    #repartition_windows
+    repartition_windows
 fi
 
 # Print sizes
@@ -130,21 +202,37 @@ echo "Size of ESP Partition: $size_esp_mb MB"
 echo "Size of Android partition: $size_userdata_gb GB\n"
 
 # Check partition sizes
-if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
-    echo "ESP partition is less than 330 MB."
-    exit 1
-    #repartition_windows
+if [ $(echo "$size_esp_mb < 349" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 350 MB."
+    repartition_windows
 fi
 
 if [ $(echo "$size_win_gb < 25" | bc) -eq 1 ]; then
     echo "Windows partition is less than 25 GB."
-    exit 1
-    #repartition_windows
+    repartition_windows
 fi
 
 # Continue with other operations if checks pass
-echo "Partition sizes are sufficient."
-echo ""
+log "[INFO] Partition sizes are sufficient."
+
+log "[INFO] ESP and Windows partitions already exist.\n\n"
+echo -n  "Do you want to re-partition - r or continue with the existing partitions - c? (r/c): "
+read -r first_confirmation
+if [[ "$first_confirmation" == "r" || "$first_confirmation" == "repart" ]]; then
+    log "[INFO] OK, repartitioning will be done now."
+    repartition_windows
+else
+    log "[INFO] Skipping repartitioning of Windows."
+    log "[NOTE] The Windows partition will be formatted, and the installation will proceed in the same partition.\n"
+fi
+
+log "[INFO] Proceeding with the rest of the Things..."
+log "[INFO] fixing GPT for 24h2 Windows\n\n"
+for dev in a b c d e f; do
+    "$BIN_DIR/gdisk" "/dev/block/sd$dev" <<< $'x\nj\n\nk\n\nw\nY\n'
+    echo " "
+done
+log "[INFO] GPT fix Done!\n"
 
 cd
 rm -rf "/tmp/arkt"

@@ -1,0 +1,148 @@
+#!/bin/sh
+#
+# Copyright (C) 2025-26 https://github.com/ArKT-7/NoPcWinstall
+#
+# Made For installing Windows on WOA supported devices without using any other device or recovery.
+
+# Define URLs and target paths for binaries
+BASE_URL="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin"
+URL_BUSYBOX="$BASE_URL/busybox"
+URL_MKFS_FAT="$BASE_URL/mkfs.fat"
+URL_MKFS_NTFS="$BASE_URL/mkfs.ntfs"
+URL_MOUNT_NTFS="$BASE_URL/mount.ntfs"
+URL_PARTED="$BASE_URL/parted"
+URL_SGDISK="$BASE_URL/sgdisk"
+URL_GDISK="$BASE_URL/gdisk"
+URL_WIMLIB="$BASE_URL/wimlib-imagex"
+URL_LIB1="$BASE_URL/libfuse-lite.so"
+URL_LIB2="$BASE_URL/libntfs-3g.so"
+URL_GPT="$BASE_URL/stock_gpt_nabu"
+
+BIN_DIR="/tmp/arkt/winstall"
+WORK_DIR="/sdcard/ArKT-Winstall"
+
+rm -rf "$BIN_DIR"
+mkdir -p "$BIN_DIR"
+rm -rf "$WORK_DIR"
+mkdir -p "$WORK_DIR"
+
+log() {
+    echo ""
+    echo "[$(date +"%H:%M:%S")] $1"
+}
+
+# Function to download and set permissions
+download_and_set_permissions() {
+    local url=$1 dest_file=$2
+    log "[INFO] Downloading $(basename "$dest_file")..."
+    curl -L -# -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
+    chmod 777 "$dest_file"
+    echo "[SUCCESS] $(basename "$dest_file") ready."
+}
+
+# Function to download files without setting permissions
+download_file() {
+    local url=$1 dest_file=$2
+    #echo "[INFO] Downloading $(basename "$dest_file")..."
+    curl -L -# -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; }
+    echo "[SUCCESS] $(basename "$dest_file") downloaded."
+}
+
+# Functions to convert bytes
+bytes_to_gb() {
+    "$BIN_DIR/busybox" awk -v bytes="$1" 'BEGIN { printf "%.2f", bytes / (1000 * 1000 * 1000) }'
+}
+
+bytes_to_mb() {
+    "$BIN_DIR/busybox" awk -v bytes="$1" 'BEGIN { printf "%.2f", bytes / (1000 * 1000) }'
+}
+
+# Define partition paths
+part_win="/dev/block/platform/soc/1d84000.ufshc/by-name/win"
+part_esp="/dev/block/platform/soc/1d84000.ufshc/by-name/esp"
+part_userdata="/dev/block/platform/soc/1d84000.ufshc/by-name/userdata"
+
+echo "\n\nThis script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'\n"
+echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'\n"
+
+# Check the device codename using getprop
+DEVICE_CODENAME=$(getprop ro.product.device)
+if [ "$DEVICE_CODENAME" != "nabu" ]; then
+    echo "\nThis device is not supported yet. Please contact the developer on Telegram @ArKT_7\n"
+    echo "your Device - $DEVICE_CODENAME\n"
+    exit 1
+fi
+
+# Download and set permissions for binaries
+download_and_set_permissions "$URL_BUSYBOX" "$BIN_DIR/busybox"
+download_and_set_permissions "$URL_MKFS_FAT" "$BIN_DIR/mkfs.fat"
+download_and_set_permissions "$URL_MKFS_NTFS" "$BIN_DIR/mkfs.ntfs"
+download_and_set_permissions "$URL_MOUNT_NTFS" "$BIN_DIR/mount.ntfs"
+download_and_set_permissions "$URL_PARTED" "$BIN_DIR/parted"
+download_and_set_permissions "$URL_SGDISK" "$BIN_DIR/sgdisk"
+download_and_set_permissions "$URL_GDISK" "$BIN_DIR/gdisk"
+download_and_set_permissions "$URL_WIMLIB" "$BIN_DIR/wimlib"
+download_and_set_permissions "$URL_LIB1" "$BIN_DIR/libfuse-lite.so"
+download_and_set_permissions "$URL_LIB2" "$BIN_DIR/libntfs-3g.so"
+download_and_set_permissions "$URL_GPT" "$BIN_DIR/stock_gpt_nabu"
+
+log "[INFO] All binaries have been downloaded and permissions set."
+
+echo "\n\nThis script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'\n"
+echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-Jy'\n"
+
+log "[INFO] let's proceed further!\n"
+
+max=$("$BIN_DIR/busybox" blockdev --getsize64 /dev/block/sda | "$BIN_DIR/busybox" awk '{print int($1 / 1000000)}')
+
+# Get sizes in bytes
+size_win=$("$BIN_DIR/busybox" blockdev --getsize64 "$part_win" 2>/dev/null)
+size_esp=$("$BIN_DIR/busybox" blockdev --getsize64 "$part_esp" 2>/dev/null)
+size_userdata=$("$BIN_DIR/busybox" blockdev --getsize64 "$part_userdata" 2>/dev/null)
+
+# Convert sizes
+size_win_gb=$(bytes_to_gb $size_win)
+size_esp_mb=$(bytes_to_mb $size_esp)
+size_userdata_gb=$(bytes_to_gb $size_userdata)
+
+# Check if either Windows or ESP partition is missing
+if [ ! -e "$part_win" ] || [ ! -e "$part_esp" ]; then
+    log "[Warning] Windows and/or ESP partitions are missing."
+    echo "\nCurrent Size of Windows Partition: NOTHING LOL"
+    echo "Current Size of ESP Partition: NOTHING LOL\n"
+    echo "Current Size of Android Partition: $size_userdata_gb GB"
+    log "[INFO] need to do partitioning for windows"
+    exit 1
+    #repartition_windows
+fi
+
+# Print sizes
+echo "\nSize of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB\n"
+
+# Check partition sizes
+if [ $(echo "$size_esp_mb < 330" | bc) -eq 1 ]; then
+    echo "ESP partition is less than 330 MB."
+    exit 1
+    #repartition_windows
+fi
+
+if [ $(echo "$size_win_gb < 25" | bc) -eq 1 ]; then
+    echo "Windows partition is less than 25 GB."
+    exit 1
+    #repartition_windows
+fi
+
+# Continue with other operations if checks pass
+echo "Partition sizes are sufficient."
+echo ""
+
+cd
+rm -rf "/tmp/arkt"
+rm -rf "$WORK_DIR"
+echo "[SUCCESS] Cleanup complete."
+
+echo "*************************************************"
+echo "  ArKT Magic No PC Wininstall Process Complete!  "
+echo "*************************************************"

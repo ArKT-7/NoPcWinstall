@@ -69,47 +69,12 @@ su
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
 ```bash
-su -c "cd / && mkdir -p /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL -o nabuwinstall https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstall && chmod 777 nabuwinstall && su -c ./nabuwinstall"
-```
-> [!NOTE]
-> - Copy this command and Paste if upper both not work
-```bash
-mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwinstallaosp -o nabuwinstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 nabuwinstallaosp && chmod 777 busybox && su -c "./nabuwinstallaosp"
-```
-> [!WARNING]
-> - this command used wimlib-imagex to install, you may get error - but it faster than all
-> - well you can try this, just in case if you get any error contact in Telegram
-```bash
-su -c "cd / && mkdir -p /dev/tmp/arkt && cd /dev/tmp/arkt && curl -sSL -o nabuwimlib https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/nabuwimlib && chmod 777 nabuwimlib && su -c ./nabuwimlib"
+su -c "cd / && mkdir -p /tmp/arkt && cd /tmp/arkt && curl -sSLO https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/wininstall && chmod +x * && su -c ./wininstall"
 ```
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
    - **`Good Luck`**.
 
-
-<!-- 
-### 4. Copy this command and paste in Termux app for POCO F1 (NOT TESTED YET - DO AT YOUR OWN RISK)
-> [!NOTE]
-> - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
-> - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
-```bash
-su -c "mkdir -p /data/data/arkt && chmod 777 /data/data/arkt && cd /data/data/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/f1winstall -o /data/data/arkt/f1winstall && chmod 777 /data/data/arkt/f1winstall && su -c "/data/data/arkt/f1winstall""
-```
-> [!NOTE]
-> - Copy this command and Paste if upper not work
-
-```bash
-su -c "chmod 777 /data/local/tmp && cd /data/local/tmp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/f1winstall -o /data/local/tmp/f1winstall && chmod 777 /data/local/tmp/f1winstall && su -c "/data/local/tmp/f1winstall""
-```
-> [!NOTE]
-> - Copy this command and Paste if upper both not work
-```bash
-mkdir -p ~/arkt && chmod 777 ~/arkt && cd ~/arkt && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/f1winstallaosp -o f1winstallaosp && curl -sSL https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin/busybox -o busybox && chmod 777 f1winstallaosp && chmod 777 busybox && su -c "./f1winstallaosp"
-```
-
-## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait
-   - **`Good Luck`**.
--->
 > [!IMPORTANT]
 > If you faced any error please share the screenshot and error to [@ArKT_7](https://telegram.me/ArKT_7)
 

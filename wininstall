@@ -230,7 +230,75 @@ else
     log "[NOTE] The Windows partition will be formatted, and the installation will proceed in the same partition.\n"
 fi
 
-log "[INFO] Proceeding with the rest of the Things..."
+log "[INFO] Proceeding with the rest of the Things...\n"
+
+# Print sizes
+echo "\nSize of Windows Partition: $size_win_gb GB"
+echo "Size of ESP Partition: $size_esp_mb MB"
+echo "Size of Android partition: $size_userdata_gb GB\n"
+
+log "[INFO] Searching for WinInstaller ZIP files...\n"
+
+count=1
+files=()
+required_files=("pe.img" "install.bat" "sta.exe" "sha256sum" "uefi.img")
+temp_file="$BIN_DIR/zip_list.txt"
+
+"$BIN_DIR/busybox" find "/sdcard/" \
+    -type d \( -name "Android" -o -name ".*" \) -prune -o \
+    -type f -name "*.zip" -print > "$temp_file"
+
+while IFS= read -r file; do
+    if [ -f "$file" ]; then
+        # Check if all required files exist in the zip
+        all_found=true
+        for req in "${required_files[@]}"; do
+            if ! "$BIN_DIR/busybox" unzip -l "$file" | "$BIN_DIR/busybox" grep -q "$req"; then
+                all_found=false
+                break
+            fi
+        done
+        if [ "$all_found" = true ]; then
+            RELATIVE_PATH=${file#/sdcard/}
+            echo "$count. $RELATIVE_PATH"
+            files[$count]="$file"
+            count=$((count + 1))
+        fi
+    fi
+done < "$temp_file"
+rm -f "$temp_file"
+if [ "$count" -eq 1 ]; then
+    log "[Warning] No valid Wininstaller ZIP files found (must download it first!)."
+    exit 1
+fi
+
+# Automatically select the ZIP file if only one is available
+if [ "$count" -eq 2 ]; then
+    SELECTED_ZIP_FILE="${files[1]}"
+    echo ""
+    echo "Only one valid ZIP file found: $(basename "$SELECTED_ZIP_FILE")"
+    echo "Automatically selecting this file!"
+else
+    echo -n "\nEnter the serial number of the ZIP file to select: "
+    read -r selection
+    if [ -z "${files[$selection]}" ]; then
+        log "[Warning] Invalid selection, exiting xD, try again!\n"
+        exit 1
+    fi
+    SELECTED_ZIP_FILE="${files[$selection]}"
+fi
+
+log "[INFO] Extracting Wininstaller zip, please wait..."
+"$BIN_DIR/busybox" unzip -o -q "$SELECTED_ZIP_FILE" -d "$WORK_DIR"
+
+for file in "${required_files[@]}"; do
+    if ! find "$WORK_DIR" -type f -name "$file" | grep -q .; then
+        log "[ERROR] Extraction failed — missing: $file\n"
+        exit 1
+    fi
+done
+log "[INFO] All required files extracted successfully.\n"
+
 log "[INFO] fixing GPT for 24h2 Windows\n\n"
 for dev in a b c d e f; do
     "$BIN_DIR/gdisk" "/dev/block/sd$dev" <<< $'x\nj\n\nk\n\nw\nY\n'
@@ -249,15 +317,6 @@ for part in persist fsc fsg modemst1 modemst2; do
     "$BIN_DIR/busybox" dd if=/dev/block/platform/soc/1d84000.ufshc/by-name/$part of=$BACKUP_DIR/$part.img bs=8M 2>&1 | grep 'bytes'
 done
 log "[SUCCESS] Backing up partitions Done!\n"
-
-# Print sizes
-echo "\nSize of Windows Partition: $size_win_gb GB"
-echo "Size of ESP Partition: $size_esp_mb MB"
-echo "Size of Android partition: $size_userdata_gb GB\n"
-
-
-log "[INFO] Searching for WinInstaller ZIP files...\n"
-
 
 cd
 rm -rf "/tmp/arkt"

@@ -8,11 +8,13 @@
 BASE_URL="https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/bin"
 URL_BUSYBOX="$BASE_URL/busybox"
 URL_TOOLSBIN="$BASE_URL/bin.zip"
+URL_INSBAT="$BASE_URL/install.bat"
 
 BIN_DIR="/tmp/arkt/winstall"
 WORK_DIR="/sdcard/ArKT-Winstall"
 BACKUP_DIR="/sdcard/ArKT-Winstall-Backups"
 
+umount -lf /dev/block/platform/soc/1d84000.ufshc/by-name/{esp,win} 2>/dev/null
 rm -rf "$BIN_DIR"
 mkdir -p "$BIN_DIR"
 rm -rf "$WORK_DIR"
@@ -20,6 +22,10 @@ mkdir -p "$WORK_DIR"
 rm -rf "$BACKUP_DIR"
 mkdir -p "$BACKUP_DIR"
 cd "$BIN_DIR"
+
+for i in /sys/devices/system/cpu/cpu[0-9]*; do
+    echo performance > "$i/cpufreq/scaling_governor" 2>/dev/null
+done
 
 log() {
     echo ""
@@ -38,7 +44,6 @@ download_and_set_permissions() {
 # Function to download files without setting permissions
 download_file() {
     local url=$1 dest_file=$2
-    #echo "[INFO] Downloading $(basename "$dest_file")..."
     curl -L -# -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; }
     echo "[SUCCESS] $(basename "$dest_file") downloaded."
 }
@@ -58,19 +63,21 @@ copy_folder_with_progress() {
     local total_size
     total_size=$("$BIN_DIR/busybox" du -sb "$src" | "$BIN_DIR/busybox" awk '{print $1}')
     mkdir -p "$dst"
-    #echo "[INFO] Copying folder from $src to $dst..."
-    (cd "$src" && "$BIN_DIR/busybox" tar -cf - .) | "$BIN_DIR/pv" -s "$total_size" | (cd "$dst" && "$BIN_DIR/busybox" tar -xf -)
-    #echo ""
-    #echo "[INFO] Folder copy completed."
+    (cd "$src" && "$BIN_DIR/busybox" tar -cf - .) \
+        | ionice -c 1 -n 0 nice -n -20 "$BIN_DIR/pv" -B 16M -s "$total_size" \
+        | (cd "$dst" && "$BIN_DIR/busybox" tar -xf -)
 }
 
 copy_file_with_progress() {
     local src="$1"
     local dst="$2"
-    #log "[INFO] Copying $src to $dst with progress..."
-    "$BIN_DIR/pv" "$src" | "$BIN_DIR/busybox" dd of="$dst" bs=4M status=none
+    local size
+    size=$("$BIN_DIR/busybox" stat -c %s "$src")
+    mkdir -p "$(dirname "$dst")"
+    ionice -c 1 -n 0 nice -n -20 \
+      "$BIN_DIR/pv" -B 16M -s "$size" "$src" \
+      | "$BIN_DIR/busybox" dd of="$dst" bs=4M status=none
     echo ""
-    #log "[INFO] File copy completed."
 }
 
 # Define partition paths and other stuffs
@@ -193,6 +200,7 @@ fi
 # Download and set permissions for binaries
 download_and_set_permissions "$URL_BUSYBOX" "$BIN_DIR/busybox"
 download_and_set_permissions "$URL_TOOLSBIN" "$BIN_DIR/bin.zip"
+download_and_set_permissions "$URL_INSBAT" "$BIN_DIR/install.bat"
 "$BIN_DIR/busybox" unzip -o -q "$BIN_DIR/bin.zip" -d "$BIN_DIR"
 chmod -R 777 "$BIN_DIR"
 log "[INFO] All binaries have been downloaded and permissions set."
@@ -346,8 +354,10 @@ for file in "${required_files[@]}"; do
         exit 1
     fi
 done
+rm -f "$WORK_DIR/installer/install.bat"
 "$BIN_DIR/busybox" mv "$WORK_DIR/installer/pe.img" "$WORK_DIR" 
 "$BIN_DIR/busybox" mv "$WORK_DIR/installer/uefi.img" "$WORK_DIR" 
+"$BIN_DIR/busybox" cp -r "$BIN_DIR/install.bat" "$WORK_DIR/installer/"
 log "[INFO] All required files extracted successfully.\n"
 
 log "[INFO] Searching for Windows .esd/.wim files...\n"
@@ -454,7 +464,7 @@ log "[INFO] Copying backuped images to Win, please wait..."
 copy_folder_with_progress "$BACKUP_DIR" "$WORK_DIR/win/backup-images"
 
 log "[INFO] Copying Windows file to Win, please wait..."
-copy_file_with_progress "$SELECTED_WIN_FILE" "$WORK_DIR/win/$DEST_FILE"
+copy_file_with_progress "$SELECTED_WIN_FILE" "$WORK_DIR/win/installer/$DEST_FILE"
 
 log "[INFO] Copying boot.img file to Windows partition..."
 copy_file_with_progress "$BACKUP_DIR/boot.img" "$WORK_DIR/win/boot.img"

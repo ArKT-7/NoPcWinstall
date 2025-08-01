@@ -58,18 +58,20 @@ More coming soon!
 ### 1. Install Termux apk
 ## `>_` [Downlaod Termux app](https://f-droid.org/repo/com.termux_1000.apk)
 
-### 2. Open Termux app and Type
-```bash
-su
-```
-### 3. Then Grant Root 
-
-### 4. Copy this command and paste in Termux app for Xiaomi Pad 5
-> [!NOTE]
+### 2. Open Termux app and copy-paste / run this command:
+> [!WARNING]
 > - Don't run the command twice if it errors or gets canceled while run. Restart your device first, then run it again.
 > - If you doing re-partition/Partition and if there is any error then make sure to take a photo before restart
+
+> [!Important]
+> - **Make sure to give superuser (root) permission to Termux/shell app in KSU or Magisk**
 ```bash
-su -c "cd / && mkdir -p /tmp/arkt && cd /tmp/arkt && curl -sSLO https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/wininstall && chmod +x * && su -c ./wininstall"
+su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main/wininstall && chmod +x * && su -c ./wininstall"
+```
+> [!NOTE]
+> - **Use this command if upper one not work**
+```bash
+cd ~ && arkt=https://raw.githubusercontent.com/arkt-7/NoPcWinstall/main && mkdir -p arkt && cd arkt && curl -sSLO $arkt/wininstall && curl -sSLO $arkt/bin/curl && chmod +x * && su -c "export PATH=\$PWD:\$PATH && ./wininstall"
 ```
 
 ## Now Just Follow the On screen Instruction what it asking and rest just leave it and wait

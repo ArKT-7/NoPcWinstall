@@ -10,7 +10,7 @@ URL_BUSYBOX="$BASE_URL/busybox"
 URL_TOOLSBIN="$BASE_URL/bin.zip"
 URL_INSBAT="$BASE_URL/install.bat"
 
-BIN_DIR="/tmp/arkt/winstall"
+BIN_DIR="/dev/arkt/winstall"
 WORK_DIR="/sdcard/ArKT-Winstall"
 BACKUP_DIR="/sdcard/ArKT-Winstall-Backups"
 
@@ -482,7 +482,7 @@ pm install -t "$BIN_DIR/woahelper.apk"
 log "[INFO] Cleaning up..."
 cd
 umount -lf /dev/block/platform/soc/1d84000.ufshc/by-name/{esp,win} 2>/dev/null
-rm -rf "/tmp/arkt"
+rm -rf "/dev/arkt"
 rm -rf "$WORK_DIR"
 log "[SUCCESS] Cleanup complete, All Set!"
 

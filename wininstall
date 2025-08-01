@@ -476,8 +476,8 @@ log "[INFO] flashing uefi image to the device..."
 "$BIN_DIR/pv" -s "$("$BIN_DIR/busybox" stat -c%s "$WORK_DIR/uefi.img")" "$WORK_DIR/uefi.img" > /dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix)
 
 log "[INFO] installing WOA HELPER APP for dualboot to Windows..."
-"$BIN_DIR/busybox" cp "$WORK_DIR/woahelper.apk" "$BIN_DIR/woahelper.apk"
-pm install -t "$BIN_DIR/woahelper.apk"
+"$BIN_DIR/busybox" cp "$WORK_DIR/woahelper.apk" "/data/local/tmp/woahelper.apk"
+pm install -t "/data/local/tmp/woahelper.apk"
 
 log "[INFO] Cleaning up..."
 cd

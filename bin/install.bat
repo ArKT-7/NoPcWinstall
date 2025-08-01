@@ -61,7 +61,7 @@ exit /b 1
 echo.
 echo ==============================================================
 echo          Image file found at %imageFile%
-echo                  Windows drive set to %targetDrive%
+echo                   Windows drive set to %targetDrive%
 echo ==============================================================
 echo.
 echo ==============================================================
@@ -224,7 +224,7 @@ if "!xmlFound!"=="false" (
 :fileFound
 echo XML file found and renamed to arkt.xml.
 :continue
-call "X:\DriverInstaller\DriverInstaller.lnk"
+%targetDrive%\Installer\Driver\tools\DriverUpdater\%PROCESSOR_ARCHITECTURE%\DriverUpdater.exe -r %targetDrive%\Installer\Driver -d %targetDrive%\Installer\Driver\definitions\Desktop\ARM64\Internal\arkt.xml -p %targetDrive%
 echo.
 echo ==============================================================
 echo Installation is Completed. Rebooting in Windows in 5 seconds.

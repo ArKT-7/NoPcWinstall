@@ -191,9 +191,23 @@ echo "Based on Kumar_Jy's Wininstaller, Telegram - '@Kumar_Jy', Github - 'Kumar-
 
 # Check the device codename using getprop
 DEVICE_CODENAME=$(getprop ro.product.device)
-if [ "$DEVICE_CODENAME" != "nabu" ]; then
-    echo "\nThis device is not supported yet. Please contact the developer on Telegram @ArKT_7\n"
-    echo "your Device - $DEVICE_CODENAME\n"
+if [ "$DEVICE_CODENAME" = "nabu" ]; then
+    :
+elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
+    echo "\n[Warning] Detected device codename 'OP5D77L1'."
+    echo "\nMake sure you are actually running this on a Xiaomi Pad 5 (nabu)."
+    echo "If this is a different device, DO NOT PROCEED.\n"
+    echo -n  "Are you sure you are on a Xiaomi Pad 5? (y/n): "
+    read -r confirm
+    confirm=$(echo "$confirm" | tr '[:upper:]' '[:lower:]')
+    if [[ "$confirm" != "y" && "$confirm" != "yes" ]]; then
+        echo "\nThis device is not supported yet. Please contact the developer on Telegram @ArKT_7"
+        echo "Your Device - $DEVICE_CODENAME\n"
+        exit 1
+    fi
+else
+    echo "\nThis device is not supported yet. Please contact the developer on Telegram @ArKT_7"
+    echo "Your Device - $DEVICE_CODENAME\n"
     exit 1
 fi
 

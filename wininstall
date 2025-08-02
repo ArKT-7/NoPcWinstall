@@ -157,7 +157,7 @@ repartition_windows() {
         "$BIN_DIR/gdisk" "/dev/block/sd$dev" <<< $'x\nj\n\nk\n\nw\nY\n'
         echo " "
     done
-    for i in sdcard data; do
+    for i in metadata sdcard data; do
         umount -lf /$i 2>/dev/null
     done
     "$BIN_DIR/dmsetup" remove -f userdata 2>/dev/null
